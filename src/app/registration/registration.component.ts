@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -23,6 +23,8 @@ import {NzCheckboxComponent} from 'ng-zorro-antd/checkbox';
 import {RouterLink} from '@angular/router';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {NgIf} from '@angular/common';
+import {AuthService} from '../auth-tools/auth.service';
+import {NotificationComponent} from '../notification/notification.component';
 
 @Component({
   selector: 'app-registration',
@@ -51,14 +53,22 @@ import {NgIf} from '@angular/common';
   styleUrls: ['./registration.component.css']
 })
 export class RegistrationComponent {
+  private userService = inject(AuthService);
+
   passwordVisible = false;
   confirmPasswordVisible = false;
+  validateForm: FormGroup<{
+    password: FormControl<string>;
+    checkPassword: FormControl<string>;
+    username: FormControl<string>;
+  }>;
 
-  constructor(private fb: NonNullableFormBuilder) {
+
+  constructor(private fb: NonNullableFormBuilder ) {
     this.validateForm = this.fb.group({
       password: ['', [Validators.required]],
       checkPassword: ['', [Validators.required, this.confirmationValidator]],
-      nickname: ['', [Validators.required]]
+      username: ['', [Validators.required]]
     });
   }
 
@@ -71,16 +81,13 @@ export class RegistrationComponent {
   }
 
 
-  validateForm: FormGroup<{
-    password: FormControl<string>;
-    checkPassword: FormControl<string>;
-    nickname: FormControl<string>;
-  }>;
-
-
   submitForm(): void {
     if (this.validateForm.valid) {
-      console.log('submit', this.validateForm.value);
+      const {username, password, checkPassword} = this.validateForm.value;
+      if (username && password && checkPassword === password) {
+        this.userService.register(username, password);
+      }
+
     } else {
       Object.values(this.validateForm.controls).forEach(control => {
         if (control.invalid) {

@@ -6,6 +6,7 @@ import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {AuthService} from '../auth-tools/auth.service';
 import {NotificationComponent} from '../notification/notification.component';
 import {RouterLink} from '@angular/router';
+import {NzIconDirective} from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-login',
@@ -18,12 +19,15 @@ import {RouterLink} from '@angular/router';
     NzFormItemComponent,
     NzButtonComponent,
     NzInputDirective,
-    RouterLink
+    RouterLink,
+    NzIconDirective
   ],
-  templateUrl: './login.component.html'
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   private userService = inject(AuthService)
+  passwordVisible = false;
 
 
   validateForm: FormGroup<{
@@ -43,8 +47,14 @@ export class LoginComponent {
     if (userName && password) {
       this.userService.login(userName, password)
     }else{
-      this.userService.makeToast("daad");
+      console.log("kkokok")
+      // this.userService.makeToast("daad");
     }
     console.log('submit', this.validateForm.value);
   }
+  togglePasswordVisibility(): void {
+    this.passwordVisible = !this.passwordVisible;
+  }
+
+
 }

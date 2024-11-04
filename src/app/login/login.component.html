@@ -6,13 +6,24 @@
       </nz-input-group>
     </nz-form-control>
   </nz-form-item>
+
   <nz-form-item>
     <nz-form-control nzErrorTip="Please input your Password!">
-      <nz-input-group nzPrefixIcon="lock">
-        <input formControlName="password" nz-input type="password" placeholder="Password"/>
+      <nz-input-group [nzSuffix]="passwordSuffix" nzPrefixIcon="lock">
+        <input
+          formControlName="password"
+          nz-input
+          [type]="passwordVisible ? 'text' : 'password'"
+          placeholder="Password"
+        />
       </nz-input-group>
+      <ng-template #passwordSuffix>
+        <i nz-icon [nzType]="passwordVisible ? 'eye-invisible' : 'eye'" (click)="togglePasswordVisibility()"></i>
+      </ng-template>
     </nz-form-control>
   </nz-form-item>
+
+
   <nz-form-item>
     <nz-form-control>
       <button nz-button nzType="primary" [disabled]="!validateForm.valid">Log in</button>
@@ -20,7 +31,8 @@
   </nz-form-item>
 </form>
 <br>
-<button nz-button nzType="primary" routerLink="/registration">register</button>
-<br>
-<br>
-<button nz-button nzType="primary" routerLink="">welcome</button>
+
+<div class="navig">
+  <button nz-button nzType="primary" routerLink="/registration">register</button>
+  <button nz-button nzType="primary" routerLink="">welcome</button>
+</div>

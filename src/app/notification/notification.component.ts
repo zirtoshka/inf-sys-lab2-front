@@ -11,9 +11,11 @@ import {NzButtonComponent} from 'ng-zorro-antd/button';
   ],
   templateUrl: './notification.component.html'
 })
+
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
+
 export class NotificationComponent {
   constructor(private notification: NzNotificationService) {}
 

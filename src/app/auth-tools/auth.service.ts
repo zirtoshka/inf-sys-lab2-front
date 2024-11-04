@@ -5,6 +5,7 @@ import {NotificationComponent} from '../notification/notification.component';
 import {deleteCookie, getCookie} from './cookie-utils';
 import {catchError, lastValueFrom, throwError} from 'rxjs';
 import {Token} from '../dtos/token';
+import {NzNotificationService} from 'ng-zorro-antd/notification';
 
 const TOKEN_PATH = 'token';
 
@@ -16,11 +17,14 @@ export class AuthService {
   private readonly baseUrl = 'http://localhost:8000/dragon/auth';
   private httpClient = inject(HttpClient);
   private router = inject(Router);
-  private messageService = inject(NotificationComponent);
+  private notificationService = inject(NzNotificationService); // Use NzNotificationService directly
 
-  makeToast(message: string) {
-    this.messageService.createErrorNotification();
-  }
+
+  // constructor(private messageService: NotificationComponent) {}
+
+  // makeToast(message: string) {
+  //   this.messageService.createErrorNotification();
+  // }
 
   get username(): string | null {
     return sessionStorage.getItem("username");
@@ -39,7 +43,7 @@ export class AuthService {
   }
 
   set authToken(value: string | null | undefined) {
-    if (value==null){
+    if (value == null) {
       deleteCookie(TOKEN_PATH);
       //todo add smth
       // sessionStorage.removeItem("shoot");
@@ -50,47 +54,50 @@ export class AuthService {
     return this.authToken != null;
   }
 
-  private auth(name:string, token:string){
+  private auth(name: string, token: string) {
     this.authToken = token;
-    this.username=name;
+    this.username = name;
     let headers = new HttpHeaders();
-    headers = headers.set('Authorization', `Bearer ${token}` );
-    lastValueFrom(this.httpClient.get(`${this.baseUrl}/users/${name}`, { headers }))
+    console.log("3333");
+    headers = headers.set('Authorization', `Bearer ${token}`);
+    console.log("444");
+    lastValueFrom(this.httpClient.get(`${this.baseUrl}/users/${name}`, {headers}))
       .then(data => {
         this.router.navigate(['home']).then(() => {
           console.log('Navigation to home successful');
         }).catch(err => {
-          this.messageService.createErrorNotification();
+          console.log("ogogogo");
+          // this.messageService.createErrorNotification();
           console.error('Navigation failed', err);
         });
       });
   }
 
-  postData(username:string, password: string, action: string){
-    try {
-      // Выполняем POST запрос, преобразуем результат из Observable в Promise
-      const tokenResponse = lastValueFrom(
-        this.httpClient.post<Token>(`${this.baseUrl}/${action}`, { name: username, password })
-          .pipe(
-            catchError(this.handleError) // Обработка ошибок
-          )
-      );
-
-      // Аутентификация пользователя с использованием токена
-      this.auth(username, Token.name);
-
-    } catch (error) {
-      console.error('Login failed', error); // Логирование ошибки, если что-то пошло не так
-    }
+  postData(username: string, password: string, action: string) {
+    return this.httpClient
+      .post<Token>(`${this.baseUrl}/${action}`, {"name": username, password})
+      .pipe(catchError(this.handleError.bind(this)))
+      .subscribe((data) => {
+        this.auth(username, data.token)
+      });
   }
 
-  login(username: string, password: string){
+  login(username: string, password: string) {
     return this.postData(username, password, "authenticate");
   }
 
+  register(username: string, password: string) {
+    return this.postData(username, password, "register");
+  }
 
   private handleError(error: HttpErrorResponse) {
-    this.messageService.createErrorNotification();
+    console.log("555");
+    this.notificationService.error(
+      'error Notification',
+      'This is the description of the error notification'
+    );
+    // this.messageService.createErrorNotification();
+    console.log("ssld;dalsd;lasd;l");
     console.error('An error occurred:', error.message);
     return throwError(() => new Error('Something went wrong, please try again later.'));
   }
