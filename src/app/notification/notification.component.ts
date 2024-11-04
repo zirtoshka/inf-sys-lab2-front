@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, Injectable} from '@angular/core';
 
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
@@ -10,6 +10,9 @@ import {NzButtonComponent} from 'ng-zorro-antd/button';
     NzButtonComponent
   ],
   templateUrl: './notification.component.html'
+})
+@Injectable({
+  providedIn: 'root',
 })
 export class NotificationComponent {
   constructor(private notification: NzNotificationService) {}

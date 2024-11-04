@@ -1,7 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {Router} from '@angular/router';
-import {NzMessageService} from 'ng-zorro-antd/message';
 import {NotificationComponent} from '../notification/notification.component';
 import {deleteCookie, getCookie} from './cookie-utils';
 import {catchError, lastValueFrom, throwError} from 'rxjs';
@@ -18,6 +17,10 @@ export class AuthService {
   private httpClient = inject(HttpClient);
   private router = inject(Router);
   private messageService = inject(NotificationComponent);
+
+  makeToast(message: string) {
+    this.messageService.createErrorNotification();
+  }
 
   get username(): string | null {
     return sessionStorage.getItem("username");
