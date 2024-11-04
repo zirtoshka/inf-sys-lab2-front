@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {
   AbstractControl,
   FormControl,
-  FormGroup,
+  FormGroup, FormsModule,
   NonNullableFormBuilder, ReactiveFormsModule,
   ValidatorFn,
   Validators
@@ -21,6 +21,8 @@ import {NzOptionComponent, NzSelectComponent} from 'ng-zorro-antd/select';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {NzCheckboxComponent} from 'ng-zorro-antd/checkbox';
 import {RouterLink} from '@angular/router';
+import {NzIconDirective} from 'ng-zorro-antd/icon';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-registration',
@@ -40,27 +42,41 @@ import {RouterLink} from '@angular/router';
     NzRowDirective,
     NzButtonComponent,
     NzCheckboxComponent,
-    RouterLink
+    RouterLink,
+    FormsModule,
+    NzIconDirective,
+    NgIf
   ],
 
   styleUrls: ['./registration.component.css']
 })
 export class RegistrationComponent {
+  passwordVisible = false;
+  confirmPasswordVisible = false;
+
+  constructor(private fb: NonNullableFormBuilder) {
+    this.validateForm = this.fb.group({
+      password: ['', [Validators.required]],
+      checkPassword: ['', [Validators.required, this.confirmationValidator]],
+      nickname: ['', [Validators.required]]
+    });
+  }
+
+  togglePasswordVisibility(): void {
+    this.passwordVisible = !this.passwordVisible;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.confirmPasswordVisible = !this.confirmPasswordVisible;
+  }
+
+
   validateForm: FormGroup<{
-    email: FormControl<string>;
     password: FormControl<string>;
     checkPassword: FormControl<string>;
     nickname: FormControl<string>;
-    phoneNumberPrefix: FormControl<'+86' | '+87'>;
-    phoneNumber: FormControl<string>;
-    website: FormControl<string>;
-    captcha: FormControl<string>;
-    agree: FormControl<boolean>;
   }>;
-  captchaTooltipIcon: NzFormTooltipIcon = {
-    type: 'info-circle',
-    theme: 'twotone'
-  };
+
 
   submitForm(): void {
     if (this.validateForm.valid) {
@@ -69,41 +85,24 @@ export class RegistrationComponent {
       Object.values(this.validateForm.controls).forEach(control => {
         if (control.invalid) {
           control.markAsDirty();
-          control.updateValueAndValidity({ onlySelf: true });
+          control.updateValueAndValidity({onlySelf: true});
         }
       });
     }
   }
 
   updateConfirmValidator(): void {
-    /** wait for refresh value */
     Promise.resolve().then(() => this.validateForm.controls.checkPassword.updateValueAndValidity());
   }
 
   confirmationValidator: ValidatorFn = (control: AbstractControl): { [s: string]: boolean } => {
     if (!control.value) {
-      return { required: true };
+      return {required: true};
     } else if (control.value !== this.validateForm.controls.password.value) {
-      return { confirm: true, error: true };
+      return {confirm: true, error: true};
     }
     return {};
   };
 
-  getCaptcha(e: MouseEvent): void {
-    e.preventDefault();
-  }
 
-  constructor(private fb: NonNullableFormBuilder) {
-    this.validateForm = this.fb.group({
-      email: ['', [Validators.email, Validators.required]],
-      password: ['', [Validators.required]],
-      checkPassword: ['', [Validators.required, this.confirmationValidator]],
-      nickname: ['', [Validators.required]],
-      phoneNumberPrefix: '+86' as '+86' | '+87',
-      phoneNumber: ['', [Validators.required]],
-      website: ['', [Validators.required]],
-      captcha: ['', [Validators.required]],
-      agree: [false]
-    });
-  }
 }
