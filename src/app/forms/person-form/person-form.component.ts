@@ -1,6 +1,5 @@
 import {Component} from '@angular/core';
 import {
-  FormBuilder,
   FormControl,
   FormGroup,
   FormsModule,
@@ -16,8 +15,10 @@ import {NzOptionComponent, NzSelectComponent} from 'ng-zorro-antd/select';
 import {Color} from '../../dragondto/color';
 import {NgForOf, NgIf} from '@angular/common';
 import {Country} from '../../dragondto/country';
+import {Location} from '../../dragondto/location';
 import {NzRadioComponent, NzRadioGroupComponent} from 'ng-zorro-antd/radio';
 import {NzSwitchComponent} from 'ng-zorro-antd/switch';
+import {NzDividerComponent} from 'ng-zorro-antd/divider';
 
 @Component({
   selector: 'app-person-form',
@@ -39,7 +40,8 @@ import {NzSwitchComponent} from 'ng-zorro-antd/switch';
     NgIf,
     NzRadioGroupComponent,
     NzRadioComponent,
-    NzSwitchComponent
+    NzSwitchComponent,
+    NzDividerComponent
   ],
   templateUrl: './person-form.component.html',
   styleUrl: './person-form.component.css'
@@ -50,11 +52,10 @@ export class PersonFormComponent {
   countries = Object.values(Country);
 
 
-
-  locations = [
-    {name: 'New York'},
-    {name: 'Los Angeles'},
-    {name: 'Chicago'}
+  locations: Location[] = [
+    {id: 1, x: 1, y: 1, z: 1, name: 'New York'},
+    {id: 2, x: 1, y: 1, z: 1, name: 'Los Angeles'},
+    {id: 3, x: 1, y: 1, z: 1, name: 'Chicago'}
   ];
   selectedLocation: any = null;
   isCreatingNewLocation: boolean = false;
@@ -63,9 +64,15 @@ export class PersonFormComponent {
     name: FormControl<string>;
     eyeColor: FormControl<Color>;
     hairColor: FormControl<Color>;
-    location: FormControl<string>;
+
+    location: FormControl<Location>;
+    xValue: FormControl<string>;
+    yValue: FormControl<string>;
+    zValue: FormControl<string>;
+    locationName: FormControl<string>;
+
     height: FormControl<string>;
-    passportId: FormControl<string>;
+    passportID: FormControl<string>;
     nationality: FormControl<Country>;
   }>;
 
@@ -74,11 +81,17 @@ export class PersonFormComponent {
       name: ['', [Validators.required,]],
       eyeColor: [this.colors[0], [Validators.required]],
       hairColor: [this.colors[0], [Validators.required]],
-      location: ['', [Validators.required]],
+      location: [this.locations[0], [Validators.required]],
+
+      xValue: ['', [Validators.required,Validators.pattern('-?\\d+(\\.\\d+)?')]],
+      yValue: ['', [Validators.required,Validators.pattern('-?\\d+(\\.\\d+)?')]],
+      zValue: ['', [Validators.required,Validators.pattern('-?\\d+(\\.\\d+)?')]],
+      locationName: ['', [Validators.required]],
+
       height: ['', [Validators.required,
         Validators.min(0),
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
-      passportId: ['', [Validators.required]],
+      passportID: ['', [Validators.required]],
       nationality: [this.countries[0], [Validators.required]],
     });
   }
@@ -91,7 +104,6 @@ export class PersonFormComponent {
     this.isCreatingNewLocation = value;
     console.log(this.isCreatingNewLocation);
   }
-
 
 
 }
