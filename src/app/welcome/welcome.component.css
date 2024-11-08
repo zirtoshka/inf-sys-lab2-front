@@ -5,3 +5,22 @@
   justify-content: center;
   gap: 10%;
 }
+
+.nusha{
+  width: 30%;
+  height: auto;
+}
+.nusha:hover {
+  animation-name: shake;
+  animation-duration: 0.4s;
+  animation-iteration-count: infinite;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  250% { transform: translateX(10px) translateY(10px);}
+  50% { transform: translateX(-10px) translateY(-10px);}
+  75% { transform: translateX(-10px) translateY(10px);}
+  90% { transform: translateX(10px) translateY(-10px);}
+  100% { transform: translateX(0); }
+}

@@ -1,30 +1,41 @@
 <nz-layout class="home">
   <nz-header>
-    <div class="logo">cdssd</div>
-    <ul nz-menu nzTheme="dark" nzMode="horizontal">
-      <li nz-menu-item>nav 1</li>
-      <li nz-menu-item>nav 2</li>
-      <li nz-menu-item>nav 3</li>
+    <ul nz-menu nzTheme="dark" nzMode="horizontal" class="pink-menu">
+      <li nz-menu-item>dragons</li>
+      <li nz-menu-item>coordinates</li>
+      <li nz-menu-item>dragon cave</li>
+      <li nz-menu-item>dragon head</li>
+      <li nz-menu-item>location</li>
+      <li nz-menu-item>person</li>
     </ul>
   </nz-header>
   <nz-content>
-    <nz-breadcrumb>
-      <nz-breadcrumb-item>Home</nz-breadcrumb-item>
-      <nz-breadcrumb-item>List</nz-breadcrumb-item>
-      <nz-breadcrumb-item>App</nz-breadcrumb-item>
-    </nz-breadcrumb>
-    <div class="inner-content">Content
 
-      <div class="table">
-        <app-table></app-table>
+    <img class="nusha" ngSrc="assets/nusha.png" alt="nusha" aria-hidden="true" width="608" height="462"/>
+    <hr class="custom-hr">
+    <app-coordinates-form></app-coordinates-form>
+    <nz-divider nzText="爱" nzDashed style="border-top-color: #ff69b4;"></nz-divider>
 
-      </div>
+    <app-dragon-form></app-dragon-form>
+    <nz-divider nzText="爱" nzDashed style="border-top-color: #ff69b4;"></nz-divider>
 
-    </div>
-    <div class="inner-content">Content</div>
-    <div class="inner-content">Content</div>
-    <div class="inner-content">Content</div>
+    <app-dragoncave-form></app-dragoncave-form>
+    <nz-divider nzText="爱" nzDashed style="border-top-color: #ff69b4;"></nz-divider>
+
+    <app-dragonhead-form></app-dragonhead-form>
+    <nz-divider nzText="爱" nzDashed style="border-top-color: #ff69b4;"></nz-divider>
+    <app-location-form></app-location-form>
+    <nz-divider nzText="爱" nzDashed style="border-top-color: #ff69b4;"></nz-divider>
+    <app-person-form></app-person-form>
+    <nz-divider nzText="爱" nzDashed style="border-top-color: #ff69b4;"></nz-divider>
+
   </nz-content>
-  <nz-footer>Ant Design ©2020 Implement By Angular</nz-footer>
+  <nz-footer>Столько раз заканчивался какой-то отрезок жизни и казалось, что другой уже не наступит.
+    Потом другой отрезок наступал, приходило время и ему закончиться,
+    и казалось, что уж он-то точно последний и ничего уж нет и быть не может...
+    Но! Опять что-то начиналось. Нам хочется считать, что
+    наша жизнь большой-большой роман,
+    но на самом деле она сборник рассказов.
+  </nz-footer>
 </nz-layout>
 

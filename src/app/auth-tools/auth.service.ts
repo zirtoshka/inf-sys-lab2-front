@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {NotificationComponent} from '../notification/notification.component';
-import {deleteCookie, getCookie} from './cookie-utils';
+import {deleteCookie, getCookie, setCookie} from './cookie-utils';
 import {catchError, lastValueFrom, throwError} from 'rxjs';
 import {Token} from '../dtos/token';
 import {NzNotificationService} from 'ng-zorro-antd/notification';
@@ -14,7 +14,7 @@ const TOKEN_PATH = 'token';
 })
 
 export class AuthService {
-  private readonly baseUrl = 'http://localhost:8000/dragon/auth';
+  private readonly baseUrl = 'http://localhost:8080/dragon/auth'; //todo change
   private httpClient = inject(HttpClient);
   private router = inject(Router);
   private notificationService = inject(NzNotificationService); // Use NzNotificationService directly
@@ -47,6 +47,8 @@ export class AuthService {
       deleteCookie(TOKEN_PATH);
       //todo add smth
       // sessionStorage.removeItem("shoot");
+    } else {
+      setCookie(TOKEN_PATH, value);
     }
   }
 
@@ -55,17 +57,19 @@ export class AuthService {
   }
 
   private auth(name: string, token: string) {
+    console.log(token);
     this.authToken = token;
     this.username = name;
     let headers = new HttpHeaders();
     console.log("3333");
     headers = headers.set('Authorization', `Bearer ${token}`);
     console.log("444");
-    lastValueFrom(this.httpClient.get(`${this.baseUrl}/users/${name}`, {headers}))
+    lastValueFrom(this.httpClient.get(`http://localhost:8080/dragon/user/hello`, {headers})) //todo change
       .then(data => {
         this.router.navigate(['home']).then(() => {
           console.log('Navigation to home successful');
         }).catch(err => {
+          deleteCookie(TOKEN_PATH);
           console.log("ogogogo");
           // this.messageService.createErrorNotification();
           console.error('Navigation failed', err);
@@ -75,7 +79,7 @@ export class AuthService {
 
   postData(username: string, password: string, action: string) {
     return this.httpClient
-      .post<Token>(`${this.baseUrl}/${action}`, {"name": username, password})
+      .post<Token>(`${this.baseUrl}/${action}`, {"username": username, password})
       .pipe(catchError(this.handleError.bind(this)))
       .subscribe((data) => {
         this.auth(username, data.token)
@@ -90,14 +94,20 @@ export class AuthService {
     return this.postData(username, password, "register");
   }
 
+  logout() {
+    this.authToken = null;
+    this.username = undefined;
+    deleteCookie(TOKEN_PATH);
+    this.router.navigate(['authenticate']);
+  }
+
   private handleError(error: HttpErrorResponse) {
-    console.log("555");
+    deleteCookie(TOKEN_PATH);
     this.notificationService.error(
       'error Notification',
-      'This is the description of the error notification'
+      error.message,
     );
-    // this.messageService.createErrorNotification();
-    console.log("ssld;dalsd;lasd;l");
+
     console.error('An error occurred:', error.message);
     return throwError(() => new Error('Something went wrong, please try again later.'));
   }

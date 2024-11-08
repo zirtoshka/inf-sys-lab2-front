@@ -1,0 +1,27 @@
+<p>coordinates-form works!</p>
+<form nz-form [nzLayout]="'inline'" [formGroup]="validateForm" (ngSubmit)="addCoordinates()">
+  <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="x">x</nz-form-label>
+    <nz-form-control nzErrorTip="x is number">
+      <nz-input-group>
+        <input formControlName="xValue" nz-input placeholder="x"/>
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="y">y</nz-form-label>
+    <nz-form-control nzErrorTip="y is a number, it must be at least -182">
+      <nz-input-group >
+        <input formControlName="yValue" nz-input placeholder="y"/>
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-control>
+      <button nz-button nzType="primary" [disabled]="!validateForm.valid">add</button>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+

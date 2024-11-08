@@ -1,0 +1,18 @@
+<p>dragoncave-form works!</p>
+<form nz-form [nzLayout]="'inline'" [formGroup]="validateForm" (ngSubmit)="addCave()">
+  <nz-form-item>
+    <nz-form-label [nzSm]="10" [nzXs]="24" nzRequired nzFor="treasures">number of treasures</nz-form-label>
+    <nz-form-control nzErrorTip="number of treasures is number">
+      <nz-input-group>
+        <input formControlName="treasures" nz-input placeholder="number of treasures"/>
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-control>
+      <button nz-button nzType="primary" [disabled]="!validateForm.valid">add</button>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+

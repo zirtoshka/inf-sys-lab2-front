@@ -1,0 +1,46 @@
+<p>location-form works!</p>
+<form nz-form [nzLayout]="'inline'" [formGroup]="validateForm" (ngSubmit)="addLocation()">
+  <nz-form-item>
+    <nz-form-label [nzSm]="10" [nzXs]="24"  nzFor="xValue">x</nz-form-label>
+    <nz-form-control nzErrorTip="x is a number">
+      <nz-input-group>
+        <input formControlName="xValue" nz-input placeholder="x"/>
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+
+
+  <nz-form-item>
+    <nz-form-label [nzSm]="10" [nzXs]="24" nzRequired nzFor="yValue">y</nz-form-label>
+    <nz-form-control nzErrorTip="y is a number">
+      <nz-input-group>
+        <input formControlName="yValue" nz-input placeholder="y"/>
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSm]="10" [nzXs]="24" nzRequired nzFor="zValue">z</nz-form-label>
+    <nz-form-control nzErrorTip="z is a number">
+      <nz-input-group>
+        <input formControlName="zValue" nz-input placeholder="z"/>
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+
+
+  <nz-form-item>
+    <nz-form-label [nzSm]="10" [nzXs]="24" nzRequired nzFor="name">name</nz-form-label>
+    <nz-form-control nzErrorTip="name is required">
+      <nz-input-group>
+        <input formControlName="name" nz-input placeholder="name"/>
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-control>
+      <button nz-button nzType="primary" [disabled]="!validateForm.valid">add</button>
+    </nz-form-control>
+  </nz-form-item>
+</form>

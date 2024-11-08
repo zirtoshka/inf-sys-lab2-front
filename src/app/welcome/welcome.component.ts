@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {RouterLink} from '@angular/router';
-import {TableComponent} from '../table/table.component';
+import { AuthService } from '../auth-tools/auth.service';
+import {NgIf, NgOptimizedImage} from '@angular/common';
 
 @Component({
   selector: 'app-welcome',
@@ -9,11 +10,12 @@ import {TableComponent} from '../table/table.component';
   imports: [
     NzButtonComponent,
     RouterLink,
-    TableComponent,
+    NgOptimizedImage,
+    NgIf,
   ],
   templateUrl: './welcome.component.html',
   styleUrl: './welcome.component.css'
 })
 export class WelcomeComponent {
-
+    protected userService = inject(AuthService);
 }

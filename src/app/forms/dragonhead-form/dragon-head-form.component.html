@@ -1,0 +1,18 @@
+<p>dragonhead-form works!</p>
+<form nz-form [nzLayout]="'inline'" [formGroup]="validateForm" (ngSubmit)="addHead()">
+  <nz-form-item>
+    <nz-form-label [nzSm]="10" [nzXs]="24" nzRequired nzFor="eyes">eyes count</nz-form-label>
+    <nz-form-control nzErrorTip="eyes count is a number">
+      <nz-input-group>
+        <input formControlName="eyes" nz-input placeholder="eyes count"/>
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-control>
+      <button nz-button nzType="primary" [disabled]="!validateForm.valid">add</button>
+    </nz-form-control>
+  </nz-form-item>
+</form>
+

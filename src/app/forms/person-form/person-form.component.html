@@ -1,0 +1,99 @@
+<p>person-form works!</p>
+<form nz-form [nzLayout]="'vertical'" [formGroup]="validateForm" (ngSubmit)="addPerson()">
+  <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">name</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="name is required">
+      <nz-input-group>
+        <input formControlName="name" nz-input placeholder="name"/>
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+
+  <!--eye color-->
+  <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24">eye color</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzValidateStatus="eyeColor" nzHasFeedback>
+      <nz-select formControlName="eyeColor">
+        <nz-option *ngFor="let color of colors" [nzValue]="color" [nzLabel]="color"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+
+
+  <!--  hair color-->
+  <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24">hair color</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzValidateStatus="haiColor" nzHasFeedback>
+      <nz-select formControlName="hairColor">
+        <nz-option *ngFor="let color of colors" [nzValue]="color" [nzLabel]="color"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+
+
+  <!--  location-->
+  <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24">location</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+          <nz-switch [(ngModel)]="isCreatingNewLocation"
+                     (ngModelChange)="onSwitchChange($event)"
+                     [ngModelOptions]="{ standalone: true }"
+                     name="isCreatingNewLocation"
+                     [nzCheckedChildren]="'create new'"
+                     [nzUnCheckedChildren]="'select an existing one'">
+          </nz-switch>
+
+
+          <div *ngIf="!isCreatingNewLocation">
+            <nz-select [(ngModel)]="selectedLocation"
+                       [ngModelOptions]="{ standalone: true }"
+                       [nzPlaceHolder]="'select location'" name="selectedLocation">
+              <nz-option *ngFor="let location of locations" [nzValue]="location" [nzLabel]="location.name"></nz-option>
+            </nz-select>
+          </div>
+
+          <div *ngIf="isCreatingNewLocation">
+            <h1>form for new location</h1>
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+
+
+
+  <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="height">height</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="height is a number that is greater than 0">
+      <nz-input-group>
+        <input formControlName="height" nz-input placeholder="height"/>
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+
+  <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="passportID">passportID</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="passportID is a string">
+      <nz-input-group>
+        <input formControlName="passportID" nz-input placeholder="passportID"/>
+      </nz-input-group>
+    </nz-form-control>
+  </nz-form-item>
+
+  <!--nationality-->
+  <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24">nationality</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzValidateStatus="nationality" nzHasFeedback>
+      <nz-select formControlName="nationality">
+        <nz-option *ngFor="let country of countries" [nzValue]="country" [nzLabel]="country"></nz-option>
+      </nz-select>
+    </nz-form-control>
+  </nz-form-item>
+
+
+  <nz-form-item>
+    <nz-form-control>
+      <button nz-button nzType="primary" [disabled]="!validateForm.valid">add</button>
+    </nz-form-control>
+  </nz-form-item>
+
+</form>
+

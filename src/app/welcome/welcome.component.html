@@ -6,5 +6,19 @@
 
   <button nz-button nzType="primary" routerLink="/home">home</button>
 </div>
-<app-table></app-table>
+
+  <div *ngIf="userService.isLoggedIn; else notLoggedIn">
+    <h1>Hello, {{ userService.username }}!</h1>
+
+    <a [routerLink]="['/home']" title="Click to go home page">
+      <img class="nusha" ngSrc="assets/nusha.png" alt="nusha" aria-hidden="true" width="608" height="462"/>
+    </a>
+    <br>
+    <button nz-button nzType="primary" (click)="userService.logout()">Logout</button>
+  </div>
+
+  <ng-template #notLoggedIn>
+    <h1>Hello, unknown pupa!</h1>
+  </ng-template>
+
 
