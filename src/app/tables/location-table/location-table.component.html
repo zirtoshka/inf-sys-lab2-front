@@ -1,0 +1,24 @@
+<input [(ngModel)]="searchValue" (ngModelChange)="onSearch()" placeholder="search" style="margin-bottom: 16px;">
+
+<nz-table [nzData]="listOfLocations" [nzBordered]="true">
+  <thead>
+  <tr>
+    <th nzShowSort [nzSortOrder]="sortOrderId" (click)="sort('id')">ID</th>
+    <th nzShowSort [nzSortOrder]="sortOrderX" (click)="sort('x')">X</th>
+    <th nzShowSort [nzSortOrder]="sortOrderY" (click)="sort('y')">Y</th>
+    <th nzShowSort [nzSortOrder]="sortOrderZ" (click)="sort('z')">Z</th>
+    <th nzShowSort [nzSortOrder]="sortOrderName" (click)="sort('name')">name</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let location of listOfLocations">
+    <td>{{ location.id }}</td>
+    <td>{{ location.x }}</td>
+    <td>{{ location.y }}</td>
+    <td>{{ location.z }}</td>
+    <td>{{ location.name }}</td>
+  </tr>
+  </tbody>
+</nz-table>
+
+<!--<nz-pagination [nzPageIndex]="1" [nzPageSize]="10" [nzTotal]="listOfLocations.length" style="margin-top: 16px;"></nz-pagination>-->

@@ -1,0 +1,30 @@
+<p>person-table works!</p>
+<input [(ngModel)]="searchValue" (ngModelChange)="onSearch()" placeholder="search" style="margin-bottom: 16px;">
+
+<nz-table [nzData]="listOfPeople" [nzBordered]="true">
+  <thead>
+  <tr>
+    <th nzShowSort [nzSortOrder]="sortOrderId" (click)="sort('id')">ID</th>
+    <th nzShowSort [nzSortOrder]="sortOrderName" (click)="sort('name')">name</th>
+    <th nzShowSort [nzSortOrder]="sortOrderEyeColor" (click)="sort('eyeColor')">eye color</th>
+    <th nzShowSort [nzSortOrder]="sortOrderHairColor" (click)="sort('hairColor')">hair color</th>
+    <th nzShowSort [nzSortOrder]="sortOrderLocation" (click)="sort('location')">location</th>
+    <th nzShowSort [nzSortOrder]="sortOrderHeight" (click)="sort('height')">height</th>
+    <th nzShowSort [nzSortOrder]="sortOrderPassportID" (click)="sort('passportID')">passport id</th>
+    <th nzShowSort [nzSortOrder]="sortOrderNationality" (click)="sort('nationality')">nationality</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let person of listOfPeople">
+    <td>{{ person.id }}</td>
+    <td>{{ person.name }}</td>
+    <td>{{ person.eyeColor }}</td>
+    <td>{{ person.hairColor }}</td>
+    <td>{{ person.location.name }}</td>
+    <td>{{ person.height || 'not specified' }}</td>
+    <td>{{ person.passportID }}</td>
+    <td>{{ person.nationality }}</td>
+  </tr>
+  </tbody>
+</nz-table>
+

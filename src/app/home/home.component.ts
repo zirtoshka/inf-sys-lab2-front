@@ -12,6 +12,12 @@ import {DragonFormComponent} from '../forms/dragon-form/dragon-form.component';
 import {PersonFormComponent} from '../forms/person-form/person-form.component';
 import {NzDividerComponent} from 'ng-zorro-antd/divider';
 import {FormState} from './states';
+import {CoordinatesTableComponent} from '../tables/coordinates-table/coordinates-table.component';
+import {DragonTableComponent} from '../tables/dragon-table/dragon-table.component';
+import {LocationTableComponent} from '../tables/location-table/location-table.component';
+import {PersonTableComponent} from '../tables/person-table/person-table.component';
+import {DragoncaveTableComponent} from '../tables/dragoncave-table/dragoncave-table.component';
+import {DragonheadTableComponent} from '../tables/dragonhead-table/dragonhead-table.component';
 
 
 
@@ -37,7 +43,13 @@ import {FormState} from './states';
     DragonFormComponent,
     PersonFormComponent,
     NzDividerComponent,
-    NgIf
+    NgIf,
+    CoordinatesTableComponent,
+    DragonTableComponent,
+    LocationTableComponent,
+    PersonTableComponent,
+    DragoncaveTableComponent,
+    DragonheadTableComponent
   ],
   styleUrls: ['./home.component.css']
 })

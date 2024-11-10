@@ -1,0 +1,18 @@
+<p>dragoncave-table works!</p>
+<input [(ngModel)]="searchValue" (ngModelChange)="onSearch()" placeholder="search" style="margin-bottom: 16px;">
+
+<nz-table [nzData]="listOfCaves" [nzBordered]="true">
+  <thead>
+  <tr>
+    <th nzShowSort [nzSortOrder]="sortOrderId" (click)="sort('id')">ID</th>
+    <th nzShowSort [nzSortOrder]="sortOrderTreasures" (click)="sort('numberOfTreasures')">numberOfTreasures</th>
+
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let cave of listOfCaves">
+    <td>{{ cave.id }}</td>
+    <td>{{ cave.numberOfTreasures }}</td>
+  </tr>
+  </tbody>
+</nz-table>

@@ -1,0 +1,19 @@
+<input [(ngModel)]="searchValue" (ngModelChange)="onSearch()" placeholder="search by coord" style="margin-bottom: 16px;">
+
+<nz-table [nzData]="listOfCoordinates" [nzBordered]="true">
+  <thead>
+  <tr>
+    <th nzShowSort [nzSortOrder]="sortOrderId" (click)="sort('id')">ID</th>
+    <th nzShowSort [nzSortOrder]="sortOrderX" (click)="sort('x')">X</th>
+    <th nzShowSort [nzSortOrder]="sortOrderY" (click)="sort('y')">Y</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let coordinate of listOfCoordinates">
+    <td>{{ coordinate.id }}</td>
+    <td>{{ coordinate.x }}</td>
+    <td>{{ coordinate.y }}</td>
+  </tr>
+  </tbody>
+</nz-table>
+

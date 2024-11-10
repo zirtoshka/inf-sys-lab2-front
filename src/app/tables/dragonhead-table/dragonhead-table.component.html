@@ -1,0 +1,18 @@
+<p>dragonhead-table works!</p>
+<input [(ngModel)]="searchValue" (ngModelChange)="onSearch()" placeholder="search" style="margin-bottom: 16px;">
+
+<nz-table [nzData]="listOfHeads" [nzBordered]="true">
+  <thead>
+  <tr>
+    <th nzShowSort [nzSortOrder]="sortOrderId" (click)="sort('id')">ID</th>
+    <th nzShowSort [nzSortOrder]="sortOrderEyes" (click)="sort('eyesCount')">eyesCount</th>
+
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let head of listOfHeads">
+    <td>{{ head.id }}</td>
+    <td>{{ head.eyesCount }}</td>
+  </tr>
+  </tbody>
+</nz-table>
