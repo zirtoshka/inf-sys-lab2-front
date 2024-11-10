@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ViewChild} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -116,12 +116,8 @@ export class DragonFormComponent {
     }
   ];
 
-  existingHeads: DragonHead[] = [
-    {id: 1, eyesCount: 1},
-    {id: 2, eyesCount: 2},
-  ]
+
   colors = Object.values(Color);
-  countries = Object.values(Country);
 
   characters = Object.values(DragonCharacter);
 
@@ -131,7 +127,7 @@ export class DragonFormComponent {
   selectedHeads: any = null;
 
 
-  constructor(private fb: NonNullableFormBuilder) {
+  constructor(private fb: NonNullableFormBuilder, private cd: ChangeDetectorRef) {
     this.validateForm = this.fb.group({
       name: ['', [Validators.required]],
       coordinates: [null, [Validators.required]],
@@ -147,24 +143,40 @@ export class DragonFormComponent {
     })
   }
 
+  ngAfterViewChecked(): void {
+    if (this.personFormComponent) {
+      this.personFormComponent.hideAddButtonFn();
+    }
+    if (this.caveFormComponent) {
+      this.caveFormComponent.hideAddButtonFn();
+    }
+    if (this.headFormComponent) {
+      this.headFormComponent.hideAddButtonFn();
+    }
+    if (this.coordinatesFormComponent) {
+      this.coordinatesFormComponent.hideAddButtonFn();
+    }
+    this.cd.detectChanges();
+
+  }
 
   addDragon() {
     //todo
   }
 
   handleOkPerson() {
-    this.personFormComponent.showAddButtonFn();
+    // this.personFormComponent.showAddButtonFn();
   }
 
   handleOkCoordinates() {
-    this.coordinatesFormComponent.showAddButtonFn();
+    // this.coordinatesFormComponent.hideAddButtonFn();
   }
 
   handleOkCave() {
-    this.caveFormComponent.showAddButtonFn();
+    // this.caveFormComponent.hideAddButtonFn();
   }
 
   handleOkHead() {
-    this.headFormComponent.showAddButtonFn();
+    // this.headFormComponent.showAddButtonFn();
   }
 }

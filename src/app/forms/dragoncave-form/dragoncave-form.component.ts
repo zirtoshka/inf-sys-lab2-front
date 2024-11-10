@@ -34,7 +34,7 @@ import {NgIf} from '@angular/common';
   styleUrl: './dragoncave-form.component.css'
 })
 export class DragonCaveFormComponent {
-  showAddButton = false;
+  showAddButton = true;
   validateForm: FormGroup<{
     treasures: FormControl<string>;
   }>;
@@ -49,7 +49,7 @@ export class DragonCaveFormComponent {
   addCave() {
   }
 
-  showAddButtonFn() {
-    this.showAddButton = true;
+  hideAddButtonFn() {
+    this.showAddButton = false;
   }
 }

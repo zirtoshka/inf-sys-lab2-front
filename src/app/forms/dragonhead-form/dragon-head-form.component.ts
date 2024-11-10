@@ -33,7 +33,7 @@ import {NgIf} from '@angular/common';
   styleUrl: './dragon-head-form.component.css'
 })
 export class DragonHeadFormComponent {
-  showAddButton = false;
+  showAddButton = true;
   validateForm: FormGroup<{
     eyes: FormControl<string> ;
   }>;
@@ -46,7 +46,7 @@ export class DragonHeadFormComponent {
   }
 
   addHead(){}
-  showAddButtonFn(){
-    this.showAddButton = true;
+  hideAddButtonFn(){
+    this.showAddButton = false;
   }
 }

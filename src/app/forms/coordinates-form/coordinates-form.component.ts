@@ -37,7 +37,7 @@ import {NgIf} from '@angular/common';
   styleUrl: './coordinates-form.component.css'
 })
 export class CoordinatesFormComponent {
-  showAddButton = false;
+  showAddButton = true;
   validateForm: FormGroup<{
     xValue: FormControl<string>;
     yValue: FormControl<string>;
@@ -56,7 +56,7 @@ export class CoordinatesFormComponent {
   addCoordinates() {
   }
 
-  showAddButtonFn() {
-    this.showAddButton = true;
+  hideAddButtonFn() {
+    this.showAddButton = false;
   }
 }

@@ -33,7 +33,7 @@ import {NgIf} from '@angular/common';
   styleUrl: './location-form.component.css'
 })
 export class LocationFormComponent {
-  showAddButton = false;
+  showAddButton = true;
 
   validateForm: FormGroup<{
     xValue: FormControl<string>;
@@ -59,7 +59,7 @@ export class LocationFormComponent {
   addLocation() {
   }
 
-  showAddButtonFn() {
-    this.showAddButton = true;
+  hideAddButtonFn() {
+    this.showAddButton = false;
   }
 }

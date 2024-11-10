@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ViewChild} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -54,17 +54,9 @@ import {LocationFormComponent} from '../location-form/location-form.component';
 })
 export class PersonFormComponent {
   @ViewChild(LocationFormComponent) locationFormComponent!: LocationFormComponent;
-  showAddButton = false;
+  showAddButton = true;
 
-  validateForm: FormGroup<{
-    name: FormControl<string>;
-    eyeColor: FormControl<Color>;
-    hairColor: FormControl<Color>;
-    location: FormControl<Location>;
-    height: FormControl<string>;
-    passportID: FormControl<string>;
-    nationality: FormControl<Country>;
-  }>
+  validateForm: FormGroup;
   isLocationModalVisible = false;
   colors = Object.values(Color);
   countries = Object.values(Country);
@@ -73,20 +65,26 @@ export class PersonFormComponent {
     {id: 2, name: 'Location 2', x: 1, y: 1, z: 1}];
   selectedLocation: any;
 
-  constructor(private fb: NonNullableFormBuilder) {
+  constructor(private fb: NonNullableFormBuilder, private cd: ChangeDetectorRef) {
     this.validateForm = this.fb.group({
       name: ['', [Validators.required]],
-      eyeColor: [this.colors[0], [Validators.required]],
-      hairColor: [this.colors[0], [Validators.required]],
-      location: [this.existingLocations[0]],
-      nationality: [this.countries[0], [Validators.required]],
+      eyeColor: [null, [Validators.required]],
+      hairColor: [null, [Validators.required]],
+      location: [null],
+      nationality: [null, [Validators.required]],
       height: ['', [Validators.required,
         Validators.min(0),
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
-      passportID: ['', [Validators.required]],
+      passportID: [null],
     });
   }
 
+  ngAfterViewChecked(): void {
+    if (this.locationFormComponent) {
+      this.locationFormComponent.hideAddButtonFn();
+      this.cd.detectChanges();
+    }
+  }
 
   openLocationModal(): void {
     this.isLocationModalVisible = true;
@@ -98,13 +96,13 @@ export class PersonFormComponent {
   }
 
   handleOk(): void {
-    this.locationFormComponent.showAddButtonFn();
+    // this.locationFormComponent.showAddButtonFn();
     // const newLocation = get new location todo
     //   this.existingLocations.push(newLocation);
     //   this.selectedLocation = newLocation;
     //   this.isLocationModalVisible = false; !!!!
 
-    this.locationFormComponent.showAddButtonFn();
+    // this.locationFormComponent.showAddButtonFn();
 
   }
 
@@ -115,8 +113,8 @@ export class PersonFormComponent {
     }
   }
 
-  showAddButtonFn() {
-    this.showAddButton = true;
+  hideAddButtonFn() {
+    this.showAddButton = false;
   }
 
 

@@ -1,34 +1,37 @@
 <nz-layout class="home">
   <nz-header>
     <ul nz-menu nzTheme="dark" nzMode="horizontal" class="pink-menu">
-      <li nz-menu-item>dragons</li>
-      <li nz-menu-item>coordinates</li>
-      <li nz-menu-item>dragon cave</li>
-      <li nz-menu-item>dragon head</li>
-      <li nz-menu-item>location</li>
-      <li nz-menu-item>person</li>
+      <li nz-menu-item (click)="isDragonChoose()">dragons</li>
+      <li nz-menu-item (click)="isCoordinatesChoose()"> coordinates</li>
+      <li nz-menu-item (click)="isCaveChoose()">dragon cave</li>
+      <li nz-menu-item (click)="isHeadChoose()">dragon head</li>
+      <li nz-menu-item (click)="isLocationChoose()">location</li>
+      <li nz-menu-item (click)="isPersonChoose()">person</li>
     </ul>
   </nz-header>
   <nz-content>
 
     <img class="nusha" ngSrc="assets/nusha.png" alt="nusha" aria-hidden="true" width="608" height="462"/>
     <hr class="custom-hr">
-<!--    <app-coordinates-form></app-coordinates-form>-->
-    <nz-divider nzText="爱" nzDashed style="border-top-color: #ff69b4;"></nz-divider>
+    <div *ngIf="this.currentState === 'dragon'">
+      <app-dragon-form></app-dragon-form>
+    </div>
+    <div *ngIf="this.currentState === 'coordinates'">
+      <app-coordinates-form></app-coordinates-form>
+    </div>
 
-    <app-dragon-form></app-dragon-form>
-    <nz-divider nzText="爱" nzDashed style="border-top-color: #ff69b4;"></nz-divider>
-
-<!--    <app-dragoncave-form></app-dragoncave-form>-->
-<!--    <nz-divider nzText="爱" nzDashed style="border-top-color: #ff69b4;"></nz-divider>-->
-
-<!--    <app-dragonhead-form></app-dragonhead-form>-->
-<!--    <nz-divider nzText="爱" nzDashed style="border-top-color: #ff69b4;"></nz-divider>-->
-<!--    <app-location-form></app-location-form>-->
-    <nz-divider nzText="爱" nzDashed style="border-top-color: #ff69b4;"></nz-divider>
-
-    <app-person-form ></app-person-form>
-    <nz-divider nzText="爱" nzDashed style="border-top-color: #ff69b4;"></nz-divider>
+    <div *ngIf="this.currentState === 'location'">
+      <app-location-form></app-location-form>
+    </div>
+    <div *ngIf="this.currentState === 'person'">
+      <app-person-form></app-person-form>
+    </div>
+    <div *ngIf="this.currentState === 'cave'">
+      <app-dragoncave-form></app-dragoncave-form>
+    </div>
+    <div *ngIf="this.currentState === 'head'">
+      <app-dragonhead-form></app-dragonhead-form>
+    </div>
 
   </nz-content>
   <nz-footer>Столько раз заканчивался какой-то отрезок жизни и казалось, что другой уже не наступит.
