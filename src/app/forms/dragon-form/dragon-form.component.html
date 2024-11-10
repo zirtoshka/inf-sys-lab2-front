@@ -13,8 +13,7 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24">coordinates</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
-      <nz-select [(ngModel)]="selectedCoordinates" [ngModelOptions]="{ standalone: true }"
-                 [nzPlaceHolder]="'select coordinates'">
+      <nz-select formControlName="coordinates" [nzPlaceHolder]="'select coordinates'">
         <nz-option *ngFor="let coordinates of existingCoordinates" [nzValue]="coordinates"
                    [nzLabel]="coordinates.x +' '+coordinates.y "></nz-option>
       </nz-select>
@@ -26,8 +25,7 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24">cave</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
-      <nz-select [(ngModel)]="selectedCave" [ngModelOptions]="{ standalone: true }"
-                 [nzPlaceHolder]="'select cave'">
+      <nz-select formControlName="cave" [nzPlaceHolder]="'select cave'">
         <nz-option *ngFor="let cave of existingCave" [nzValue]="cave"
                    [nzLabel]="cave.id +' '+cave.numberOfTreasures "></nz-option>
       </nz-select>
@@ -39,8 +37,7 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24">killer</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
-      <nz-select [(ngModel)]="selectedKiller" [ngModelOptions]="{ standalone: true }"
-                 [nzPlaceHolder]="'select killer'">
+      <nz-select formControlName="killer" [nzPlaceHolder]="'select killer'">
         <nz-option *ngFor="let person of existingPerson" [nzValue]="person" [nzLabel]="person.name"></nz-option>
       </nz-select>
       <button nz-button nzType="default" (click)="this.isKillerModalVisible=true">create new person</button>
@@ -69,7 +66,7 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24"> color</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzValidateStatus="color" nzHasFeedback>
-      <nz-select formControlName="color">
+      <nz-select formControlName="color" [nzPlaceHolder]="'select color'">
         <nz-option *ngFor="let color of colors" [nzValue]="color" [nzLabel]="color"></nz-option>
       </nz-select>
     </nz-form-control>
@@ -78,7 +75,7 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24"> character</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzValidateStatus="character" nzHasFeedback>
-      <nz-select formControlName="character">
+      <nz-select formControlName="character" [nzPlaceHolder]="'select character'">
         <nz-option *ngFor="let character of characters" [nzValue]="character" [nzLabel]="character"></nz-option>
       </nz-select>
     </nz-form-control>
@@ -86,14 +83,13 @@
 
   <!--  head-->
   <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24">heads</nz-form-label>
-    <nz-form-control [nzSm]="14" [nzXs]="24">
-      <nz-select [(ngModel)]="selectedHeads" [ngModelOptions]="{ standalone: true }" [nzMode]="'multiple'"
-                 [nzPlaceHolder]="'Select heads'">
-        <nz-option *ngFor="let head of existingHeads" [nzValue]="head"
-                   [nzLabel]="head.id+' '+head.eyesCount"></nz-option>
+    <nz-form-label [nzSm]="6" [nzXs]="24">Dragon Heads</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Select at least one head">
+      <nz-select formControlName="heads" [nzPlaceHolder]="'Select heads'" nzMode="multiple">
+        <nz-option *ngFor="let head of existingDragonHeads" [nzValue]="head"
+                   [nzLabel]="'Eyes: ' + head.eyesCount"></nz-option>
       </nz-select>
-      <button nz-button nzType="default" (click)="this.isHeadModalVisible=true">create new head</button>
+      <button nz-button nzType="default" (click)="this.isHeadModalVisible = true">Add new head</button>
     </nz-form-control>
   </nz-form-item>
 

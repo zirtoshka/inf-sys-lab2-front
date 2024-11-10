@@ -72,42 +72,18 @@ export class DragonFormComponent {
   isCaveModalVisible = false;
   isHeadModalVisible = false;
 
-  validateForm: FormGroup<{
-    name: FormControl<string>;
-
-    coordinates: FormControl<Coordinates>;
-    xCoordinate: FormControl<string>;
-    yCoordinate: FormControl<string>;
-
-    cave: FormControl<DragonCave>;
-    numberOfTreasures: FormControl<string>;
-
-    // person
-    killer: FormControl<Person>;
-    personName: FormControl<string>;
-    eyeColor: FormControl<Color>;
-    hairColor: FormControl<Color>;
-    //person location beginning
-    location: FormControl<Location>;
-    xValue: FormControl<string>;
-    yValue: FormControl<string>;
-    zValue: FormControl<string>;
-    locationName: FormControl<string>;
-    //person location end
-    height: FormControl<string>;
-    passportID: FormControl<string>;
-    nationality: FormControl<Country>;
-    // person end
-
-    age: FormControl<string>;
-    wingspan: FormControl<string>;
-    color: FormControl<Color>;
-    character: FormControl<DragonCharacter>;
-
-    head: FormControl<DragonHead>;
-    eyesCount: FormControl<string>;
-
-  }>;
+  validateForm: FormGroup;
+  // <{
+  //   name: FormControl<string>;
+  //   coordinates: FormControl<Coordinates>;
+  //   cave: FormControl<DragonCave>;
+  //   killer: FormControl<Person>;
+  //   age: FormControl<string>;
+  //   wingspan: FormControl<string>;
+  //   color: FormControl<Color>;
+  //   character: FormControl<DragonCharacter>;
+  //   head:FormControl<DragonHead[]>;
+  // }>;
 
   existingCoordinates: Coordinates[] = [
     {id: 1, x: 1, y: 1},
@@ -149,12 +125,6 @@ export class DragonFormComponent {
 
   characters = Object.values(DragonCharacter);
 
-
-  isCreatingNewLocation: boolean = false;
-  selectedLocation: any = null;
-
-  isCreatingNewKiller: boolean = false;
-
   selectedKiller: any = null;
   selectedCoordinates: any = null;
   selectedCave: any = null;
@@ -163,65 +133,23 @@ export class DragonFormComponent {
 
   constructor(private fb: NonNullableFormBuilder) {
     this.validateForm = this.fb.group({
-
       name: ['', [Validators.required]],
-      //coord
-      coordinates: [this.existingCoordinates[0], [Validators.required]],
-      xCoordinate: ['', [Validators.required,
-        Validators.pattern('-?\\d+(\\.\\d+)?')]],
-      yCoordinate: ['', [Validators.required,
-        Validators.min(-182),
-        Validators.pattern('-?\\d+(\\.\\d+)?')]],
-
-      //cave
-      cave: [this.existingCave[0], [Validators.required]],
-      numberOfTreasures: ['', [Validators.required,
-        Validators.pattern('-?\\d+(\\.\\d+)?')]],
-
-      // person
-      killer: [this.existingPerson[0], [Validators.required]],
-      personName: ['', [Validators.required]],
-      eyeColor: [this.colors[0], [Validators.required]],
-      hairColor: [this.colors[0], [Validators.required]],
-      //person location beginning
-      location: [this.existingLocations[0]],
-      xValue: ['', [Validators.required, Validators.pattern('-?\\d+(\\.\\d+)?')]],
-      yValue: ['', [Validators.required, Validators.pattern('-?\\d+(\\.\\d+)?')]],
-      zValue: ['', [Validators.required, Validators.pattern('-?\\d+(\\.\\d+)?')]],
-      locationName: ['', [Validators.required]],
-      //person location end
-      height: ['', [Validators.required,
-        Validators.min(0),
-        Validators.pattern('-?\\d+(\\.\\d+)?')]],
-      passportID: ['', [Validators.required]],
-      nationality: [this.countries[0], [Validators.required]],
-      // person end
-
+      coordinates: [null, [Validators.required]],
+      cave: [null, [Validators.required]],
+      killer: [null, [Validators.required]],
       age: ['', [Validators.min(0),
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
       wingspan: ['', [Validators.min(0),
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
-      color: [this.colors[0], [Validators.required]],
-      character: [this.characters[0], [Validators.required]],
-
-      // head
-      head: [this.existingDragonHeads[0]],
-      eyesCount: ['', [Validators.pattern('-?\\d+(\\.\\d+)?')]]
-
+      color: [null, [Validators.required]],
+      character: [null, [Validators.required]],
+      heads: [[], [Validators.required]],
     })
   }
 
 
-  onSwitchChangeLocation(value: boolean) {
-    this.isCreatingNewLocation = value;
-    console.log(this.isCreatingNewLocation);
-  }
-
-  onSwitchChangeKiller(value: boolean) {
-    this.isCreatingNewKiller = value;
-  }
-
   addDragon() {
+    //todo
   }
 
   handleOkPerson() {
