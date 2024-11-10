@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -11,6 +11,8 @@ import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {NzColDirective} from 'ng-zorro-antd/grid';
 import {NzFormControlComponent, NzFormDirective, NzFormItemComponent, NzFormLabelComponent} from 'ng-zorro-antd/form';
 import {NzInputDirective, NzInputGroupComponent} from 'ng-zorro-antd/input';
+import {treeCollapseMotion} from 'ng-zorro-antd/core/animation';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-dragoncave-form',
@@ -25,14 +27,16 @@ import {NzInputDirective, NzInputGroupComponent} from 'ng-zorro-antd/input';
     NzFormLabelComponent,
     NzInputDirective,
     NzInputGroupComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgIf
   ],
   templateUrl: './dragoncave-form.component.html',
   styleUrl: './dragoncave-form.component.css'
 })
 export class DragonCaveFormComponent {
+  showAddButton = false;
   validateForm: FormGroup<{
-    treasures: FormControl<string> ;
+    treasures: FormControl<string>;
   }>;
 
   constructor(private fb: NonNullableFormBuilder) {
@@ -42,5 +46,10 @@ export class DragonCaveFormComponent {
     });
   }
 
-  addCave(){}
+  addCave() {
+  }
+
+  showAddButtonFn() {
+    this.showAddButton = true;
+  }
 }

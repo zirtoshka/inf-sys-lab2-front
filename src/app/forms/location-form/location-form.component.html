@@ -38,9 +38,11 @@
     </nz-form-control>
   </nz-form-item>
 
-  <nz-form-item>
+  <nz-form-item *ngIf="showAddButton">
     <nz-form-control>
-      <button nz-button nzType="primary" [disabled]="!validateForm.valid">add</button>
+      <button nz-button nzType="primary" [disabled]="!validateForm.valid">add new location</button>
     </nz-form-control>
   </nz-form-item>
 </form>
+
+

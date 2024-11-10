@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -13,6 +13,7 @@ import {NzIconDirective} from "ng-zorro-antd/icon";
 import {NzInputDirective, NzInputGroupComponent} from "ng-zorro-antd/input";
 import {RouterLink} from "@angular/router";
 import {NzColDirective} from 'ng-zorro-antd/grid';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-coordinates-form',
@@ -29,12 +30,14 @@ import {NzColDirective} from 'ng-zorro-antd/grid';
     ReactiveFormsModule,
     RouterLink,
     NzFormLabelComponent,
-    NzColDirective
+    NzColDirective,
+    NgIf
   ],
   templateUrl: './coordinates-form.component.html',
   styleUrl: './coordinates-form.component.css'
 })
 export class CoordinatesFormComponent {
+  showAddButton = false;
   validateForm: FormGroup<{
     xValue: FormControl<string>;
     yValue: FormControl<string>;
@@ -50,5 +53,10 @@ export class CoordinatesFormComponent {
     });
   }
 
-  addCoordinates(){}
+  addCoordinates() {
+  }
+
+  showAddButtonFn() {
+    this.showAddButton = true;
+  }
 }

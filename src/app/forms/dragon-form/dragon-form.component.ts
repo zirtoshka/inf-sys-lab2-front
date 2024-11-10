@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -22,6 +22,14 @@ import {NgForOf, NgIf} from '@angular/common';
 import {NzOptionComponent, NzSelectComponent} from 'ng-zorro-antd/select';
 import {NzDividerComponent} from 'ng-zorro-antd/divider';
 import {NzSwitchComponent} from 'ng-zorro-antd/switch';
+import {NzButtonComponent} from 'ng-zorro-antd/button';
+import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
+import {PersonFormComponent} from '../person-form/person-form.component';
+import {CoordinatesFormComponent} from '../coordinates-form/coordinates-form.component';
+import {DragonCaveFormComponent} from '../dragoncave-form/dragoncave-form.component';
+import {DragonHeadFormComponent} from '../dragonhead-form/dragon-head-form.component';
+import {Head} from 'rxjs';
+
 
 @Component({
   selector: 'app-dragon-form',
@@ -41,12 +49,29 @@ import {NzSwitchComponent} from 'ng-zorro-antd/switch';
     NgIf,
     NzDividerComponent,
     NzSwitchComponent,
-    FormsModule
+    FormsModule,
+    NzButtonComponent,
+    NzModalComponent,
+    PersonFormComponent,
+    CoordinatesFormComponent,
+    DragonCaveFormComponent,
+    DragonHeadFormComponent
   ],
+  providers: [NzModalService],
   templateUrl: './dragon-form.component.html',
   styleUrl: './dragon-form.component.css'
 })
 export class DragonFormComponent {
+  @ViewChild(PersonFormComponent) personFormComponent!: PersonFormComponent;
+  @ViewChild(CoordinatesFormComponent) coordinatesFormComponent!: CoordinatesFormComponent;
+  @ViewChild(DragonCaveFormComponent) caveFormComponent!: DragonCaveFormComponent;
+  @ViewChild(DragonHeadFormComponent) headFormComponent!: DragonHeadFormComponent;
+
+  isKillerModalVisible = false;
+  isCoordinatesModalVisible = false;
+  isCaveModalVisible = false;
+  isHeadModalVisible = false;
+
   validateForm: FormGroup<{
     name: FormControl<string>;
 
@@ -114,6 +139,11 @@ export class DragonFormComponent {
       passportID: "123456lolik", nationality: Country.USA
     }
   ];
+
+  existingHeads: DragonHead[] = [
+    {id: 1, eyesCount: 1},
+    {id: 2, eyesCount: 2},
+  ]
   colors = Object.values(Color);
   countries = Object.values(Country);
 
@@ -124,7 +154,11 @@ export class DragonFormComponent {
   selectedLocation: any = null;
 
   isCreatingNewKiller: boolean = false;
+
   selectedKiller: any = null;
+  selectedCoordinates: any = null;
+  selectedCave: any = null;
+  selectedHeads: any = null;
 
 
   constructor(private fb: NonNullableFormBuilder) {
@@ -187,5 +221,22 @@ export class DragonFormComponent {
     this.isCreatingNewKiller = value;
   }
 
-  addDragon(){}
+  addDragon() {
+  }
+
+  handleOkPerson() {
+    this.personFormComponent.showAddButtonFn();
+  }
+
+  handleOkCoordinates() {
+    this.coordinatesFormComponent.showAddButtonFn();
+  }
+
+  handleOkCave() {
+    this.caveFormComponent.showAddButtonFn();
+  }
+
+  handleOkHead() {
+    this.headFormComponent.showAddButtonFn();
+  }
 }

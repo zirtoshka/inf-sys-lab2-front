@@ -11,6 +11,7 @@ import {NzButtonComponent} from "ng-zorro-antd/button";
 import {NzColDirective} from "ng-zorro-antd/grid";
 import {NzFormControlComponent, NzFormDirective, NzFormItemComponent, NzFormLabelComponent} from "ng-zorro-antd/form";
 import {NzInputDirective, NzInputGroupComponent} from "ng-zorro-antd/input";
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-location-form',
@@ -25,12 +26,15 @@ import {NzInputDirective, NzInputGroupComponent} from "ng-zorro-antd/input";
     NzFormLabelComponent,
     NzInputDirective,
     NzInputGroupComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgIf
   ],
   templateUrl: './location-form.component.html',
   styleUrl: './location-form.component.css'
 })
 export class LocationFormComponent {
+  showAddButton = false;
+
   validateForm: FormGroup<{
     xValue: FormControl<string>;
     yValue: FormControl<string>;
@@ -53,5 +57,9 @@ export class LocationFormComponent {
 
 
   addLocation() {
+  }
+
+  showAddButtonFn() {
+    this.showAddButton = true;
   }
 }

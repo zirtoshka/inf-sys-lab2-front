@@ -10,167 +10,42 @@
   </nz-form-item>
 
   <!--  coordinates-->
+  <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24">coordinates</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24">
+      <nz-select [(ngModel)]="selectedCoordinates" [ngModelOptions]="{ standalone: true }"
+                 [nzPlaceHolder]="'select coordinates'">
+        <nz-option *ngFor="let coordinates of existingCoordinates" [nzValue]="coordinates"
+                   [nzLabel]="coordinates.x +' '+coordinates.y "></nz-option>
+      </nz-select>
+      <button nz-button nzType="default" (click)="this.isCoordinatesModalVisible=true">create new coordinates</button>
+    </nz-form-control>
+  </nz-form-item>
 
   <!--  cave-->
+  <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24">cave</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24">
+      <nz-select [(ngModel)]="selectedCave" [ngModelOptions]="{ standalone: true }"
+                 [nzPlaceHolder]="'select cave'">
+        <nz-option *ngFor="let cave of existingCave" [nzValue]="cave"
+                   [nzLabel]="cave.id +' '+cave.numberOfTreasures "></nz-option>
+      </nz-select>
+      <button nz-button nzType="default" (click)="this.isCaveModalVisible=true">create new cave</button>
+    </nz-form-control>
+  </nz-form-item>
 
   <!--  killer-->
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24">killer</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
-      <nz-switch [(ngModel)]="isCreatingNewKiller"
-                 (ngModelChange)="onSwitchChangeKiller($event)"
-                 [ngModelOptions]="{ standalone: true }"
-                 name="isCreatingNewKiller"
-                 [nzCheckedChildren]="'create new'"
-                 [nzUnCheckedChildren]="'select an existing one'">
-      </nz-switch>
-
-
-      <div *ngIf="!isCreatingNewKiller">
-        <nz-select
-          [(ngModel)]="selectedKiller"
-          [ngModelOptions]="{ standalone: true }"
-          [nzPlaceHolder]="'select killer'" name="selectedKiller">
-          <nz-option *ngFor="let killer of existingPerson" [nzValue]="killer" [nzLabel]="killer.name"></nz-option>
-        </nz-select>
-      </div>
-
-      <div *ngIf="isCreatingNewKiller">
-        <h1>form for new killer</h1>
-        <nz-divider nzText="killer form" nzDashed style="border-top-color: #ff69b4;"></nz-divider>
-
-        <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="personName">personName</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="personName is required">
-            <nz-input-group>
-              <input formControlName="personName" nz-input placeholder="personName"/>
-            </nz-input-group>
-          </nz-form-control>
-        </nz-form-item>
-
-        <!--eye color-->
-        <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24">eye color</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24" nzValidateStatus="eyeColor" nzHasFeedback>
-            <nz-select formControlName="eyeColor">
-              <nz-option *ngFor="let color of colors" [nzValue]="color" [nzLabel]="color"></nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-
-
-        <!--  hair color-->
-        <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24">hair color</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24" nzValidateStatus="haiColor" nzHasFeedback>
-            <nz-select formControlName="hairColor">
-              <nz-option *ngFor="let color of colors" [nzValue]="color" [nzLabel]="color"></nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-
-
-        <!--  location-->
-        <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24">location</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24">
-            <nz-switch [(ngModel)]="isCreatingNewLocation"
-                       (ngModelChange)="onSwitchChangeLocation($event)"
-                       [ngModelOptions]="{ standalone: true }"
-                       name="isCreatingNewLocation"
-                       [nzCheckedChildren]="'create new'"
-                       [nzUnCheckedChildren]="'select an existing one'">
-            </nz-switch>
-
-
-            <div *ngIf="!isCreatingNewLocation">
-              <nz-select
-                [(ngModel)]="selectedLocation"
-                [ngModelOptions]="{ standalone: true }"
-                [nzPlaceHolder]="'select location'" name="selectedLocation">
-                <nz-option *ngFor="let location of existingLocations" [nzValue]="location"
-                           [nzLabel]="location.name"></nz-option>
-              </nz-select>
-            </div>
-
-            <div *ngIf="isCreatingNewLocation">
-              <h1>form for new location</h1>
-              <nz-divider nzText="location form" nzDashed style="border-top-color: #ff69b4;"></nz-divider>
-              <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="xValue">x</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="x is a number">
-                  <nz-input-group>
-                    <input formControlName="xValue" nz-input placeholder="x"/>
-                  </nz-input-group>
-                </nz-form-control>
-              </nz-form-item>
-
-
-              <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="yValue">y</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="y is a number">
-                  <nz-input-group>
-                    <input formControlName="yValue" nz-input placeholder="y"/>
-                  </nz-input-group>
-                </nz-form-control>
-              </nz-form-item>
-
-              <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="zValue">z</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="z is a number">
-                  <nz-input-group>
-                    <input formControlName="zValue" nz-input placeholder="z"/>
-                  </nz-input-group>
-                </nz-form-control>
-              </nz-form-item>
-              <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="locationName">location name</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="location name is required">
-                  <nz-input-group>
-                    <input formControlName="locationName" nz-input placeholder="location name"/>
-                  </nz-input-group>
-                </nz-form-control>
-              </nz-form-item>
-              <nz-divider nzText="location form" nzDashed style="border-top-color: #ff69b4;"></nz-divider>
-
-            </div>
-          </nz-form-control>
-        </nz-form-item>
-
-
-        <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="height">height</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="height is a number that is greater than 0">
-            <nz-input-group>
-              <input formControlName="height" nz-input placeholder="height"/>
-            </nz-input-group>
-          </nz-form-control>
-        </nz-form-item>
-
-        <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="passportID">passportID</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="passportID is a string">
-            <nz-input-group>
-              <input formControlName="passportID" nz-input placeholder="passportID"/>
-            </nz-input-group>
-          </nz-form-control>
-        </nz-form-item>
-
-        <!--nationality-->
-        <nz-form-item>
-          <nz-form-label [nzSm]="6" [nzXs]="24">nationality</nz-form-label>
-          <nz-form-control [nzSm]="14" [nzXs]="24" nzValidateStatus="nationality" nzHasFeedback>
-            <nz-select formControlName="nationality">
-              <nz-option *ngFor="let country of countries" [nzValue]="country" [nzLabel]="country"></nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
+      <nz-select [(ngModel)]="selectedKiller" [ngModelOptions]="{ standalone: true }"
+                 [nzPlaceHolder]="'select killer'">
+        <nz-option *ngFor="let person of existingPerson" [nzValue]="person" [nzLabel]="person.name"></nz-option>
+      </nz-select>
+      <button nz-button nzType="default" (click)="this.isKillerModalVisible=true">create new person</button>
     </nz-form-control>
   </nz-form-item>
-  <!--person end-->
-  <nz-divider nzText="killer form" nzDashed style="border-top-color: #ff69b4;"></nz-divider>
-
 
   <!--age-->
   <nz-form-item>
@@ -208,5 +83,84 @@
       </nz-select>
     </nz-form-control>
   </nz-form-item>
+
   <!--  head-->
+  <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24">heads</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24">
+      <nz-select [(ngModel)]="selectedHeads" [ngModelOptions]="{ standalone: true }" [nzMode]="'multiple'"
+                 [nzPlaceHolder]="'Select heads'">
+        <nz-option *ngFor="let head of existingHeads" [nzValue]="head"
+                   [nzLabel]="head.id+' '+head.eyesCount"></nz-option>
+      </nz-select>
+      <button nz-button nzType="default" (click)="this.isHeadModalVisible=true">create new head</button>
+    </nz-form-control>
+  </nz-form-item>
+
+
+  <nz-form-item>
+    <nz-form-control>
+      <button nz-button nzType="primary" [disabled]="!validateForm.valid">add</button>
+    </nz-form-control>
+  </nz-form-item>
 </form>
+
+
+<nz-modal [(nzVisible)]="isKillerModalVisible"
+          nzTitle="create new person"
+          [nzContent]="personForma"
+          (nzOnCancel)="this.isKillerModalVisible = false;"
+          [nzFooter]="modalFooterPers">
+  <ng-template #personForma>
+    <app-person-form></app-person-form>
+  </ng-template>
+  <ng-template #modalFooterPers>
+    <button nz-button nzType="default" (click)="this.isKillerModalVisible = false;">cancel</button>
+    <button nz-button nzType="primary" (click)="handleOkPerson()">add</button>
+  </ng-template>
+</nz-modal>
+
+
+<nz-modal [(nzVisible)]="isCoordinatesModalVisible"
+          nzTitle="create new coordinates"
+          [nzContent]="coordinatesForma"
+          (nzOnCancel)="this.isCoordinatesModalVisible = false;"
+          [nzFooter]="coordFooter">
+  <ng-template #coordinatesForma>
+    <app-coordinates-form></app-coordinates-form>
+  </ng-template>
+  <ng-template #coordFooter>
+    <button nz-button nzType="default" (click)="this.isCoordinatesModalVisible = false;">cancel</button>
+    <button nz-button nzType="primary" (click)="handleOkCoordinates()">add</button>
+  </ng-template>
+</nz-modal>
+
+
+<nz-modal [(nzVisible)]="isCaveModalVisible"
+          nzTitle="create new cave"
+          [nzContent]="caveForma"
+          (nzOnCancel)="this.isCaveModalVisible = false;"
+          [nzFooter]="caveFooter">
+  <ng-template #caveForma>
+    <app-dragoncave-form></app-dragoncave-form>
+  </ng-template>
+  <ng-template #caveFooter>
+    <button nz-button nzType="default" (click)="this.isCoordinatesModalVisible = false;">cancel</button>
+    <button nz-button nzType="primary" (click)="handleOkCave()">add</button>
+  </ng-template>
+</nz-modal>
+
+
+<nz-modal [(nzVisible)]="isHeadModalVisible"
+          nzTitle="create new head"
+          [nzContent]="headForma"
+          (nzOnCancel)="this.isHeadModalVisible = false;"
+          [nzFooter]="modalFooterHead">
+  <ng-template #headForma>
+    <app-dragonhead-form></app-dragonhead-form>
+  </ng-template>
+  <ng-template #modalFooterHead>
+    <button nz-button nzType="default" (click)="this.isHeadModalVisible = false;">cancel</button>
+    <button nz-button nzType="primary" (click)="handleOkHead()">add</button>
+  </ng-template>
+</nz-modal>
