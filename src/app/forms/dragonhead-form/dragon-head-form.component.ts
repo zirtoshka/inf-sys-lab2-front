@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -12,6 +12,10 @@ import {NzColDirective} from "ng-zorro-antd/grid";
 import {NzFormControlComponent, NzFormDirective, NzFormItemComponent, NzFormLabelComponent} from "ng-zorro-antd/form";
 import {NzInputDirective, NzInputGroupComponent} from "ng-zorro-antd/input";
 import {NgIf} from '@angular/common';
+import {HeadService} from '../../services/head.service';
+import {DragonHead} from '../../dragondto/dragonhead';
+import {NzIconDirective} from 'ng-zorro-antd/icon';
+import {NzSwitchComponent} from 'ng-zorro-antd/switch';
 
 @Component({
   selector: 'app-dragonhead-form',
@@ -27,26 +31,36 @@ import {NgIf} from '@angular/common';
     NzInputDirective,
     NzInputGroupComponent,
     ReactiveFormsModule,
-    NgIf
+    NgIf,
+    NzIconDirective,
+    NzSwitchComponent
   ],
   templateUrl: './dragon-head-form.component.html',
   styleUrl: './dragon-head-form.component.css'
 })
 export class DragonHeadFormComponent {
+  private headService = inject(HeadService);
   showAddButton = true;
-  validateForm: FormGroup<{
-    eyes: FormControl<string> ;
-  }>;
+  validateForm: FormGroup;
 
   constructor(private fb: NonNullableFormBuilder) {
     this.validateForm = this.fb.group({
       eyes: ['', [Validators.required,
-        Validators.pattern('-?\\d+(\\.\\d+)?')]]
+        Validators.pattern('-?\\d+(\\.\\d+)?')]],
+      canEdit: ['', [Validators.required,]]
     });
   }
 
-  addHead(){}
-  hideAddButtonFn(){
+  addHead() {
+    if (this.validateForm.valid) {
+      this.headService.addHead(this.validateForm.value)
+        .subscribe((head: DragonHead) => {
+          console.log(head);
+        })
+    }
+  }
+
+  hideAddButtonFn() {
     this.showAddButton = false;
   }
 }

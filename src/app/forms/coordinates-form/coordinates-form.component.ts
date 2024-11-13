@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -14,6 +14,9 @@ import {NzInputDirective, NzInputGroupComponent} from "ng-zorro-antd/input";
 import {RouterLink} from "@angular/router";
 import {NzColDirective} from 'ng-zorro-antd/grid';
 import {NgIf} from '@angular/common';
+import {CoordinatesService} from '../../services/coordinates.service';
+import {Coordinates} from '../../dragondto/coordinates';
+import {NzSwitchComponent} from 'ng-zorro-antd/switch';
 
 @Component({
   selector: 'app-coordinates-form',
@@ -31,17 +34,18 @@ import {NgIf} from '@angular/common';
     RouterLink,
     NzFormLabelComponent,
     NzColDirective,
-    NgIf
+    NgIf,
+    NzSwitchComponent
   ],
   templateUrl: './coordinates-form.component.html',
   styleUrl: './coordinates-form.component.css'
 })
-export class CoordinatesFormComponent  {
+export class CoordinatesFormComponent {
+  private coordinatesService = inject(CoordinatesService);
   showAddButton = true;
-  validateForm: FormGroup<{
-    xValue: FormControl<string>;
-    yValue: FormControl<string>;
-  }>;
+  validateForm: FormGroup;
+
+
 
   constructor(private fb: NonNullableFormBuilder) {
     this.validateForm = this.fb.group({
@@ -50,10 +54,19 @@ export class CoordinatesFormComponent  {
       yValue: ['', [Validators.required,
         Validators.min(-182),
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
+      canEdit: ['', [Validators.required,]]
     });
   }
 
   addCoordinates() {
+    if (this.validateForm.valid) {
+      const formData = this.validateForm.value;
+      this.coordinatesService.addCoordinates(
+        formData
+      ).subscribe((coord: Coordinates) => {
+        console.log(coord);
+      });
+    }
   }
 
   hideAddButtonFn() {

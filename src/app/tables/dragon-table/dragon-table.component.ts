@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Dragon} from '../../dragondto/dragon';
 import {Color} from '../../dragondto/color';
@@ -24,26 +24,28 @@ export class DragonTableComponent {
     {
       id: 1,
       name: 'Дракон огня',
-      coordinates: { id: 1, x: 10, y: 20 },
+      coordinates: {id: 1, x: 10, y: 20, canEdit: true},
       creationDate: '2022-01-01',
-      cave: {id: 3, numberOfTreasures: 2},
+      cave: {id: 3, numberOfTreasures: 2, canEdit: true},
       killer: null,
       age: 100,
       wingspan: 25,
       color: Color.RED,
-      character: DragonCharacter.CHAOTIC
+      character: DragonCharacter.CHAOTIC,
+      canEdit: true
     },
     {
       id: 2,
       name: 'Ледяной дракон',
-      coordinates: { id: 1, x: 10, y: 20 },
+      coordinates: {id: 1, x: 10, y: 20, canEdit: true},
       creationDate: '2023-05-20',
-      cave: {id: 3, numberOfTreasures: 2},
+      cave: {id: 3, numberOfTreasures: 2, canEdit: true},
       killer: null,
       age: 200,
       wingspan: 30,
       color: Color.WHITE,
-      character: DragonCharacter.GOOD
+      character: DragonCharacter.GOOD,
+      canEdit: true
     },
   ];
 
@@ -106,6 +108,7 @@ export class DragonTableComponent {
   }
 
   searchValue = '';
+
   onSearch(): void {
     this.listOfDragons = this.listOfDragons.filter(dragon =>
       dragon.name.toLowerCase().includes(this.searchValue.toLowerCase()) ||

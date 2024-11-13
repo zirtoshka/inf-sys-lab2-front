@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {NgForOf} from '@angular/common';
 import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
 import {NzTableComponent, NzThAddOnComponent} from 'ng-zorro-antd/table';
@@ -21,13 +21,13 @@ import {Location} from '../../dragondto/location';
 })
 export class LocationTableComponent {
   listOfLocations: Location[] = [
-    { id: 1, x: 10, y: 20, z: 30, name: 'A' },
-    { id: 2, x: 15, y: 25, z: 35, name: 'B' },
-    { id: 3, x: 20, y: 30, z: 40, name: 'C' },
-    { id: 4, x: 25, y: 35, z: 45, name: 'D' },
-    { id: 5, x: 30, y: 40, z: 50, name: 'E' },
-    { id: 6, x: 35, y: 45, z: 55, name: 'F' },
-    { id: 7, x: 40, y: 50, z: 60, name: 'G' },
+    {id: 1, x: 10, y: 20, z: 30, name: 'A', canEdit: true},
+    {id: 2, x: 15, y: 25, z: 35, name: 'B', canEdit: true},
+    {id: 3, x: 20, y: 30, z: 40, name: 'C', canEdit: true},
+    {id: 4, x: 25, y: 35, z: 45, name: 'D', canEdit: true},
+    {id: 5, x: 30, y: 40, z: 50, name: 'E', canEdit: true},
+    {id: 6, x: 35, y: 45, z: 55, name: 'F', canEdit: true},
+    {id: 7, x: 40, y: 50, z: 60, name: 'G', canEdit: true},
   ];
 
   sortOrderId: 'ascend' | 'descend' | null = null;

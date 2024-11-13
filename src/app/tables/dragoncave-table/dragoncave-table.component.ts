@@ -20,16 +20,16 @@ import {ca_ES} from 'ng-zorro-antd/i18n';
 })
 export class DragoncaveTableComponent {
   listOfCaves: DragonCave[] = [
-    {id: 1, numberOfTreasures: 10},
-    {id: 2, numberOfTreasures: 30},
-    {id: 3, numberOfTreasures: 2},
-    {id: 4, numberOfTreasures: 30},
-    {id: 5, numberOfTreasures: 2},
-    {id: 6, numberOfTreasures: 30},
-    {id: 7, numberOfTreasures: 2},
-    {id: 8, numberOfTreasures: 30},
-    {id: 9, numberOfTreasures: 2},
-    {id: 10, numberOfTreasures: 30},
+    {id: 1, numberOfTreasures: 10,canEdit: true},
+    {id: 2, numberOfTreasures: 30,canEdit: true},
+    {id: 3, numberOfTreasures: 2,canEdit: true},
+    {id: 4, numberOfTreasures: 30,canEdit: true},
+    {id: 5, numberOfTreasures: 2,canEdit: true},
+    {id: 6, numberOfTreasures: 30,canEdit: true},
+    {id: 7, numberOfTreasures: 2,canEdit: true},
+    {id: 8, numberOfTreasures: 30,canEdit: true},
+    {id: 9, numberOfTreasures: 2,canEdit: true},
+    {id: 10, numberOfTreasures: 30,canEdit: true},
   ];
 
   sortOrderId: 'ascend' | 'descend' | null = null;

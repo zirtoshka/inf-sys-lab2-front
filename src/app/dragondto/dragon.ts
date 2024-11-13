@@ -14,5 +14,6 @@ export interface Dragon {
   age: number | null;
   wingspan: number | null;
   color: Color;
-  character: DragonCharacter
+  character: DragonCharacter;
+  canEdit: boolean
 }

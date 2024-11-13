@@ -3,5 +3,6 @@ export interface Location {
   x: number | null,
   y: number,
   z: number,
-  name: string
+  name: string,
+  canEdit: boolean
 }

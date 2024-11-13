@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {Person} from '../../dragondto/person';
 import {Color} from '../../dragondto/color';
 import {Country} from '../../dragondto/country';
 import {NzTableComponent, NzThAddOnComponent} from 'ng-zorro-antd/table';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgForOf} from '@angular/common';
+import {Coordinates} from '../../dragondto/coordinates';
 
 @Component({
   selector: 'app-person-table',
@@ -26,30 +27,33 @@ export class PersonTableComponent {
       name: 'Иван Иванов',
       eyeColor: Color.RED,
       hairColor: Color.BROWN,
-      location: { id: 1, x: 10, y: 20, z: 30, name: 'Москва' },
+      location: {id: 1, x: 10, y: 20, z: 30, name: 'Москва', canEdit: true},
       height: 175,
       passportID: '123456789',
-      nationality: Country.USA
+      nationality: Country.USA,
+      canEdit: true
     },
     {
       id: 2,
       name: 'Анна Смирнова',
       eyeColor: Color.BLUE,
       hairColor: Color.YELLOW,
-      location: { id: 2, x: 15, y: 25, z: 35, name: 'Санкт-Петербург' },
+      location: {id: 2, x: 15, y: 25, z: 35, name: 'Санкт-Петербург',canEdit: true},
       height: 165,
       passportID: '987654321',
-      nationality: Country.GERMANY
+      nationality: Country.GERMANY,
+      canEdit: true
     },
     {
       id: 3,
       name: 'Максим Петров',
       eyeColor: Color.WHITE,
       hairColor: Color.RED,
-      location: { id: 3, x: 20, y: 30, z: 40, name: 'Екатеринбург' },
+      location: {id: 3, x: 20, y: 30, z: 40, name: 'Екатеринбург', canEdit: true},
       height: null,
       passportID: '1122334455',
-      nationality: Country.FRANCE
+      nationality: Country.FRANCE,
+      canEdit: true
     }
   ];
 
@@ -104,6 +108,7 @@ export class PersonTableComponent {
   }
 
   searchValue = '';
+
   onSearch(): void {
     this.listOfPeople = this.listOfPeople.filter(person =>
       person.name.toLowerCase().includes(this.searchValue.toLowerCase()) ||

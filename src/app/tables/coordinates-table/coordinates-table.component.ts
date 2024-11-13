@@ -21,13 +21,13 @@ import {NgForOf} from '@angular/common';
 })
 export class CoordinatesTableComponent {
   listOfCoordinates: Coordinates[] = [
-    { id: 1, x: 10, y: 20 },
-    { id: 2, x: 15, y: 25 },
-    { id: 3, x: 20, y: 30 },
-    { id: 4, x: 25, y: 35 },
-    { id: 5, x: 30, y: 40 },
-    { id: 6, x: 35, y: 45 },
-    { id: 7, x: 40, y: 50 },
+    { id: 1, x: 10, y: 20 ,canEdit: true},
+    { id: 2, x: 15, y: 25 ,canEdit: true},
+    { id: 3, x: 20, y: 30 ,canEdit: true},
+    { id: 4, x: 25, y: 35 ,canEdit: true},
+    { id: 5, x: 30, y: 40,canEdit: true },
+    { id: 6, x: 35, y: 45 ,canEdit: true},
+    { id: 7, x: 40, y: 50,canEdit: true },
   ];
 
   sortOrderId: 'ascend' | 'descend' | null = null;

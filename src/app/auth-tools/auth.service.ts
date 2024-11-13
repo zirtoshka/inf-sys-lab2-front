@@ -91,7 +91,7 @@ export class AuthService {
   }
 
   register(username: string, password: string) {
-    return this.postData(username, password, "register");
+    return this.postData(username, password, "reg");
   }
 
   logout() {

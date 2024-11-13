@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, ViewChild} from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -22,6 +22,9 @@ import {NzSwitchComponent} from 'ng-zorro-antd/switch';
 import {NzDividerComponent} from 'ng-zorro-antd/divider';
 import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
 import {LocationFormComponent} from '../location-form/location-form.component';
+import {PersonService} from '../../services/person.service';
+import {Person} from '../../dragondto/person';
+import {NzIconDirective} from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-person-form',
@@ -46,7 +49,8 @@ import {LocationFormComponent} from '../location-form/location-form.component';
     NzSwitchComponent,
     NzDividerComponent,
     NzModalComponent,
-    LocationFormComponent
+    LocationFormComponent,
+    NzIconDirective
   ],
   providers: [NzModalService],
   templateUrl: './person-form.component.html',
@@ -54,15 +58,17 @@ import {LocationFormComponent} from '../location-form/location-form.component';
 })
 export class PersonFormComponent {
   @ViewChild(LocationFormComponent) locationFormComponent!: LocationFormComponent;
+  private personService = inject(PersonService);
   showAddButton = true;
+
 
   validateForm: FormGroup;
   isLocationModalVisible = false;
   colors = Object.values(Color);
   countries = Object.values(Country);
   existingLocations: Location[] = [
-    {id: 1, name: 'Location 1', x: 0, y: 0, z: 0},
-    {id: 2, name: 'Location 2', x: 1, y: 1, z: 1}];
+    {id: 1, name: 'Location 1', x: 0, y: 0, z: 0, canEdit: true},
+    {id: 2, name: 'Location 2', x: 1, y: 1, z: 1, canEdit: true}];
   selectedLocation: any;
 
   constructor(private fb: NonNullableFormBuilder, private cd: ChangeDetectorRef) {
@@ -76,6 +82,7 @@ export class PersonFormComponent {
         Validators.min(0),
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
       passportID: [null],
+      canEdit:[null, [Validators.required]],
     });
   }
 
@@ -109,7 +116,10 @@ export class PersonFormComponent {
   addPerson(): void {
     if (this.validateForm.valid) {
       const personData = this.validateForm.value;
-      console.log('Person data:', personData);
+      this.personService.addPerson(personData)
+        .subscribe((person: Person) => {
+          console.log(person);
+        })
     }
   }
 

@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, ViewChild} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -29,6 +29,8 @@ import {CoordinatesFormComponent} from '../coordinates-form/coordinates-form.com
 import {DragonCaveFormComponent} from '../dragoncave-form/dragoncave-form.component';
 import {DragonHeadFormComponent} from '../dragonhead-form/dragon-head-form.component';
 import {Head} from 'rxjs';
+import {DragonService} from '../../services/dragon.service';
+import {NzIconDirective} from 'ng-zorro-antd/icon';
 
 
 @Component({
@@ -55,7 +57,8 @@ import {Head} from 'rxjs';
     PersonFormComponent,
     CoordinatesFormComponent,
     DragonCaveFormComponent,
-    DragonHeadFormComponent
+    DragonHeadFormComponent,
+    NzIconDirective
   ],
   providers: [NzModalService],
   templateUrl: './dragon-form.component.html',
@@ -67,52 +70,46 @@ export class DragonFormComponent {
   @ViewChild(DragonCaveFormComponent) caveFormComponent!: DragonCaveFormComponent;
   @ViewChild(DragonHeadFormComponent) headFormComponent!: DragonHeadFormComponent;
 
+  private dragonService = inject(DragonService);
+
   isKillerModalVisible = false;
   isCoordinatesModalVisible = false;
   isCaveModalVisible = false;
   isHeadModalVisible = false;
 
   validateForm: FormGroup;
-  // <{
-  //   name: FormControl<string>;
-  //   coordinates: FormControl<Coordinates>;
-  //   cave: FormControl<DragonCave>;
-  //   killer: FormControl<Person>;
-  //   age: FormControl<string>;
-  //   wingspan: FormControl<string>;
-  //   color: FormControl<Color>;
-  //   character: FormControl<DragonCharacter>;
-  //   head:FormControl<DragonHead[]>;
-  // }>;
+
 
   existingCoordinates: Coordinates[] = [
-    {id: 1, x: 1, y: 1},
-    {id: 2, x: 2, y: 2}
+    {id: 1, x: 1, y: 1, canEdit: true},
+    {id: 2, x: 2, y: 2, canEdit: true}
   ];
 
   existingCave: DragonCave[] = [
-    {id: 1, numberOfTreasures: 1},
-    {id: 2, numberOfTreasures: 2},
+    {id: 1, numberOfTreasures: 1, canEdit: true},
+    {id: 2, numberOfTreasures: 2, canEdit: true},
   ]
   existingDragonHeads: DragonHead[] = [
-    {id: 1, eyesCount: 1},
-    {id: 2, eyesCount: 2},
+    {id: 1, eyesCount: 1, canEdit: true},
+    {id: 2, eyesCount: 2, canEdit: true},
   ]
   existingLocations: Location[] = [
-    {id: 1, x: 1, y: 1, z: 1, name: 'New York'},
-    {id: 2, x: 1, y: 1, z: 1, name: 'Los Angeles'},
-    {id: 3, x: 1, y: 1, z: 1, name: 'Chicago'}
+    {id: 1, x: 1, y: 1, z: 1, name: 'New York', canEdit: true},
+    {id: 2, x: 1, y: 1, z: 1, name: 'Los Angeles', canEdit: true},
+    {id: 3, x: 1, y: 1, z: 1, name: 'Chicago', canEdit: true}
   ];
   existingPerson: Person[] = [
     {
       id: 1, name: "Zhora", eyeColor: Color.BLUE, hairColor: Color.WHITE,
       location: this.existingLocations[0], height: 3,
-      passportID: "123456lolik", nationality: Country.USA
+      passportID: "123456lolik", nationality: Country.USA,
+      canEdit: true
     },
     {
       id: 2, name: "Tolik", eyeColor: Color.BLUE, hairColor: Color.WHITE,
       location: this.existingLocations[1], height: 3,
-      passportID: "123456lolik", nationality: Country.USA
+      passportID: "123456lolik", nationality: Country.USA,
+      canEdit: true
     }
   ];
 
@@ -140,6 +137,7 @@ export class DragonFormComponent {
       color: [null, [Validators.required]],
       character: [null, [Validators.required]],
       heads: [[], [Validators.required]],
+      canEdit: [null, [Validators.required]],
     })
   }
 
@@ -161,7 +159,13 @@ export class DragonFormComponent {
   }
 
   addDragon() {
-    //todo
+    if (this.validateForm.valid) {
+      this.dragonService.addDragon(this.validateForm.value)
+        .subscribe((data: any) => {
+          console.log(data);
+        })
+    }
+
   }
 
   handleOkPerson() {

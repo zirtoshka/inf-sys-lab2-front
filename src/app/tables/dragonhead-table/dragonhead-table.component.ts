@@ -19,16 +19,16 @@ import {DragonHead} from '../../dragondto/dragonhead';
 })
 export class DragonheadTableComponent {
   listOfHeads: DragonHead[] = [
-    {id: 1, eyesCount: 10},
-    {id: 2, eyesCount: 30},
-    {id: 3, eyesCount: 2},
-    {id: 4, eyesCount: 30},
-    {id: 5, eyesCount: 2},
-    {id: 6, eyesCount: 30},
-    {id: 7, eyesCount: 2},
-    {id: 8, eyesCount: 30},
-    {id: 9, eyesCount: 2},
-    {id: 10, eyesCount: 30},
+    {id: 1, eyesCount: 10, canEdit: true},
+    {id: 2, eyesCount: 30, canEdit: true},
+    {id: 3, eyesCount: 2, canEdit: true},
+    {id: 4, eyesCount: 30, canEdit: true},
+    {id: 5, eyesCount: 2, canEdit: true},
+    {id: 6, eyesCount: 30, canEdit: true},
+    {id: 7, eyesCount: 2, canEdit: true},
+    {id: 8, eyesCount: 30, canEdit: true},
+    {id: 9, eyesCount: 2, canEdit: true},
+    {id: 10, eyesCount: 30, canEdit: true},
   ];
 
   sortOrderId: 'ascend' | 'descend' | null = null;
