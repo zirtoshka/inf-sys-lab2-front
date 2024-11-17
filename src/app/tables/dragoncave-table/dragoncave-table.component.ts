@@ -1,9 +1,14 @@
-import { Component } from '@angular/core';
+import {ChangeDetectorRef, Component, inject, ViewChild} from '@angular/core';
 import {NgForOf} from '@angular/common';
 import {NzTableComponent, NzThAddOnComponent} from 'ng-zorro-antd/table';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {DragonCave} from '../../dragondto/dragoncave';
-import {ca_ES} from 'ng-zorro-antd/i18n';
+import {NzButtonComponent} from "ng-zorro-antd/button";
+import {NzPopconfirmDirective} from "ng-zorro-antd/popconfirm";
+import {CoordinatesFormComponent} from '../../forms/coordinates-form/coordinates-form.component';
+import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
+import {CaveService} from '../../services/cave.service';
+import {DragonCaveFormComponent} from '../../forms/dragoncave-form/dragoncave-form.component';
 
 @Component({
   selector: 'app-dragoncave-table',
@@ -13,24 +18,39 @@ import {ca_ES} from 'ng-zorro-antd/i18n';
     NzTableComponent,
     NzThAddOnComponent,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    NzButtonComponent,
+    NzPopconfirmDirective,
+    CoordinatesFormComponent,
+    NzModalComponent,
+    DragonCaveFormComponent
   ],
+  providers: [NzModalService],
   templateUrl: './dragoncave-table.component.html',
   styleUrl: './dragoncave-table.component.css'
 })
 export class DragoncaveTableComponent {
+  private caveService = inject(CaveService);
+  @ViewChild(DragonCaveFormComponent) caveFormComponent!: DragonCaveFormComponent;
+  isCaveModalVisible = false;
+  dataEdit: DragonCave | null;
+
   listOfCaves: DragonCave[] = [
-    {id: 1, numberOfTreasures: 10,canEdit: true},
-    {id: 2, numberOfTreasures: 30,canEdit: true},
-    {id: 3, numberOfTreasures: 2,canEdit: true},
-    {id: 4, numberOfTreasures: 30,canEdit: true},
-    {id: 5, numberOfTreasures: 2,canEdit: true},
-    {id: 6, numberOfTreasures: 30,canEdit: true},
-    {id: 7, numberOfTreasures: 2,canEdit: true},
-    {id: 8, numberOfTreasures: 30,canEdit: true},
-    {id: 9, numberOfTreasures: 2,canEdit: true},
-    {id: 10, numberOfTreasures: 30,canEdit: true},
+    {id: 1, numberOfTreasures: 10, canEdit: true},
+    {id: 2, numberOfTreasures: 30, canEdit: true},
+    {id: 3, numberOfTreasures: 2, canEdit: true},
+    {id: 4, numberOfTreasures: 30, canEdit: true},
+    {id: 5, numberOfTreasures: 2, canEdit: true},
+    {id: 6, numberOfTreasures: 30, canEdit: true},
+    {id: 7, numberOfTreasures: 2, canEdit: true},
+    {id: 8, numberOfTreasures: 30, canEdit: true},
+    {id: 9, numberOfTreasures: 2, canEdit: true},
+    {id: 10, numberOfTreasures: 30, canEdit: true},
   ];
+
+  constructor(private cd: ChangeDetectorRef) {
+    this.dataEdit = null;
+  }
 
   sortOrderId: 'ascend' | 'descend' | null = null;
   sortOrderTreasures: 'ascend' | 'descend' | null = null;
@@ -63,5 +83,36 @@ export class DragoncaveTableComponent {
         && item.numberOfTreasures.toString().includes(this.searchValue)));
   }
 
-  protected readonly ca_ES = ca_ES;
+  deleteRow(id: number): void {
+    this.caveService.deleteCave(
+      {id: id})
+      .subscribe((res) => {
+        console.log(res);
+      })
+    this.listOfCaves = this.listOfCaves.filter(d => d.id !== id);
+  }
+
+
+
+  handleOkCave() {
+    this.caveFormComponent.updateCave();
+  }
+
+  ngAfterViewChecked(): void {
+    if (this.caveFormComponent) {
+      if (this.dataEdit) {
+        this.caveFormComponent.setDefaultData(this.dataEdit);
+      }
+      this.caveFormComponent.hideAddButtonFn();
+    }
+    this.cd.detectChanges();
+
+  }
+
+  openEditModal(data: DragonCave): void {
+    this.isCaveModalVisible = true;
+    this.dataEdit = data;
+
+  }
+
 }

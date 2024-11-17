@@ -1,6 +1,5 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {
-  FormControl,
   FormGroup,
   FormsModule,
   NonNullableFormBuilder,
@@ -46,7 +45,7 @@ export class CoordinatesFormComponent {
   private coordinatesService = inject(CoordinatesService);
   showAddButton = true;
   validateForm: FormGroup;
-  defaultData: Coordinates | undefined;
+  idForEdit: number | undefined;
 
 
   constructor(private fb: NonNullableFormBuilder) {
@@ -73,9 +72,9 @@ export class CoordinatesFormComponent {
   }
 
   updateCoordinates() {
-    if (this.validateForm.valid && this.defaultData) {
+    if (this.validateForm.valid && this.idForEdit) {
       const coordinates: Coordinates = {
-        id: this.defaultData.id,
+        id: this.idForEdit,
         x: this.validateForm.value.xValue,
         y: this.validateForm.value.yValue,
         canEdit: this.validateForm.value.canEdit
@@ -96,16 +95,14 @@ export class CoordinatesFormComponent {
     this.showAddButton = false;
   }
 
-  setCanEdit() {
-    if (this.defaultData) {
-      return this.defaultData.canEdit;
-    }
-    return false;
-  }
 
   setDefaultData(data: Coordinates) {
-    this.defaultData = data;
-
+    this.idForEdit = data.id;
+    this.validateForm.patchValue({
+      yValue: data.y,
+      xValue: data.x,
+      canEdit: data.canEdit
+    });
   }
 
 }

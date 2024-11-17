@@ -1,8 +1,4 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {AuthService} from '../auth-tools/auth.service';
-import {Coordinates} from 'ng-zorro-antd/core/util';
-import {DragonHead} from '../dragondto/dragonhead';
 import {BaseService} from './base.service';
 
 @Injectable({
@@ -13,5 +9,13 @@ export class HeadService {
 
   addHead(formData:any) {
     return this.baseService.add(formData, "/head/addHead");
+  }
+  updateHead(formData: any) {
+    return this.baseService.update(formData, "/head/update");
+  }
+
+
+  deleteHead(formData: any) {
+    return this.baseService.delete(formData, "/head/delete");
   }
 }

@@ -1,6 +1,5 @@
 import {Component, inject} from '@angular/core';
 import {
-  FormControl,
   FormGroup,
   FormsModule,
   NonNullableFormBuilder,
@@ -42,6 +41,7 @@ export class DragonHeadFormComponent {
   private headService = inject(HeadService);
   showAddButton = true;
   validateForm: FormGroup;
+  idForEdit: number | undefined;
 
   constructor(private fb: NonNullableFormBuilder) {
     this.validateForm = this.fb.group({
@@ -60,7 +60,32 @@ export class DragonHeadFormComponent {
     }
   }
 
+  updateHead() {
+    if (this.validateForm.valid && this.idForEdit) {
+      const head: DragonHead = {
+        id: this.idForEdit,
+        eyesCount: this.validateForm.value.eyes,
+        canEdit: this.validateForm.value.canEdit
+      };
+      this.headService.updateHead(
+        head
+      ).subscribe((data: DragonHead) => {
+        console.log(data);
+      })
+    }
+  }
+
   hideAddButtonFn() {
     this.showAddButton = false;
+  }
+
+
+  setDefaultData(data: DragonHead) {
+    this.idForEdit = data.id;
+    this.validateForm.patchValue({
+      eyes: data.eyesCount,
+      canEdit: data.canEdit
+    });
+
   }
 }

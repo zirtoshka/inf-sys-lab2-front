@@ -1,9 +1,16 @@
-import {Component} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, ViewChild} from '@angular/core';
 import {NgForOf} from '@angular/common';
 import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
 import {NzTableComponent, NzThAddOnComponent} from 'ng-zorro-antd/table';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Location} from '../../dragondto/location';
+import {NzButtonComponent} from "ng-zorro-antd/button";
+import {NzPopconfirmDirective} from "ng-zorro-antd/popconfirm";
+import {CoordinatesFormComponent} from '../../forms/coordinates-form/coordinates-form.component';
+import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
+import {LocationFormComponent} from '../../forms/location-form/location-form.component';
+import {Coordinates} from '../../dragondto/coordinates';
+import {LocationService} from '../../services/location.service';
 
 @Component({
   selector: 'app-location-table',
@@ -14,12 +21,23 @@ import {Location} from '../../dragondto/location';
     NzTableComponent,
     NzThAddOnComponent,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    NzButtonComponent,
+    NzPopconfirmDirective,
+    CoordinatesFormComponent,
+    NzModalComponent,
+    LocationFormComponent
   ],
+  providers: [NzModalService],
   templateUrl: './location-table.component.html',
   styleUrl: './location-table.component.css'
 })
 export class LocationTableComponent {
+  private locationService = inject(LocationService);
+  @ViewChild(LocationFormComponent) locationFormComponent!: LocationFormComponent;
+  dataEdit: Location | null;
+  isLocationModalVisible = false;
+
   listOfLocations: Location[] = [
     {id: 1, x: 10, y: 20, z: 30, name: 'A', canEdit: true},
     {id: 2, x: 15, y: 25, z: 35, name: 'B', canEdit: true},
@@ -29,6 +47,10 @@ export class LocationTableComponent {
     {id: 6, x: 35, y: 45, z: 55, name: 'F', canEdit: true},
     {id: 7, x: 40, y: 50, z: 60, name: 'G', canEdit: true},
   ];
+
+  constructor(private cd: ChangeDetectorRef) {
+    this.dataEdit = null;
+  }
 
   sortOrderId: 'ascend' | 'descend' | null = null;
   sortOrderX: 'ascend' | 'descend' | null = null;
@@ -76,5 +98,37 @@ export class LocationTableComponent {
       item.y.toString().includes(this.searchValue) ||
       item.z.toString().includes(this.searchValue)
     );
+  }
+
+
+  deleteRow(id: number): void {
+    this.locationService.deleteLocation(
+      {id: id})
+      .subscribe((res) => {
+        console.log(res);
+      })
+    this.listOfLocations = this.listOfLocations.filter(d => d.id !== id);
+  }
+
+
+  handleOkLocation() {
+    this.locationFormComponent.updateLocation();
+  }
+
+  ngAfterViewChecked(): void {
+    if (this.locationFormComponent) {
+      if (this.dataEdit) {
+        this.locationFormComponent.setDefaultData(this.dataEdit);
+      }
+      this.locationFormComponent.hideAddButtonFn();
+    }
+    this.cd.detectChanges();
+
+  }
+
+  openEditModal(data: Location): void {
+    this.isLocationModalVisible = true;
+    this.dataEdit = data;
+
   }
 }

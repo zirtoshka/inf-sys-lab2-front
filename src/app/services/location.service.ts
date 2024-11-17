@@ -1,6 +1,4 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {AuthService} from '../auth-tools/auth.service';
 import {BaseService} from './base.service';
 
 @Injectable(
@@ -11,5 +9,12 @@ export class LocationService {
 
   addLocation(formData: any) {
     return this.baseService.add(formData, "/location/addLocation");
+  }
+
+  updateLocation(formData: any) {
+    return this.baseService.update(formData, "/location/updateLocation");
+  }
+  deleteLocation(formData: any) {
+    return this.baseService.delete(formData, "/location/deleteLocation");
   }
 }

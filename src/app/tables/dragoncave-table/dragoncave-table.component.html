@@ -4,15 +4,41 @@
 <nz-table [nzData]="listOfCaves" [nzBordered]="true">
   <thead>
   <tr>
-    <th nzShowSort [nzSortOrder]="sortOrderId" (click)="sort('id')">ID</th>
-    <th nzShowSort [nzSortOrder]="sortOrderTreasures" (click)="sort('numberOfTreasures')">numberOfTreasures</th>
-
+<!--    <th nzShowSort [nzSortOrder]="sortOrderId" (click)="sort('id')">ID</th>-->
+<!--    <th nzShowSort [nzSortOrder]="sortOrderTreasures" (click)="sort('numberOfTreasures')">numberOfTreasures</th>-->
+    <th>id</th>
+    <th>number of treasure</th>
+    <th style="width: 15%;">actions</th>
   </tr>
   </thead>
   <tbody>
   <tr *ngFor="let cave of listOfCaves">
     <td>{{ cave.id }}</td>
     <td>{{ cave.numberOfTreasures }}</td>
+    <td>{{cave.canEdit}}</td>
+    <td>
+      <button nz-button nzSize="small" nzShape="round" nzType="primary" (click)="openEditModal(cave)">edit cave
+      </button>
+      <a nz-popconfirm nzPopconfirmTitle="Are you sure?" (nzOnConfirm)="deleteRow(cave.id)">
+        Delete
+      </a>
+    </td>
   </tr>
   </tbody>
 </nz-table>
+
+
+
+<nz-modal [(nzVisible)]="isCaveModalVisible"
+          nzTitle="edit cave"
+          [nzContent]="caveForma"
+          (nzOnCancel)="this.isCaveModalVisible = false;"
+          [nzFooter]="caveFooter">
+  <ng-template #caveForma>
+    <app-dragoncave-form></app-dragoncave-form>
+  </ng-template>
+  <ng-template #caveFooter>
+    <button nz-button nzType="default" (click)="this.isCaveModalVisible = false;">cancel</button>
+    <button nz-button nzType="primary" (click)="handleOkCave()">save</button>
+  </ng-template>
+</nz-modal>

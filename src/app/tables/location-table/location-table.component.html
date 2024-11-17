@@ -3,11 +3,18 @@
 <nz-table [nzData]="listOfLocations" [nzBordered]="true">
   <thead>
   <tr>
-    <th nzShowSort [nzSortOrder]="sortOrderId" (click)="sort('id')">ID</th>
-    <th nzShowSort [nzSortOrder]="sortOrderX" (click)="sort('x')">X</th>
-    <th nzShowSort [nzSortOrder]="sortOrderY" (click)="sort('y')">Y</th>
-    <th nzShowSort [nzSortOrder]="sortOrderZ" (click)="sort('z')">Z</th>
-    <th nzShowSort [nzSortOrder]="sortOrderName" (click)="sort('name')">name</th>
+    <!--    <th nzShowSort [nzSortOrder]="sortOrderId" (click)="sort('id')">ID</th>-->
+    <!--    <th nzShowSort [nzSortOrder]="sortOrderX" (click)="sort('x')">X</th>-->
+    <!--    <th nzShowSort [nzSortOrder]="sortOrderY" (click)="sort('y')">Y</th>-->
+    <!--    <th nzShowSort [nzSortOrder]="sortOrderZ" (click)="sort('z')">Z</th>-->
+    <!--    <th nzShowSort [nzSortOrder]="sortOrderName" (click)="sort('name')">name</th>-->
+    <th>id</th>
+    <th>x</th>
+    <th>y</th>
+    <th>z</th>
+    <th>name</th>
+    <th>can edit</th>
+    <th style="width: 15%;">actions</th>
   </tr>
   </thead>
   <tbody>
@@ -17,8 +24,32 @@
     <td>{{ location.y }}</td>
     <td>{{ location.z }}</td>
     <td>{{ location.name }}</td>
+    <td>{{ location.canEdit }}</td>
+    <td>
+      <button nz-button nzSize="small" nzShape="round" nzType="primary" (click)="openEditModal(location)">
+        edit location
+      </button>
+      <a nz-popconfirm nzPopconfirmTitle="Are you sure?" (nzOnConfirm)="deleteRow(location.id)">
+        Delete
+      </a></td>
   </tr>
   </tbody>
 </nz-table>
 
 <!--<nz-pagination [nzPageIndex]="1" [nzPageSize]="10" [nzTotal]="listOfLocations.length" style="margin-top: 16px;"></nz-pagination>-->
+
+<nz-modal [(nzVisible)]="isLocationModalVisible"
+          nzTitle="edit location"
+          [nzContent]="locationForma"
+          (nzOnCancel)="this.isLocationModalVisible = false;"
+          [nzFooter]="locationFooter">
+  <ng-template #locationForma>
+    <app-location-form>
+
+    </app-location-form>
+  </ng-template>
+  <ng-template #locationFooter>
+    <button nz-button nzType="default" (click)="this.isLocationModalVisible = false;">cancel</button>
+    <button nz-button nzType="primary" (click)="handleOkLocation()">save</button>
+  </ng-template>
+</nz-modal>

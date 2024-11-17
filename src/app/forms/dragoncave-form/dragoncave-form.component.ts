@@ -1,6 +1,5 @@
 import {Component, inject} from '@angular/core';
 import {
-  FormControl,
   FormGroup,
   FormsModule,
   NonNullableFormBuilder,
@@ -11,7 +10,6 @@ import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {NzColDirective} from 'ng-zorro-antd/grid';
 import {NzFormControlComponent, NzFormDirective, NzFormItemComponent, NzFormLabelComponent} from 'ng-zorro-antd/form';
 import {NzInputDirective, NzInputGroupComponent} from 'ng-zorro-antd/input';
-import {treeCollapseMotion} from 'ng-zorro-antd/core/animation';
 import {NgIf} from '@angular/common';
 import {CaveService} from '../../services/cave.service';
 import {DragonCave} from '../../dragondto/dragoncave';
@@ -43,6 +41,7 @@ export class DragonCaveFormComponent {
   private caveService = inject(CaveService);
   showAddButton = true;
   validateForm: FormGroup;
+  idForEdit: number | undefined;
 
   constructor(private fb: NonNullableFormBuilder) {
     this.validateForm = this.fb.group({
@@ -60,6 +59,31 @@ export class DragonCaveFormComponent {
         console.log(cave)
       })
     }
+  }
+
+  updateCave() {
+    if (this.validateForm.valid && this.idForEdit) {
+      const cave: DragonCave = {
+        id: this.idForEdit,
+        numberOfTreasures: this.validateForm.value.treasures,
+        canEdit: this.validateForm.value.canEdit
+      };
+      this.caveService.updateCave(cave)
+        .subscribe((cave: DragonCave) => {
+          console.log(cave)
+        });
+    }
+  }
+
+
+
+  setDefaultData(data: DragonCave) {
+    this.idForEdit = data.id;
+    this.validateForm.patchValue({
+      treasures: data.numberOfTreasures,
+      canEdit: data.canEdit
+    });
+
   }
 
   hideAddButtonFn() {

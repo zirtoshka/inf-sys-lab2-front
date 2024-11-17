@@ -1,10 +1,8 @@
-<p>dragoncave-form works!</p>
 <form nz-form [nzLayout]="'inline'" [formGroup]="validateForm" (ngSubmit)="addCave()">
   <nz-form-item>
     <nz-form-label [nzSm]="20" [nzXs]="24" nzFor="canEdit">can edit</nz-form-label>
     <nz-switch
       formControlName="canEdit"
-      [ngModel]="false"
       [nzCheckedChildren]="checkedTemplate"
       [nzUnCheckedChildren]="unCheckedTemplate"
     ></nz-switch>
