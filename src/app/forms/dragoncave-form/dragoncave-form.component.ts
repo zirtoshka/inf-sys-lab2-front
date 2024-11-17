@@ -41,7 +41,7 @@ export class DragonCaveFormComponent {
   private caveService = inject(CaveService);
   showAddButton = true;
   validateForm: FormGroup;
-  idForEdit: number | undefined;
+  defaultData: DragonCave | undefined;
 
   constructor(private fb: NonNullableFormBuilder) {
     this.validateForm = this.fb.group({
@@ -62,9 +62,9 @@ export class DragonCaveFormComponent {
   }
 
   updateCave() {
-    if (this.validateForm.valid && this.idForEdit) {
+    if (this.validateForm.valid && this.defaultData) {
       const cave: DragonCave = {
-        id: this.idForEdit,
+        id: this.defaultData.id,
         numberOfTreasures: this.validateForm.value.treasures,
         canEdit: this.validateForm.value.canEdit
       };
@@ -76,17 +76,18 @@ export class DragonCaveFormComponent {
   }
 
 
-
   setDefaultData(data: DragonCave) {
-    this.idForEdit = data.id;
-    this.validateForm.patchValue({
-      treasures: data.numberOfTreasures,
-      canEdit: data.canEdit
-    });
-
+    this.defaultData = data;
   }
 
   hideAddButtonFn() {
     this.showAddButton = false;
+  }
+
+  setCanEdit() {
+    if (this.defaultData) {
+      return this.defaultData.canEdit;
+    }
+    return false;
   }
 }

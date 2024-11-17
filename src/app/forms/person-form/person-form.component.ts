@@ -60,16 +60,15 @@ export class PersonFormComponent {
   private personService = inject(PersonService);
   showAddButton = true;
 
-  idForEdit: number | undefined;
+  defaultData: Person | undefined;
 
   validateForm: FormGroup;
   isLocationModalVisible = false;
   colors = Object.values(Color);
   countries = Object.values(Country);
-  existingLocations: Location[] = [
+  existingLocations: (Location)[] = [
     {id: 1, name: 'Location 1', x: 0, y: 0, z: 0, canEdit: true},
     {id: 2, name: 'Location 2', x: 1, y: 1, z: 1, canEdit: true}];
-  selectedLocation: any;
 
   constructor(private fb: NonNullableFormBuilder, private cd: ChangeDetectorRef) {
     this.validateForm = this.fb.group({
@@ -124,9 +123,11 @@ export class PersonFormComponent {
   }
 
   updatePerson() {
-    if (this.validateForm.valid && this.idForEdit) {
+    console.log(this.validateForm.valid);
+    console.log(this.validateForm.value);
+    if (this.validateForm.valid && this.defaultData) {
       const coordinates: Coordinates = { //todo ->person
-        id: this.idForEdit,
+        id: this.defaultData.id,
         x: this.validateForm.value.xValue,
         y: this.validateForm.value.yValue,
         canEdit: this.validateForm.value.canEdit
@@ -145,18 +146,22 @@ export class PersonFormComponent {
 
 
   setDefaultData(data: Person) {
-    this.idForEdit = data.id;
-    this.validateForm.patchValue({
-      name: data.name,  //todo ->person valid data
-      eyeColor: data.eyeColor,
-      hairColor: data.hairColor,
-      location:data.location, //todo ???
-      nationality: data.nationality,
-      height: data.height,
-      passportID: data.passportID,
-      canEdit: data.canEdit
+    this.defaultData = data;
+    console.log(data.location)
+  }
 
-    });
+  setCanEdit() {
+    if (this.defaultData) {
+      return this.defaultData.canEdit;
+    }
+    return false;
+  }
+
+  setLocation() {
+    if (this.defaultData) {
+      return this.existingLocations.find(location => location.id === this.defaultData?.location.id);
+    }
+    return null
   }
 
 }

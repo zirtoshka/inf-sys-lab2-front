@@ -41,7 +41,7 @@ export class DragonHeadFormComponent {
   private headService = inject(HeadService);
   showAddButton = true;
   validateForm: FormGroup;
-  idForEdit: number | undefined;
+  defaultData: DragonHead | undefined;
 
   constructor(private fb: NonNullableFormBuilder) {
     this.validateForm = this.fb.group({
@@ -61,9 +61,9 @@ export class DragonHeadFormComponent {
   }
 
   updateHead() {
-    if (this.validateForm.valid && this.idForEdit) {
+    if (this.validateForm.valid && this.defaultData) {
       const head: DragonHead = {
-        id: this.idForEdit,
+        id: this.defaultData.id,
         eyesCount: this.validateForm.value.eyes,
         canEdit: this.validateForm.value.canEdit
       };
@@ -79,13 +79,14 @@ export class DragonHeadFormComponent {
     this.showAddButton = false;
   }
 
+  setCanEdit() {
+    if (this.defaultData) {
+      return this.defaultData.canEdit;
+    }
+    return false;
+  }
 
   setDefaultData(data: DragonHead) {
-    this.idForEdit = data.id;
-    this.validateForm.patchValue({
-      eyes: data.eyesCount,
-      canEdit: data.canEdit
-    });
-
+    this.defaultData = data;
   }
 }

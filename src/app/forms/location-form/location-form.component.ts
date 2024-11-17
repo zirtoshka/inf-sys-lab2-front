@@ -15,6 +15,7 @@ import {LocationService} from '../../services/location.service';
 import {Location} from '../../dragondto/location';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {NzSwitchComponent} from 'ng-zorro-antd/switch';
+import {Coordinates} from '../../dragondto/coordinates';
 
 @Component({
   selector: 'app-location-form',
@@ -40,7 +41,7 @@ import {NzSwitchComponent} from 'ng-zorro-antd/switch';
 export class LocationFormComponent {
   private locationService = inject(LocationService);
   showAddButton = true;
-  idForEdit: number | undefined;
+  defaultData: Location | undefined;
 
 
   validateForm: FormGroup;
@@ -54,7 +55,7 @@ export class LocationFormComponent {
       zValue: ['', [Validators.required,
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
       name: ['', [Validators.required]],
-      canEdit:[false]
+      canEdit: [false]
     });
   }
 
@@ -69,9 +70,9 @@ export class LocationFormComponent {
   }
 
   updateLocation() {
-    if (this.validateForm.valid && this.idForEdit) {
+    if (this.validateForm.valid && this.defaultData) {
       const location: Location = {
-        id: this.idForEdit,
+        id: this.defaultData.id,
         x: this.validateForm.value.xValue,
         y: this.validateForm.value.yValue,
         z: this.validateForm.value.zValue,
@@ -83,6 +84,8 @@ export class LocationFormComponent {
       ).subscribe((data: Location) => {
         console.log(data);
       })
+    }else{
+      console.log("sfsdfsfsdfs") //todo
     }
   }
 
@@ -92,13 +95,13 @@ export class LocationFormComponent {
 
 
   setDefaultData(data: Location) {
-    this.idForEdit = data.id;
-    this.validateForm.patchValue({
-      yValue: data.y,
-      xValue: data.x,
-      zValue: data.z,
-      name: data.name,
-      canEdit: data.canEdit
-    });
+    this.defaultData = data;
+  }
+
+  setCanEdit() {
+    if (this.defaultData) {
+      return this.defaultData.canEdit;
+    }
+    return false;
   }
 }

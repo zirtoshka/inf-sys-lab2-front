@@ -4,7 +4,7 @@
     <nz-form-label [nzSm]="20" [nzXs]="24" nzFor="canEdit">can edit</nz-form-label>
     <nz-switch
       formControlName="canEdit"
-      [ngModel]="false"
+      [ngModel]="setCanEdit()"
       [nzCheckedChildren]="checkedTemplate"
       [nzUnCheckedChildren]="unCheckedTemplate"
     ></nz-switch>
@@ -15,7 +15,7 @@
     <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">name</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="name is required">
       <nz-input-group>
-        <input formControlName="name" nz-input placeholder="name"/>
+        <input formControlName="name" nz-input placeholder="name" [ngModel]="defaultData?.name"/>
       </nz-input-group>
     </nz-form-control>
   </nz-form-item>
@@ -24,7 +24,7 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24">eye color</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzValidateStatus="eyeColor" nzHasFeedback>
-      <nz-select formControlName="eyeColor" [nzPlaceHolder]="'Select eye color'">
+      <nz-select [ngModel]="defaultData?.eyeColor" formControlName="eyeColor" [nzPlaceHolder]="'Select eye color'">
         <nz-option *ngFor="let color of colors" [nzValue]="color" [nzLabel]="color"></nz-option>
       </nz-select>
     </nz-form-control>
@@ -33,18 +33,20 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24">hair color</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzValidateStatus="haiColor" nzHasFeedback>
-      <nz-select formControlName="hairColor" [nzPlaceHolder]="'Select hair color'">
+      <nz-select [ngModel]="defaultData?.hairColor" formControlName="hairColor" [nzPlaceHolder]="'Select hair color'">
         <nz-option *ngFor="let color of colors" [nzValue]="color" [nzLabel]="color"></nz-option>
       </nz-select>
     </nz-form-control>
   </nz-form-item>
-<!--  location-->
+  <!--  location-->
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24">location</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
-      <nz-select [(ngModel)]="selectedLocation" [ngModelOptions]="{ standalone: true }"
+      <nz-select formControlName="location"
+                 [ngModel]="setLocation()"
                  [nzPlaceHolder]="'select location'">
-        <nz-option *ngFor="let location of existingLocations" [nzValue]="location" [nzLabel]="location.name"></nz-option>
+        <nz-option *ngFor="let location of existingLocations" [nzValue]="location"
+                   [nzLabel]="location.name"></nz-option>
       </nz-select>
       <button nz-button nzType="default" (click)="openLocationModal()">create new location</button>
     </nz-form-control>
@@ -54,7 +56,7 @@
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="height">height</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="height is a number that is greater than 0">
       <nz-input-group>
-        <input formControlName="height" nz-input placeholder="height"/>
+        <input formControlName="height" nz-input placeholder="height" [ngModel]="defaultData?.height"/>
       </nz-input-group>
     </nz-form-control>
   </nz-form-item>
@@ -62,14 +64,15 @@
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="passportID">passportID</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="passportID is a string">
       <nz-input-group>
-        <input formControlName="passportID" nz-input placeholder="passportID"/>
+        <input formControlName="passportID" nz-input placeholder="passportID" [ngModel]="defaultData?.passportID"/>
       </nz-input-group>
     </nz-form-control>
   </nz-form-item>
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24">nationality</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzValidateStatus="nationality" nzHasFeedback>
-      <nz-select formControlName="nationality" [nzPlaceHolder]="'Select nationality'">
+      <nz-select [ngModel]="defaultData?.nationality" formControlName="nationality"
+                 [nzPlaceHolder]="'Select nationality'">
         <nz-option *ngFor="let country of countries" [nzValue]="country" [nzLabel]="country"></nz-option>
       </nz-select>
     </nz-form-control>

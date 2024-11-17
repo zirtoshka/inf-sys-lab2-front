@@ -45,7 +45,7 @@ export class CoordinatesFormComponent {
   private coordinatesService = inject(CoordinatesService);
   showAddButton = true;
   validateForm: FormGroup;
-  idForEdit: number | undefined;
+  defaultData: Coordinates | undefined;
 
 
   constructor(private fb: NonNullableFormBuilder) {
@@ -71,10 +71,11 @@ export class CoordinatesFormComponent {
     }
   }
 
+
   updateCoordinates() {
-    if (this.validateForm.valid && this.idForEdit) {
+    if (this.validateForm.valid && this.defaultData) {
       const coordinates: Coordinates = {
-        id: this.idForEdit,
+        id: this.defaultData.id,
         x: this.validateForm.value.xValue,
         y: this.validateForm.value.yValue,
         canEdit: this.validateForm.value.canEdit
@@ -87,6 +88,7 @@ export class CoordinatesFormComponent {
     }
   }
 
+
   getFormData() {
     return this.validateForm.value;
   }
@@ -97,12 +99,13 @@ export class CoordinatesFormComponent {
 
 
   setDefaultData(data: Coordinates) {
-    this.idForEdit = data.id;
-    this.validateForm.patchValue({
-      yValue: data.y,
-      xValue: data.x,
-      canEdit: data.canEdit
-    });
+    this.defaultData = data;
   }
 
+  setCanEdit() {
+    if (this.defaultData) {
+      return this.defaultData.canEdit;
+    }
+    return false;
+  }
 }

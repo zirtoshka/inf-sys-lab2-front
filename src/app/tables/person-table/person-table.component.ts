@@ -159,6 +159,8 @@ export class PersonTableComponent {
     if (this.personFormComponent) {
       if (this.dataEdit) {
         this.personFormComponent.setDefaultData(this.dataEdit);
+
+
       }
       this.personFormComponent.hideAddButtonFn();
     }
