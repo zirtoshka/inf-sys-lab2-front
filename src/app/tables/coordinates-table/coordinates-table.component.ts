@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, OnInit, ViewChild} from '@angular/core';
 import {Coordinates} from '../../dragondto/coordinates';
 
 import {FormsModule} from '@angular/forms';
@@ -10,6 +10,7 @@ import {NzInputDirective} from 'ng-zorro-antd/input';
 import {CoordinatesFormComponent} from '../../forms/coordinates-form/coordinates-form.component';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
+import {CoordinatesService} from '../../services/coordinates.service';
 
 @Component({
   selector: 'app-coordinates-table',
@@ -31,7 +32,8 @@ import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
   templateUrl: './coordinates-table.component.html',
   styleUrl: './coordinates-table.component.css'
 })
-export class CoordinatesTableComponent implements OnInit {
+export class CoordinatesTableComponent {
+  private coordinatesService = inject(CoordinatesService);
   @ViewChild(CoordinatesFormComponent) coordinatesFormComponent!: CoordinatesFormComponent;
   isCoordinatesModalVisible = false;
   dataEdit: Coordinates | null;
@@ -85,43 +87,14 @@ export class CoordinatesTableComponent implements OnInit {
 
 
   deleteRow(id: number): void {
+    this.coordinatesService.deleteCoordinates(
+      {id: id})
+      .subscribe((res) => {
+        console.log(res);
+      })
     this.listOfCoordinates = this.listOfCoordinates.filter(d => d.id !== id);
   }
 
-  //todo
-  editCache: { [key: string]: { edit: boolean; data: Coordinates } } = {};
-
-  startEdit(id: number): void {
-    this.editCache[id].edit = true;
-  }
-
-
-  cancelEdit(id: number): void {
-    const index = this.listOfCoordinates.findIndex(item => item.id === id);
-    this.editCache[id] = {
-      data: {...this.listOfCoordinates[index]},
-      edit: false
-    };
-  }
-
-  saveEdit(id: number): void {
-    const index = this.listOfCoordinates.findIndex(item => item.id === id);
-    Object.assign(this.listOfCoordinates[index], this.editCache[id].data);
-    this.editCache[id].edit = false;
-  }
-
-  updateEditCache(): void {
-    this.listOfCoordinates.forEach(item => {
-      this.editCache[item.id] = {
-        edit: false,
-        data: {...item}
-      };
-    });
-  }
-
-  ngOnInit(): void {
-    this.updateEditCache()
-  }
 
   handleOkCoordinates() {
     this.coordinatesFormComponent.updateCoordinates();

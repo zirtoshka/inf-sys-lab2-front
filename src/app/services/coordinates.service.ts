@@ -22,4 +22,10 @@ export class CoordinatesService {
   ) {
     return this.baseService.update(formData, "/coord/updateCoordinates");
   }
+
+
+  deleteCoordinates(formData: any) {
+
+    return this.baseService.delete(formData, "/coord/deleteCoordinates");
+  }
 }
