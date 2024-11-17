@@ -49,8 +49,7 @@ import {DragonheadTableComponent} from '../tables/dragonhead-table/dragonhead-ta
     LocationTableComponent,
     PersonTableComponent,
     DragoncaveTableComponent,
-    DragonheadTableComponent
-  ],
+    DragonheadTableComponent],
   styleUrls: ['./home.component.css']
 })
 

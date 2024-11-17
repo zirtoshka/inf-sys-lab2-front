@@ -17,26 +17,28 @@ import {NgIf} from '@angular/common';
 import {CoordinatesService} from '../../services/coordinates.service';
 import {Coordinates} from '../../dragondto/coordinates';
 import {NzSwitchComponent} from 'ng-zorro-antd/switch';
+import {NzModalComponent} from "ng-zorro-antd/modal";
 
 @Component({
   selector: 'app-coordinates-form',
   standalone: true,
-  imports: [
-    FormsModule,
-    NzButtonComponent,
-    NzFormControlComponent,
-    NzFormDirective,
-    NzFormItemComponent,
-    NzIconDirective,
-    NzInputDirective,
-    NzInputGroupComponent,
-    ReactiveFormsModule,
-    RouterLink,
-    NzFormLabelComponent,
-    NzColDirective,
-    NgIf,
-    NzSwitchComponent
-  ],
+    imports: [
+        FormsModule,
+        NzButtonComponent,
+        NzFormControlComponent,
+        NzFormDirective,
+        NzFormItemComponent,
+        NzIconDirective,
+        NzInputDirective,
+        NzInputGroupComponent,
+        ReactiveFormsModule,
+        RouterLink,
+        NzFormLabelComponent,
+        NzColDirective,
+        NgIf,
+        NzSwitchComponent,
+        NzModalComponent
+    ],
   templateUrl: './coordinates-form.component.html',
   styleUrl: './coordinates-form.component.css'
 })
@@ -67,6 +69,10 @@ export class CoordinatesFormComponent {
         console.log(coord);
       });
     }
+  }
+
+  getFormData(){
+    return this.validateForm.value;
   }
 
   hideAddButtonFn() {

@@ -1,19 +1,73 @@
-<input [(ngModel)]="searchValue" (ngModelChange)="onSearch()" placeholder="search by coord" style="margin-bottom: 16px;">
+<input [(ngModel)]="searchValue" (ngModelChange)="onSearch()" placeholder="search by coord"
+       style="margin-bottom: 16px;">
 
-<nz-table [nzData]="listOfCoordinates" [nzBordered]="true">
+<nz-table #editRowTable [nzData]="listOfCoordinates" [nzBordered]="true">
   <thead>
   <tr>
-    <th nzShowSort [nzSortOrder]="sortOrderId" (click)="sort('id')">ID</th>
-    <th nzShowSort [nzSortOrder]="sortOrderX" (click)="sort('x')">X</th>
-    <th nzShowSort [nzSortOrder]="sortOrderY" (click)="sort('y')">Y</th>
+    <!--    <th nzShowSort [nzSortOrder]="sortOrderId" (click)="sort('id')">ID</th>-->
+    <!--    <th nzShowSort [nzSortOrder]="sortOrderX" (click)="sort('x')">X</th>-->
+    <!--    <th nzShowSort [nzSortOrder]="sortOrderY" (click)="sort('y')">Y</th>-->
+    <th>ID</th>
+    <th>X</th>
+    <th>Y</th>
+    <th>Can edit</th>
+    <th>Edit</th>
+    <th>Delete</th>
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let coordinate of listOfCoordinates">
-    <td>{{ coordinate.id }}</td>
-    <td>{{ coordinate.x }}</td>
-    <td>{{ coordinate.y }}</td>
-  </tr>
+    @for (data of editRowTable.data; track data) {
+      <tr>
+        @if (!editCache[data.id].edit) {
+          <td>{{ data.id }}</td>
+          <td>{{ data.x }}</td>
+          <td>{{ data.y }}</td>
+          <td>{{ data.canEdit }}</td>
+          <td>
+            <a (click)="startEdit(data.id)">Edit</a>
+            <button nz-button nzType="default" (click)="this.isCoordinatesModalVisible=true">edit coordinates</button>
+          </td>
+          <td>
+            <a nz-popconfirm nzPopconfirmTitle="Are you sure?" (nzOnConfirm)="deleteRow(data.id)">
+              Delete
+            </a>
+          </td>
+        } @else {
+          <td>{{ data.id }}</td>
+          <td><input type="text" nz-input [(ngModel)]="editCache[data.id].data.x" /></td>
+          <td><input type="text" nz-input [(ngModel)]="editCache[data.id].data.y" /></td>
+          <td><input type="checkbox" nz-input [(ngModel)]="editCache[data.id].data.canEdit" /></td>
+          <td>
+            <a (click)="saveEdit(data.id)" class="save">Save</a>
+            <a nz-popconfirm nzPopconfirmTitle="Sure to cancel?" (nzOnConfirm)="cancelEdit(data.id)">Cancel</a>
+          </td>
+          <td>
+            <a nz-popconfirm nzPopconfirmTitle="Are you sure?" (nzOnConfirm)="deleteRow(data.id)">
+              Delete
+            </a>
+          </td>
+
+        }
+      </tr>
+    }
   </tbody>
 </nz-table>
+
+
+
+
+<nz-modal [(nzVisible)]="isCoordinatesModalVisible"
+          nzTitle="edit coordinates"
+          [nzContent]="coordinatesForma"
+          (nzOnCancel)="this.isCoordinatesModalVisible = false;"
+          [nzFooter]="coordFooter">
+  <ng-template #coordinatesForma>
+    <app-coordinates-form></app-coordinates-form>
+  </ng-template>
+  <ng-template #coordFooter>
+    <button nz-button nzType="default" (click)="this.isCoordinatesModalVisible = false;">cancel</button>
+    <button nz-button nzType="primary" (click)="handleOkCoordinates()">save</button>
+  </ng-template>
+</nz-modal>
+
 
