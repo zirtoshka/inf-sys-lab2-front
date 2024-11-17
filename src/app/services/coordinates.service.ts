@@ -16,4 +16,10 @@ export class CoordinatesService {
   ) {
     return this.baseService.add(formData, "/coord/addCoordinates");
   }
+
+  updateCoordinates(
+    formData: any
+  ) {
+    return this.baseService.update(formData, "/coord/updateCoordinates");
+  }
 }

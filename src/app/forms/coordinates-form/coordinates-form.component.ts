@@ -22,23 +22,23 @@ import {NzModalComponent} from "ng-zorro-antd/modal";
 @Component({
   selector: 'app-coordinates-form',
   standalone: true,
-    imports: [
-        FormsModule,
-        NzButtonComponent,
-        NzFormControlComponent,
-        NzFormDirective,
-        NzFormItemComponent,
-        NzIconDirective,
-        NzInputDirective,
-        NzInputGroupComponent,
-        ReactiveFormsModule,
-        RouterLink,
-        NzFormLabelComponent,
-        NzColDirective,
-        NgIf,
-        NzSwitchComponent,
-        NzModalComponent
-    ],
+  imports: [
+    FormsModule,
+    NzButtonComponent,
+    NzFormControlComponent,
+    NzFormDirective,
+    NzFormItemComponent,
+    NzIconDirective,
+    NzInputDirective,
+    NzInputGroupComponent,
+    ReactiveFormsModule,
+    RouterLink,
+    NzFormLabelComponent,
+    NzColDirective,
+    NgIf,
+    NzSwitchComponent,
+    NzModalComponent
+  ],
   templateUrl: './coordinates-form.component.html',
   styleUrl: './coordinates-form.component.css'
 })
@@ -46,10 +46,11 @@ export class CoordinatesFormComponent {
   private coordinatesService = inject(CoordinatesService);
   showAddButton = true;
   validateForm: FormGroup;
-
+  defaultData: Coordinates | undefined;
 
 
   constructor(private fb: NonNullableFormBuilder) {
+
     this.validateForm = this.fb.group({
       xValue: ['', [Validators.required,
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
@@ -71,12 +72,40 @@ export class CoordinatesFormComponent {
     }
   }
 
-  getFormData(){
+  updateCoordinates() {
+    if (this.validateForm.valid && this.defaultData) {
+      const coordinates: Coordinates = {
+        id: this.defaultData.id,
+        x: this.validateForm.value.xValue,
+        y: this.validateForm.value.yValue,
+        canEdit: this.validateForm.value.canEdit
+      };
+      this.coordinatesService.updateCoordinates(
+        coordinates
+      ).subscribe((coord: Coordinates) => {
+        console.log(coord);
+      })
+    }
+  }
+
+  getFormData() {
     return this.validateForm.value;
   }
 
   hideAddButtonFn() {
     this.showAddButton = false;
+  }
+
+  setCanEdit() {
+    if (this.defaultData) {
+      return this.defaultData.canEdit;
+    }
+    return false;
+  }
+
+  setDefaultData(data: Coordinates) {
+    this.defaultData = data;
+
   }
 
 }

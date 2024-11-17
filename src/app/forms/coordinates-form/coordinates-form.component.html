@@ -4,7 +4,7 @@
     <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="x">x</nz-form-label>
     <nz-form-control nzErrorTip="x is number">
       <nz-input-group>
-        <input formControlName="xValue" nz-input placeholder="x"/>
+        <input formControlName="xValue" nz-input placeholder="x" [ngModel]="defaultData?.x"/>
       </nz-input-group>
     </nz-form-control>
   </nz-form-item>
@@ -13,7 +13,7 @@
     <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="y">y</nz-form-label>
     <nz-form-control nzErrorTip="y is a number, it must be at least -182">
       <nz-input-group>
-        <input formControlName="yValue" nz-input placeholder="y"/>
+        <input formControlName="yValue" nz-input placeholder="y" [ngModel]="defaultData?.y"/>
       </nz-input-group>
     </nz-form-control>
   </nz-form-item>
@@ -22,7 +22,7 @@
     <nz-form-label [nzSm]="20" [nzXs]="24" nzFor="canEdit">can edit</nz-form-label>
     <nz-switch
       formControlName="canEdit"
-      [ngModel]="false"
+      [ngModel]="setCanEdit()"
       [nzCheckedChildren]="checkedTemplate"
       [nzUnCheckedChildren]="unCheckedTemplate"
     ></nz-switch>

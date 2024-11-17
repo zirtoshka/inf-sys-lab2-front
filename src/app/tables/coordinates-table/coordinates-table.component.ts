@@ -10,6 +10,7 @@ import {NzInputDirective} from 'ng-zorro-antd/input';
 import {CoordinatesFormComponent} from '../../forms/coordinates-form/coordinates-form.component';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
+
 @Component({
   selector: 'app-coordinates-table',
   standalone: true,
@@ -33,22 +34,24 @@ import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
 export class CoordinatesTableComponent implements OnInit {
   @ViewChild(CoordinatesFormComponent) coordinatesFormComponent!: CoordinatesFormComponent;
   isCoordinatesModalVisible = false;
+  dataEdit: Coordinates | null;
 
   listOfCoordinates: Coordinates[] = [
-    { id: 1, x: 10, y: 20 ,canEdit: true},
-    { id: 2, x: 15, y: 25 ,canEdit: true},
-    { id: 3, x: 20, y: 30 ,canEdit: true},
-    { id: 4, x: 25, y: 35 ,canEdit: true},
-    { id: 5, x: 30, y: 40,canEdit: true },
-    { id: 6, x: 35, y: 45 ,canEdit: true},
-    { id: 7, x: 40, y: 50,canEdit: true },
+    {id: 1, x: 10, y: 20, canEdit: true},
+    {id: 2, x: 15, y: 25, canEdit: true},
+    {id: 3, x: 20, y: 30, canEdit: true},
+    {id: 4, x: 25, y: 35, canEdit: true},
+    {id: 5, x: 30, y: 40, canEdit: true},
+    {id: 6, x: 35, y: 45, canEdit: true},
+    {id: 7, x: 40, y: 50, canEdit: true},
   ];
 
   sortOrderId: 'ascend' | 'descend' | null = null;
   sortOrderX: 'ascend' | 'descend' | null = null;
   sortOrderY: 'ascend' | 'descend' | null = null;
 
-  constructor( private cd: ChangeDetectorRef) {
+  constructor(private cd: ChangeDetectorRef) {
+    this.dataEdit = null;
   }
 
   sort(key: 'id' | 'x' | 'y'): void {
@@ -87,6 +90,7 @@ export class CoordinatesTableComponent implements OnInit {
 
   //todo
   editCache: { [key: string]: { edit: boolean; data: Coordinates } } = {};
+
   startEdit(id: number): void {
     this.editCache[id].edit = true;
   }
@@ -95,7 +99,7 @@ export class CoordinatesTableComponent implements OnInit {
   cancelEdit(id: number): void {
     const index = this.listOfCoordinates.findIndex(item => item.id === id);
     this.editCache[id] = {
-      data: { ...this.listOfCoordinates[index] },
+      data: {...this.listOfCoordinates[index]},
       edit: false
     };
   }
@@ -105,27 +109,40 @@ export class CoordinatesTableComponent implements OnInit {
     Object.assign(this.listOfCoordinates[index], this.editCache[id].data);
     this.editCache[id].edit = false;
   }
+
   updateEditCache(): void {
     this.listOfCoordinates.forEach(item => {
       this.editCache[item.id] = {
         edit: false,
-        data: { ...item }
+        data: {...item}
       };
     });
   }
+
   ngOnInit(): void {
     this.updateEditCache()
   }
 
-  handleOkCoordinates(){
-    let data = this.coordinatesFormComponent.getFormData();
-    console.log(data);
+  handleOkCoordinates() {
+    this.coordinatesFormComponent.updateCoordinates();
   }
+
   ngAfterViewChecked(): void {
     if (this.coordinatesFormComponent) {
+      if (this.dataEdit) {
+        this.coordinatesFormComponent.setDefaultData(this.dataEdit);
+      }
       this.coordinatesFormComponent.hideAddButtonFn();
     }
     this.cd.detectChanges();
 
   }
+
+  openEditModal(data: Coordinates): void {
+    this.isCoordinatesModalVisible = true;
+    this.dataEdit = data;
+
+  }
+
+
 }
