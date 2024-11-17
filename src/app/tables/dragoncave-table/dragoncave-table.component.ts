@@ -9,6 +9,7 @@ import {CoordinatesFormComponent} from '../../forms/coordinates-form/coordinates
 import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
 import {CaveService} from '../../services/cave.service';
 import {DragonCaveFormComponent} from '../../forms/dragoncave-form/dragoncave-form.component';
+import {Coordinates} from '../../dragondto/coordinates';
 
 @Component({
   selector: 'app-dragoncave-table',
@@ -114,5 +115,8 @@ export class DragoncaveTableComponent {
     this.dataEdit = data;
 
   }
+
+
+
 
 }

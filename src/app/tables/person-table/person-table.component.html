@@ -4,14 +4,24 @@
 <nz-table [nzData]="listOfPeople" [nzBordered]="true">
   <thead>
   <tr>
-    <th nzShowSort [nzSortOrder]="sortOrderId" (click)="sort('id')">ID</th>
-    <th nzShowSort [nzSortOrder]="sortOrderName" (click)="sort('name')">name</th>
-    <th nzShowSort [nzSortOrder]="sortOrderEyeColor" (click)="sort('eyeColor')">eye color</th>
-    <th nzShowSort [nzSortOrder]="sortOrderHairColor" (click)="sort('hairColor')">hair color</th>
-    <th nzShowSort [nzSortOrder]="sortOrderLocation" (click)="sort('location')">location</th>
-    <th nzShowSort [nzSortOrder]="sortOrderHeight" (click)="sort('height')">height</th>
-    <th nzShowSort [nzSortOrder]="sortOrderPassportID" (click)="sort('passportID')">passport id</th>
-    <th nzShowSort [nzSortOrder]="sortOrderNationality" (click)="sort('nationality')">nationality</th>
+    <!--    <th nzShowSort [nzSortOrder]="sortOrderId" (click)="sort('id')">ID</th>-->
+    <!--    <th nzShowSort [nzSortOrder]="sortOrderName" (click)="sort('name')">name</th>-->
+    <!--    <th nzShowSort [nzSortOrder]="sortOrderEyeColor" (click)="sort('eyeColor')">eye color</th>-->
+    <!--    <th nzShowSort [nzSortOrder]="sortOrderHairColor" (click)="sort('hairColor')">hair color</th>-->
+    <!--    <th nzShowSort [nzSortOrder]="sortOrderLocation" (click)="sort('location')">location</th>-->
+    <!--    <th nzShowSort [nzSortOrder]="sortOrderHeight" (click)="sort('height')">height</th>-->
+    <!--    <th nzShowSort [nzSortOrder]="sortOrderPassportID" (click)="sort('passportID')">passport id</th>-->
+    <!--    <th nzShowSort [nzSortOrder]="sortOrderNationality" (click)="sort('nationality')">nationality</th>-->
+    <th>id</th>
+    <th>name</th>
+    <th>eye color</th>
+    <th>hair color</th>
+    <th>location</th>
+    <th>height</th>
+    <th>passportID</th>
+    <th>nationality</th>
+    <th>can edit</th>
+    <th>actions</th>
   </tr>
   </thead>
   <tbody>
@@ -20,11 +30,58 @@
     <td>{{ person.name }}</td>
     <td>{{ person.eyeColor }}</td>
     <td>{{ person.hairColor }}</td>
-    <td>{{ person.location.name }}</td>
+    <td>
+      <a (click)="openLocationModal(person.location)">{{ person.location.name }}</a>
+    </td>
     <td>{{ person.height || 'not specified' }}</td>
     <td>{{ person.passportID }}</td>
     <td>{{ person.nationality }}</td>
+    <td>{{ person.canEdit }}</td>
+    <td>
+      <button nz-button nzSize="small" nzShape="round" nzType="primary" (click)="openEditModal(person)">edit person
+      </button>
+      <a nz-popconfirm nzPopconfirmTitle="Are you sure?" (nzOnConfirm)="deleteRow(person.id)">
+        Delete
+      </a>
+    </td>
   </tr>
   </tbody>
 </nz-table>
 
+
+<nz-modal [(nzVisible)]="isPersonModalVisible"
+          nzTitle="edit person"
+          [nzContent]="personForma"
+          (nzOnCancel)="this.isPersonModalVisible = false;"
+          [nzFooter]="personFooter">
+  <ng-template #personForma>
+    <app-person-form></app-person-form>
+  </ng-template>
+  <ng-template #personFooter>
+    <button nz-button nzType="default" (click)="this.isPersonModalVisible = false;">cancel</button>
+    <button nz-button nzType="primary" (click)="handleOkCoordinates()">save</button>
+  </ng-template>
+</nz-modal>
+
+
+<nz-modal
+  [(nzVisible)]="isLocationModalVisible"
+  [nzTitle]="'Location Details'"
+  [nzFooter]="null"
+  [nzContent]="locationInfo"
+  (nzOnCancel)="handleCancel()"
+>
+  <ng-template #locationInfo>
+    <ng-container *ngIf="selectedLocation!=null">
+      <p><strong>ID:</strong> {{ selectedLocation.id }}</p>
+      <p><strong>name:</strong> {{ selectedLocation.name }}</p>
+      <p><strong>x:</strong> {{ selectedLocation.x }}</p>
+      <p><strong>y:</strong> {{ selectedLocation.y }}</p>
+      <p><strong>z:</strong> {{ selectedLocation.z }}</p>
+      <p><strong>can edit:</strong> {{ selectedLocation.canEdit }}</p>
+    </ng-container>
+  </ng-template>
+</nz-modal>
+
+
+<app-bubuka></app-bubuka>

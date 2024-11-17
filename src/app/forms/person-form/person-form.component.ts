@@ -1,7 +1,5 @@
 import {ChangeDetectorRef, Component, inject, ViewChild} from '@angular/core';
 import {
-  FormBuilder,
-  FormControl,
   FormGroup,
   FormsModule,
   NonNullableFormBuilder,
@@ -25,6 +23,7 @@ import {LocationFormComponent} from '../location-form/location-form.component';
 import {PersonService} from '../../services/person.service';
 import {Person} from '../../dragondto/person';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
+import {Coordinates} from '../../dragondto/coordinates';
 
 @Component({
   selector: 'app-person-form',
@@ -61,6 +60,7 @@ export class PersonFormComponent {
   private personService = inject(PersonService);
   showAddButton = true;
 
+  idForEdit: number | undefined;
 
   validateForm: FormGroup;
   isLocationModalVisible = false;
@@ -82,7 +82,7 @@ export class PersonFormComponent {
         Validators.min(0),
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
       passportID: [null],
-      canEdit:[null, [Validators.required]],
+      canEdit: [null, [Validators.required]],
     });
   }
 
@@ -123,9 +123,40 @@ export class PersonFormComponent {
     }
   }
 
+  updatePerson() {
+    if (this.validateForm.valid && this.idForEdit) {
+      const coordinates: Coordinates = { //todo ->person
+        id: this.idForEdit,
+        x: this.validateForm.value.xValue,
+        y: this.validateForm.value.yValue,
+        canEdit: this.validateForm.value.canEdit
+      };
+      this.personService.updatePerson(
+        coordinates
+      ).subscribe((data: Person) => {
+        console.log(data);
+      })
+    }
+  }
+
   hideAddButtonFn() {
     this.showAddButton = false;
   }
 
+
+  setDefaultData(data: Person) {
+    this.idForEdit = data.id;
+    this.validateForm.patchValue({
+      name: data.name,  //todo ->person valid data
+      eyeColor: data.eyeColor,
+      hairColor: data.hairColor,
+      location:data.location, //todo ???
+      nationality: data.nationality,
+      height: data.height,
+      passportID: data.passportID,
+      canEdit: data.canEdit
+
+    });
+  }
 
 }

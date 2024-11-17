@@ -1,11 +1,18 @@
-import {Component} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, ViewChild} from '@angular/core';
 import {Person} from '../../dragondto/person';
 import {Color} from '../../dragondto/color';
 import {Country} from '../../dragondto/country';
 import {NzTableComponent, NzThAddOnComponent} from 'ng-zorro-antd/table';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgForOf} from '@angular/common';
-import {Coordinates} from '../../dragondto/coordinates';
+import {NgForOf, NgIf} from '@angular/common';
+import {NzButtonComponent} from 'ng-zorro-antd/button';
+import {NzPopconfirmDirective} from 'ng-zorro-antd/popconfirm';
+import {CoordinatesFormComponent} from '../../forms/coordinates-form/coordinates-form.component';
+import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
+import {PersonFormComponent} from '../../forms/person-form/person-form.component';
+import {PersonService} from '../../services/person.service';
+import {BubukaComponent} from '../../bubuka/bubuka.component';
+import {Location} from '../../dragondto/location';
 
 @Component({
   selector: 'app-person-table',
@@ -15,12 +22,25 @@ import {Coordinates} from '../../dragondto/coordinates';
     ReactiveFormsModule,
     NzTableComponent,
     FormsModule,
-    NgForOf
+    NgForOf,
+    NzButtonComponent,
+    NzPopconfirmDirective,
+    CoordinatesFormComponent,
+    NzModalComponent,
+    PersonFormComponent,
+    BubukaComponent,
+    NgIf
   ],
+  providers: [NzModalService],
   templateUrl: './person-table.component.html',
   styleUrl: './person-table.component.css'
 })
 export class PersonTableComponent {
+  private personService = inject(PersonService);
+  @ViewChild(PersonFormComponent) personFormComponent!: PersonFormComponent;
+  isPersonModalVisible = false;
+  dataEdit: Person | null;
+
   listOfPeople: Person[] = [
     {
       id: 1,
@@ -38,7 +58,7 @@ export class PersonTableComponent {
       name: 'Анна Смирнова',
       eyeColor: Color.BLUE,
       hairColor: Color.YELLOW,
-      location: {id: 2, x: 15, y: 25, z: 35, name: 'Санкт-Петербург',canEdit: true},
+      location: {id: 2, x: 15, y: 25, z: 35, name: 'Санкт-Петербург', canEdit: true},
       height: 165,
       passportID: '987654321',
       nationality: Country.GERMANY,
@@ -56,6 +76,10 @@ export class PersonTableComponent {
       canEdit: true
     }
   ];
+
+  constructor(private cd: ChangeDetectorRef) {
+    this.dataEdit = null;
+  }
 
   sortOrderId: 'ascend' | 'descend' | null = null;
   sortOrderName: 'ascend' | 'descend' | null = null;
@@ -115,4 +139,52 @@ export class PersonTableComponent {
       person.passportID.toLowerCase().includes(this.searchValue.toLowerCase())
     );
   }
+
+
+  deleteRow(id: number): void {
+    this.personService.deletePerson(
+      {id: id})
+      .subscribe((res) => {
+        console.log(res);
+      })
+    this.listOfPeople = this.listOfPeople.filter(d => d.id !== id);
+  }
+
+
+  handleOkCoordinates() {
+    this.personFormComponent.updatePerson();
+  }
+
+  ngAfterViewChecked(): void {
+    if (this.personFormComponent) {
+      if (this.dataEdit) {
+        this.personFormComponent.setDefaultData(this.dataEdit);
+      }
+      this.personFormComponent.hideAddButtonFn();
+    }
+    this.cd.detectChanges();
+
+  }
+
+  openEditModal(data: Person): void {
+    this.isPersonModalVisible = true;
+    this.dataEdit = data;
+
+  }
+
+  //location info
+  isLocationModalVisible = false;
+  selectedLocation: Location | null = null;
+
+  openLocationModal(location: Location): void {
+    this.selectedLocation = location;
+    this.isLocationModalVisible = true;
+    // this.cd.detectChanges();
+
+  }
+
+  handleCancel(): void {
+    this.isLocationModalVisible = false;
+  }
+
 }

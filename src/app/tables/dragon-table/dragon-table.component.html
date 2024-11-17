@@ -4,26 +4,37 @@
 <nz-table [nzData]="listOfDragons" [nzBordered]="true">
   <thead>
   <tr>
-    <th nzShowSort [nzSortOrder]="sortOrderId" (click)="sort('id')">ID</th>
-    <th nzShowSort [nzSortOrder]="sortOrderName" (click)="sort('name')">name</th>
-    <th nzShowSort [nzSortOrder]="sortOrderCoordinates" (click)="sort('coordinates')">coordinates</th>
-    <th nzShowSort [nzSortOrder]="sortOrderCreationDate" (click)="sort('creationDate')">creation date</th>
-    <th nzShowSort [nzSortOrder]="sortOrderCave" (click)="sort('cave')">cave</th>
-    <th nzShowSort [nzSortOrder]="sortOrderKiller" (click)="sort('killer')">killer</th>
-    <th nzShowSort [nzSortOrder]="sortOrderAge" (click)="sort('age')">age</th>
-    <th nzShowSort [nzSortOrder]="sortOrderWingspan" (click)="sort('wingspan')">wings</th>
-    <th nzShowSort [nzSortOrder]="sortOrderColor" (click)="sort('color')">color</th>
-    <th nzShowSort [nzSortOrder]="sortOrderCharacter" (click)="sort('character')">character</th>
+    <th>id</th>
+    <th>name</th>
+    <th>coordinates</th>
+    <th>creation date</th>
+    <th>cave</th>
+    <th>killer</th>
+    <th>age</th>
+    <th>wingspan</th>
+    <th>color</th>
+    <th>character</th>
+    <th>can edit</th>
   </tr>
   </thead>
   <tbody>
   <tr *ngFor="let dragon of listOfDragons">
     <td>{{ dragon.id }}</td>
     <td>{{ dragon.name }}</td>
-    <td>{{ dragon.coordinates.x }}, {{ dragon.coordinates.y }}, {{ dragon.coordinates.id}}</td>
+    <td>
+      <a (click)="openCoordinatesModal(dragon.coordinates)">{{ dragon.coordinates.x }}, {{ dragon.coordinates.y }}
+        , {{ dragon.coordinates.id }}</a>
+    </td>
     <td>{{ dragon.creationDate }}</td>
-    <td>{{ dragon.cave.numberOfTreasures }}</td>
-    <td>{{ dragon.killer ? dragon.killer.name : 'null' }}</td>
+
+    <td>
+      <a (click)="openCaveModal(dragon.cave)">{{ dragon.cave.numberOfTreasures }}</a>
+    </td>
+
+
+    <td>
+      <a (click)="openKillerModal(dragon.killer)">{{ dragon.killer ? dragon.killer.name : 'null' }}</a>
+    </td>
     <td>{{ dragon.age || 'null' }}</td>
     <td>{{ dragon.wingspan || 'null' }}</td>
     <td>{{ dragon.color }}</td>
@@ -31,4 +42,71 @@
   </tr>
   </tbody>
 </nz-table>
+
+
+<nz-modal
+  [(nzVisible)]="isCoordinatesModalVisible"
+  [nzTitle]="'Coordinates Details'"
+  [nzFooter]="null"
+  [nzContent]="coordinatesInfo"
+  (nzOnCancel)="handleCoordinatesCancel()"
+>
+  <ng-template #coordinatesInfo>
+    <ng-container *ngIf="selectedCoordinates!=null">
+      <p><strong>ID:</strong> {{ selectedCoordinates.id }}</p>
+      <p><strong>x:</strong> {{ selectedCoordinates.x }}</p>
+      <p><strong>y:</strong> {{ selectedCoordinates.y }}</p>
+      <p><strong>can edit:</strong> {{ selectedCoordinates.canEdit }}</p>
+    </ng-container>
+  </ng-template>
+</nz-modal>
+
+
+<nz-modal
+  [(nzVisible)]="isCaveModalVisible"
+  [nzTitle]="'Cave Details'"
+  [nzFooter]="null"
+  [nzContent]="caveInfo"
+  (nzOnCancel)="handleCaveCancel()"
+>
+  <ng-template #caveInfo>
+    <ng-container *ngIf="selectedCave!=null">
+      <p><strong>ID:</strong> {{ selectedCave.id }}</p>
+      <p><strong>treasure:</strong> {{ selectedCave.numberOfTreasures }}</p>
+      <p><strong>can edit:</strong> {{ selectedCave.canEdit }}</p>
+    </ng-container>
+  </ng-template>
+</nz-modal>
+
+<nz-modal
+  [(nzVisible)]="isKillerModalVisible"
+  [nzTitle]="'killer Details'"
+  [nzFooter]="null"
+  [nzContent]="killerInfo"
+  (nzOnCancel)="handleKillerCancel()"
+>
+  <ng-template #killerInfo>
+    <ng-container *ngIf="selectedKiller!=null">
+      <p><strong>ID:</strong> {{ selectedKiller.id }}</p>
+      <p><strong>name:</strong> {{ selectedKiller.name }}</p>
+      <p><strong>eye:</strong> {{ selectedKiller.eyeColor }}</p>
+      <p><strong>hair:</strong> {{ selectedKiller.hairColor }}</p>
+
+      <p><strong>location:</strong></p>
+      <ul>
+        <li><strong>ID:</strong> {{ selectedKiller.location.id }}</li>
+        <li><strong>Name:</strong> {{ selectedKiller.location.name }}</li>
+        <li><strong>X:</strong> {{ selectedKiller.location.x }}</li>
+        <li><strong>Y:</strong> {{ selectedKiller.location.y }}</li>
+        <li><strong>Z:</strong> {{ selectedKiller.location.z }}</li>
+        <li><strong>Can Edit:</strong> {{ selectedKiller.location.canEdit }}</li>
+      </ul>
+
+      <p><strong>height:</strong> {{ selectedKiller.height }}</p>
+      <p><strong>passportID:</strong> {{ selectedKiller.passportID }}</p>
+      <p><strong>nationality:</strong> {{ selectedKiller.nationality }}</p>
+      <p><strong>can edit:</strong> {{ selectedKiller.canEdit }}</p>
+    </ng-container>
+  </ng-template>
+</nz-modal>
 

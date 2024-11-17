@@ -3,8 +3,13 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Dragon} from '../../dragondto/dragon';
 import {Color} from '../../dragondto/color';
 import {DragonCharacter} from '../../dragondto/dragoncharacter';
-import {NgForOf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {NzTableComponent, NzThAddOnComponent} from 'ng-zorro-antd/table';
+import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
+import {Coordinates} from '../../dragondto/coordinates';
+import {DragonCave} from '../../dragondto/dragoncave';
+import {Country} from '../../dragondto/country';
+import {Person} from '../../dragondto/person';
 
 @Component({
   selector: 'app-dragon-table',
@@ -14,8 +19,11 @@ import {NzTableComponent, NzThAddOnComponent} from 'ng-zorro-antd/table';
     FormsModule,
     NgForOf,
     NzThAddOnComponent,
-    NzTableComponent
+    NzTableComponent,
+    NgIf,
+    NzModalComponent
   ],
+  providers: [NzModalService],
   templateUrl: './dragon-table.component.html',
   styleUrl: './dragon-table.component.css'
 })
@@ -27,7 +35,17 @@ export class DragonTableComponent {
       coordinates: {id: 1, x: 10, y: 20, canEdit: true},
       creationDate: '2022-01-01',
       cave: {id: 3, numberOfTreasures: 2, canEdit: true},
-      killer: null,
+      killer: {
+        id: 1,
+        name: 'Иван Иванов',
+        eyeColor: Color.RED,
+        hairColor: Color.BROWN,
+        location: {id: 1, x: 10, y: 20, z: 30, name: 'Москва', canEdit: true},
+        height: 175,
+        passportID: '123456789',
+        nationality: Country.USA,
+        canEdit: true
+      },
       age: 100,
       wingspan: 25,
       color: Color.RED,
@@ -114,5 +132,54 @@ export class DragonTableComponent {
       dragon.name.toLowerCase().includes(this.searchValue.toLowerCase()) ||
       dragon.id.toString().includes(this.searchValue.toLowerCase())
     );
+  }
+
+
+  //coordinates info
+  isCoordinatesModalVisible = false;
+  selectedCoordinates: Coordinates | null = null;
+
+  openCoordinatesModal(data: Coordinates): void {
+    this.selectedCoordinates = data;
+    this.isCoordinatesModalVisible = true;
+    // this.cd.detectChanges();
+
+  }
+
+  handleCoordinatesCancel(): void {
+    this.isCoordinatesModalVisible = false;
+  }
+
+
+  //cave info
+  isCaveModalVisible = false;
+  selectedCave: DragonCave | null = null;
+
+  openCaveModal(data: DragonCave): void {
+    this.selectedCave = data;
+    this.isCaveModalVisible = true;
+
+  }
+
+  handleCaveCancel(): void {
+    this.isCaveModalVisible = false;
+  }
+
+
+  //cave info
+  isKillerModalVisible = false;
+  selectedKiller: Person | null = null;
+
+  openKillerModal(data: Person | null): void {
+    if (data) {
+      this.selectedKiller = data;
+      this.isKillerModalVisible = true;
+    }
+
+
+  }
+
+  handleKillerCancel(): void {
+    this.isKillerModalVisible = false;
   }
 }

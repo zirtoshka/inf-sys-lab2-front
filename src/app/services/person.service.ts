@@ -1,6 +1,4 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {AuthService} from '../auth-tools/auth.service';
 import {BaseService} from './base.service';
 
 @Injectable(
@@ -11,5 +9,11 @@ export class PersonService {
 
   addPerson(formData: any) {
     return this.baseService.add(formData, "/person/addPerson");
+  }
+  deletePerson(formData: any) {
+    return this.baseService.add(formData, "/person/deletePerson");
+  }
+  updatePerson(formData: any) {
+    return this.baseService.add(formData, "/person/updatePerson");
   }
 }
