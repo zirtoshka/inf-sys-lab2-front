@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, inject, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewChild} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -31,6 +31,7 @@ import {DragonHeadFormComponent} from '../dragonhead-form/dragon-head-form.compo
 import {Head} from 'rxjs';
 import {DragonService} from '../../services/dragon.service';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
+import {Dragon} from '../../dragondto/dragon';
 
 
 @Component({
@@ -62,7 +63,9 @@ import {NzIconDirective} from 'ng-zorro-antd/icon';
   ],
   providers: [NzModalService],
   templateUrl: './dragon-form.component.html',
-  styleUrl: './dragon-form.component.css'
+  styleUrl: './dragon-form.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+
 })
 export class DragonFormComponent {
   @ViewChild(PersonFormComponent) personFormComponent!: PersonFormComponent;
@@ -71,6 +74,9 @@ export class DragonFormComponent {
   @ViewChild(DragonHeadFormComponent) headFormComponent!: DragonHeadFormComponent;
 
   private dragonService = inject(DragonService);
+
+  showAddButton = true;
+  defaultData: Dragon | undefined;
 
   isKillerModalVisible = false;
   isCoordinatesModalVisible = false;
@@ -168,6 +174,78 @@ export class DragonFormComponent {
 
   }
 
+  updateDragon() {
+    if (this.validateForm.valid && this.defaultData) {
+      const head: Dragon = {
+        age: this.defaultData.age,
+        cave: this.defaultData.cave,
+        character: this.defaultData.character,
+        color: this.defaultData.color,
+        coordinates: this.defaultData.coordinates,
+        creationDate: this.defaultData.creationDate,
+        heads: this.defaultData.heads,
+        killer: this.defaultData.killer,
+        wingspan: this.defaultData.wingspan,
+        id: this.defaultData.id,
+        name: this.validateForm.value.eyes,
+        canEdit: this.validateForm.value.canEdit
+      };
+      this.dragonService.updateDragon(
+        head
+      ).subscribe((data: Dragon) => {
+        console.log(data);
+      })
+    }
+  }
+
+
+  hideAddButtonFn() {
+    this.showAddButton = false;
+  }
+
+  setCanEdit() {
+    if (this.defaultData) {
+      return this.defaultData.canEdit;
+    }
+    return false;
+  }
+
+  setDefaultData(data: Dragon) {
+    this.defaultData = data;
+  }
+
+  setCoordinates() {
+    if (this.defaultData) {
+      return this.existingCoordinates.find(data => data.id === this.defaultData?.coordinates.id);
+    }
+    return null
+  }
+
+  setCave() {
+    if (this.defaultData) {
+      return this.existingCave.find(data => data.id === this.defaultData?.cave.id);
+    }
+    return null
+  }
+
+  setKiller() {
+    if (this.defaultData) {
+      return this.existingPerson.find(data => data.id === this.defaultData?.killer?.id);
+    }
+    return null
+  }
+
+  setHeads(): DragonHead[] {
+    if (this.defaultData && this.defaultData.heads) {
+      return this.defaultData.heads.map((head) =>
+        this.existingDragonHeads.find((existingHead) => existingHead.id === head.id)
+      ).filter((head): head is DragonHead => !!head);
+    }
+    return [];
+  }
+
+
+
   handleOkPerson() {
     // this.personFormComponent.showAddButtonFn();
   }
@@ -183,4 +261,6 @@ export class DragonFormComponent {
   handleOkHead() {
     // this.headFormComponent.showAddButtonFn();
   }
+
+  protected readonly name = name;
 }

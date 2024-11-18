@@ -14,7 +14,9 @@
     <th>wingspan</th>
     <th>color</th>
     <th>character</th>
+    <th>head</th>
     <th>can edit</th>
+    <th>actions</th>
   </tr>
   </thead>
   <tbody>
@@ -39,9 +41,40 @@
     <td>{{ dragon.wingspan || 'null' }}</td>
     <td>{{ dragon.color }}</td>
     <td>{{ dragon.character }}</td>
+    <td>
+      <a (click)="openHeadsModal(dragon.heads)">
+        number of heads: {{ dragon.heads.length}}
+      </a>
+    </td>
+    <td>{{ dragon.canEdit ? 'Yes' : 'No'  }}</td>
+
+    <td>
+      <button nz-button nzSize="small" nzShape="round" nzType="primary" (click)="openEditModal(dragon)">edit head
+      </button>
+      <a nz-popconfirm nzPopconfirmTitle="Are you sure?" (nzOnConfirm)="deleteRow(dragon.id)">
+        Delete
+      </a>
+    </td>
   </tr>
   </tbody>
 </nz-table>
+
+
+<nz-modal [(nzVisible)]="isDragonModalVisible"
+          nzTitle="edit dragon"
+          [nzContent]="dragonForma"
+          (nzOnCancel)="this.isDragonModalVisible = false;"
+          [nzFooter]="dragonFooter">
+  <ng-template #dragonForma>
+    <app-dragon-form></app-dragon-form>
+  </ng-template>
+  <ng-template #dragonFooter>
+    <button nz-button nzType="default" (click)="this.isDragonModalVisible = false;">cancel</button>
+    <button nz-button nzType="primary" (click)="handleOkHead()">save</button>
+  </ng-template>
+</nz-modal>
+
+
 
 
 <nz-modal
@@ -56,7 +89,7 @@
       <p><strong>ID:</strong> {{ selectedCoordinates.id }}</p>
       <p><strong>x:</strong> {{ selectedCoordinates.x }}</p>
       <p><strong>y:</strong> {{ selectedCoordinates.y }}</p>
-      <p><strong>can edit:</strong> {{ selectedCoordinates.canEdit }}</p>
+      <p><strong>can edit:</strong> {{ selectedCoordinates.canEdit ? 'Yes' : 'No'  }}</p>
     </ng-container>
   </ng-template>
 </nz-modal>
@@ -73,7 +106,7 @@
     <ng-container *ngIf="selectedCave!=null">
       <p><strong>ID:</strong> {{ selectedCave.id }}</p>
       <p><strong>treasure:</strong> {{ selectedCave.numberOfTreasures }}</p>
-      <p><strong>can edit:</strong> {{ selectedCave.canEdit }}</p>
+      <p><strong>can edit:</strong> {{ selectedCave.canEdit ? 'Yes' : 'No'  }}</p>
     </ng-container>
   </ng-template>
 </nz-modal>
@@ -105,8 +138,33 @@
       <p><strong>height:</strong> {{ selectedKiller.height }}</p>
       <p><strong>passportID:</strong> {{ selectedKiller.passportID }}</p>
       <p><strong>nationality:</strong> {{ selectedKiller.nationality }}</p>
-      <p><strong>can edit:</strong> {{ selectedKiller.canEdit }}</p>
+      <p><strong>can edit:</strong> {{ selectedKiller.canEdit ? 'Yes' : 'No'  }}</p>
     </ng-container>
   </ng-template>
 </nz-modal>
 
+
+
+<nz-modal
+  [(nzVisible)]="isHeadsModalVisible"
+  [nzTitle]="'heads Details'"
+  [nzFooter]="null"
+  [nzContent]="headsInfo"
+  (nzOnCancel)="handleHeadCancel()"
+>
+  <ng-template #headsInfo>
+    <ng-container *ngIf="selectedHeads!=null; else noHeads">
+      <ul>
+        <li *ngFor="let head of selectedHeads">
+          <p><strong>ID:</strong> {{ head.id }}</p>
+          <p><strong>Eyes Count:</strong> {{ head.eyesCount ?? 'N/A' }}</p>
+          <p><strong>can edit:</strong> {{ head.canEdit ? 'Yes' : 'No' }}</p>
+          <hr />
+        </li>
+      </ul>
+    </ng-container>
+    <ng-template #noHeads>
+      <p>No heads available.</p>
+    </ng-template>
+  </ng-template>
+</nz-modal>

@@ -3,6 +3,7 @@ import {DragonCave} from './dragoncave';
 import {Person} from './person';
 import {Color} from './color';
 import {DragonCharacter} from './dragoncharacter';
+import {DragonHead} from './dragonhead';
 
 export interface Dragon {
   id: number;
@@ -15,5 +16,6 @@ export interface Dragon {
   wingspan: number | null;
   color: Color;
   character: DragonCharacter;
+  heads: DragonHead[];
   canEdit: boolean
 }

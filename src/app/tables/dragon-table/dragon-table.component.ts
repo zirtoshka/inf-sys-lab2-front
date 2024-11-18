@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, ViewChild} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Dragon} from '../../dragondto/dragon';
 import {Color} from '../../dragondto/color';
@@ -10,6 +10,14 @@ import {Coordinates} from '../../dragondto/coordinates';
 import {DragonCave} from '../../dragondto/dragoncave';
 import {Country} from '../../dragondto/country';
 import {Person} from '../../dragondto/person';
+import {Head} from 'rxjs';
+import {DragonHead} from '../../dragondto/dragonhead';
+import {NzButtonComponent} from 'ng-zorro-antd/button';
+import {NzPopconfirmDirective} from 'ng-zorro-antd/popconfirm';
+import {DragonHeadFormComponent} from '../../forms/dragonhead-form/dragon-head-form.component';
+import {DragonFormComponent} from '../../forms/dragon-form/dragon-form.component';
+import {HeadService} from '../../services/head.service';
+import {DragonService} from '../../services/dragon.service';
 
 @Component({
   selector: 'app-dragon-table',
@@ -21,13 +29,23 @@ import {Person} from '../../dragondto/person';
     NzThAddOnComponent,
     NzTableComponent,
     NgIf,
-    NzModalComponent
+    NzModalComponent,
+    NzButtonComponent,
+    NzPopconfirmDirective,
+    DragonHeadFormComponent,
+    DragonFormComponent
   ],
   providers: [NzModalService],
   templateUrl: './dragon-table.component.html',
   styleUrl: './dragon-table.component.css'
 })
 export class DragonTableComponent {
+  private dragonService: DragonService = inject(DragonService);
+  @ViewChild(DragonFormComponent) dragonFormComponent!: DragonFormComponent;
+  isDragonModalVisible = false;
+  dataEdit: Dragon | null;
+
+
   listOfDragons: Dragon[] = [
     {
       id: 1,
@@ -50,6 +68,9 @@ export class DragonTableComponent {
       wingspan: 25,
       color: Color.RED,
       character: DragonCharacter.CHAOTIC,
+      heads: [
+        {id: 1, eyesCount: 10, canEdit: true},
+        {id: 2, eyesCount: 30, canEdit: true}],
       canEdit: true
     },
     {
@@ -63,9 +84,15 @@ export class DragonTableComponent {
       wingspan: 30,
       color: Color.WHITE,
       character: DragonCharacter.GOOD,
+      heads: [
+        {id: 4, eyesCount: 10, canEdit: true}],
       canEdit: true
     },
   ];
+
+  constructor(private cd: ChangeDetectorRef) {
+    this.dataEdit = null;
+  }
 
   sortOrderId: 'ascend' | 'descend' | null = null;
   sortOrderName: 'ascend' | 'descend' | null = null;
@@ -134,6 +161,38 @@ export class DragonTableComponent {
     );
   }
 
+  //dragon
+  deleteRow(id: number): void {
+    this.dragonService.deleteDragon(
+      {id: id})
+      .subscribe((res) => {
+        console.log(res);
+      })
+    this.listOfDragons = this.listOfDragons.filter(d => d.id !== id);
+  }
+
+
+  handleOkHead() {
+    this.dragonFormComponent.updateDragon();
+  }
+
+  ngAfterViewChecked(): void {
+    if (this.dragonFormComponent) {
+      if (this.dataEdit) {
+        this.dragonFormComponent.setDefaultData(this.dataEdit);
+      }
+      this.dragonFormComponent.hideAddButtonFn();
+    }
+    this.cd.detectChanges();
+
+  }
+
+  openEditModal(data: Dragon): void {
+    this.isDragonModalVisible = true;
+    this.dataEdit = data;
+
+  }
+
 
   //coordinates info
   isCoordinatesModalVisible = false;
@@ -166,7 +225,7 @@ export class DragonTableComponent {
   }
 
 
-  //cave info
+  //killer info
   isKillerModalVisible = false;
   selectedKiller: Person | null = null;
 
@@ -181,5 +240,21 @@ export class DragonTableComponent {
 
   handleKillerCancel(): void {
     this.isKillerModalVisible = false;
+  }
+
+
+  //heads info
+  isHeadsModalVisible = false;
+  selectedHeads: DragonHead[] | null = null;
+
+  openHeadsModal(data: DragonHead[] | null): void {
+    if (data) {
+      this.selectedHeads = data;
+      this.isHeadsModalVisible = true;
+    }
+  }
+
+  handleHeadCancel(): void {
+    this.isHeadsModalVisible = false;
   }
 }

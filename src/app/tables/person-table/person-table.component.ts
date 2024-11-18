@@ -11,7 +11,6 @@ import {CoordinatesFormComponent} from '../../forms/coordinates-form/coordinates
 import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
 import {PersonFormComponent} from '../../forms/person-form/person-form.component';
 import {PersonService} from '../../services/person.service';
-import {BubukaComponent} from '../../bubuka/bubuka.component';
 import {Location} from '../../dragondto/location';
 
 @Component({
@@ -28,7 +27,6 @@ import {Location} from '../../dragondto/location';
     CoordinatesFormComponent,
     NzModalComponent,
     PersonFormComponent,
-    BubukaComponent,
     NgIf
   ],
   providers: [NzModalService],
