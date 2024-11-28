@@ -10,14 +10,13 @@ import {Coordinates} from '../../dragondto/coordinates';
 import {DragonCave} from '../../dragondto/dragoncave';
 import {Country} from '../../dragondto/country';
 import {Person} from '../../dragondto/person';
-import {Head} from 'rxjs';
 import {DragonHead} from '../../dragondto/dragonhead';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {NzPopconfirmDirective} from 'ng-zorro-antd/popconfirm';
 import {DragonHeadFormComponent} from '../../forms/dragonhead-form/dragon-head-form.component';
 import {DragonFormComponent} from '../../forms/dragon-form/dragon-form.component';
-import {HeadService} from '../../services/head.service';
 import {DragonService} from '../../services/dragon.service';
+import {DragonEditFormComponent} from '../../forms/dragon-edit-form/dragon-edit-form.component';
 
 @Component({
   selector: 'app-dragon-table',
@@ -33,7 +32,8 @@ import {DragonService} from '../../services/dragon.service';
     NzButtonComponent,
     NzPopconfirmDirective,
     DragonHeadFormComponent,
-    DragonFormComponent
+    DragonFormComponent,
+    DragonEditFormComponent
   ],
   providers: [NzModalService],
   templateUrl: './dragon-table.component.html',
@@ -41,7 +41,7 @@ import {DragonService} from '../../services/dragon.service';
 })
 export class DragonTableComponent {
   private dragonService: DragonService = inject(DragonService);
-  @ViewChild(DragonFormComponent) dragonFormComponent!: DragonFormComponent;
+  @ViewChild(DragonEditFormComponent) dragonEditFormComponent!: DragonEditFormComponent;
   isDragonModalVisible = false;
   dataEdit: Dragon | null;
 
@@ -52,7 +52,7 @@ export class DragonTableComponent {
       name: 'Дракон огня',
       coordinates: {id: 1, x: 10, y: 20, canEdit: true},
       creationDate: '2022-01-01',
-      cave: {id: 3, numberOfTreasures: 2, canEdit: true},
+      cave: {id: 1, numberOfTreasures: 2, canEdit: true},
       killer: {
         id: 1,
         name: 'Иван Иванов',
@@ -78,14 +78,14 @@ export class DragonTableComponent {
       name: 'Ледяной дракон',
       coordinates: {id: 1, x: 10, y: 20, canEdit: true},
       creationDate: '2023-05-20',
-      cave: {id: 3, numberOfTreasures: 2, canEdit: true},
+      cave: {id: 2, numberOfTreasures: 2, canEdit: true},
       killer: null,
       age: 200,
       wingspan: 30,
       color: Color.WHITE,
       character: DragonCharacter.GOOD,
       heads: [
-        {id: 4, eyesCount: 10, canEdit: true}],
+        {id: 1, eyesCount: 10, canEdit: true}],
       canEdit: true
     },
   ];
@@ -173,15 +173,15 @@ export class DragonTableComponent {
 
 
   handleOkHead() {
-    this.dragonFormComponent.updateDragon();
+    this.dragonEditFormComponent.updateDragon();
   }
 
   ngAfterViewChecked(): void {
-    if (this.dragonFormComponent) {
+    if (this.dragonEditFormComponent) {
       if (this.dataEdit) {
-        this.dragonFormComponent.setDefaultData(this.dataEdit);
+        this.dragonEditFormComponent.setDefaultData(this.dataEdit);
       }
-      this.dragonFormComponent.hideAddButtonFn();
+      this.dragonEditFormComponent.hideAddButtonFn();
     }
     this.cd.detectChanges();
 

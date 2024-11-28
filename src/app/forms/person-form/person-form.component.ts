@@ -147,7 +147,6 @@ export class PersonFormComponent {
 
   setDefaultData(data: Person) {
     this.defaultData = data;
-    console.log(data.location)
   }
 
   setCanEdit() {

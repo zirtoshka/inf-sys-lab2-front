@@ -1,3 +1,4 @@
+<p>dragon-edit-form works!</p>
 <p>dragon-form works!</p>
 <form nz-form [nzLayout]="'vertical'" [formGroup]="validateForm" (ngSubmit)="addDragon()">
 
@@ -31,7 +32,6 @@
         <nz-option *ngFor="let coordinates of existingCoordinates" [nzValue]="coordinates"
                    [nzLabel]="coordinates.x +' '+coordinates.y "></nz-option>
       </nz-select>
-      <button nz-button nzType="default" (click)="this.isCoordinatesModalVisible=true">create new coordinates</button>
     </nz-form-control>
   </nz-form-item>
 
@@ -43,7 +43,6 @@
         <nz-option *ngFor="let cave of existingCave" [nzValue]="cave"
                    [nzLabel]="cave.id +' '+cave.numberOfTreasures "></nz-option>
       </nz-select>
-      <button nz-button nzType="default" (click)="this.isCaveModalVisible=true">create new cave</button>
     </nz-form-control>
   </nz-form-item>
 
@@ -54,7 +53,6 @@
       <nz-select [ngModel]="setKiller()" formControlName="killer" [nzPlaceHolder]="'select killer'">
         <nz-option *ngFor="let person of existingPerson" [nzValue]="person" [nzLabel]="person.name"></nz-option>
       </nz-select>
-      <button nz-button nzType="default" (click)="this.isKillerModalVisible=true">create new person</button>
     </nz-form-control>
   </nz-form-item>
 
@@ -99,15 +97,13 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24">Dragon Heads</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Select at least one head">
-      <nz-select  formControlName="heads" [nzPlaceHolder]="'Select heads'" nzMode="multiple">
+      <nz-select
+        formControlName="heads" [nzPlaceHolder]="'Select heads'" nzMode="multiple">
         <nz-option *ngFor="let head of existingDragonHeads" [nzValue]="head"
                    [nzLabel]="'Eyes: ' + head.eyesCount"></nz-option>
       </nz-select>
-      <button nz-button nzType="default" (click)="this.isHeadModalVisible = true">Add new head</button>
     </nz-form-control>
   </nz-form-item>
-
-
 
 
   <nz-form-item>
@@ -118,64 +114,8 @@
 </form>
 
 
-<nz-modal [(nzVisible)]="isKillerModalVisible"
-          nzTitle="create new person"
-          [nzContent]="personForma"
-          (nzOnCancel)="this.isKillerModalVisible = false;"
-          [nzFooter]="modalFooterPers">
-  <ng-template #personForma>
-    <app-person-form></app-person-form>
-  </ng-template>
-  <ng-template #modalFooterPers>
-    <button nz-button nzType="default" (click)="this.isKillerModalVisible = false;">cancel</button>
-    <button nz-button nzType="primary" (click)="handleOkPerson()">add</button>
-  </ng-template>
-</nz-modal>
-
-
-<nz-modal [(nzVisible)]="isCoordinatesModalVisible"
-          nzTitle="create new coordinates"
-          [nzContent]="coordinatesForma"
-          (nzOnCancel)="this.isCoordinatesModalVisible = false;"
-          [nzFooter]="coordFooter">
-  <ng-template #coordinatesForma>
-    <app-coordinates-form></app-coordinates-form>
-  </ng-template>
-  <ng-template #coordFooter>
-    <button nz-button nzType="default" (click)="this.isCoordinatesModalVisible = false;">cancel</button>
-    <button nz-button nzType="primary" (click)="handleOkCoordinates()">add</button>
-  </ng-template>
-</nz-modal>
-
-
-<nz-modal [(nzVisible)]="isCaveModalVisible"
-          nzTitle="create new cave"
-          [nzContent]="caveForma"
-          (nzOnCancel)="this.isCaveModalVisible = false;"
-          [nzFooter]="caveFooter">
-  <ng-template #caveForma>
-    <app-dragoncave-form></app-dragoncave-form>
-  </ng-template>
 
 
 
-  <ng-template #caveFooter>
-    <button nz-button nzType="default" (click)="this.isCoordinatesModalVisible = false;">cancel</button>
-    <button nz-button nzType="primary" (click)="handleOkCave()">add</button>
-  </ng-template>
-</nz-modal>
 
 
-<nz-modal [(nzVisible)]="isHeadModalVisible"
-          nzTitle="create new head"
-          [nzContent]="headForma"
-          (nzOnCancel)="this.isHeadModalVisible = false;"
-          [nzFooter]="modalFooterHead">
-  <ng-template #headForma>
-    <app-dragonhead-form></app-dragonhead-form>
-  </ng-template>
-  <ng-template #modalFooterHead>
-    <button nz-button nzType="default" (click)="this.isHeadModalVisible = false;">cancel</button>
-    <button nz-button nzType="primary" (click)="handleOkHead()">add</button>
-  </ng-template>
-</nz-modal>

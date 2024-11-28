@@ -5,4 +5,6 @@ export enum FormState {
   Person = 'person',
   Cave = 'cave',
   Head = 'head',
+  AdminForm = 'adminForm',
+  AdminPage = 'adminPage',
 }

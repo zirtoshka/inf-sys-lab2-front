@@ -18,7 +18,8 @@ import {LocationTableComponent} from '../tables/location-table/location-table.co
 import {PersonTableComponent} from '../tables/person-table/person-table.component';
 import {DragoncaveTableComponent} from '../tables/dragoncave-table/dragoncave-table.component';
 import {DragonheadTableComponent} from '../tables/dragonhead-table/dragonhead-table.component';
-
+import {AdminFormComponent} from '../forms/admin-form/admin-form.component';
+import {AppTableComponent} from '../tables/app-table/app-table.component';
 
 
 @Component({
@@ -49,7 +50,10 @@ import {DragonheadTableComponent} from '../tables/dragonhead-table/dragonhead-ta
     LocationTableComponent,
     PersonTableComponent,
     DragoncaveTableComponent,
-    DragonheadTableComponent],
+    DragonheadTableComponent,
+    AdminFormComponent,
+    AppTableComponent
+  ],
   styleUrls: ['./home.component.css']
 })
 
@@ -57,8 +61,16 @@ import {DragonheadTableComponent} from '../tables/dragonhead-table/dragonhead-ta
 export class HomeComponent {
   currentState: FormState = FormState.Dragon;
 
+  isAdminPageChoose() {
+    this.currentState = FormState.AdminPage;
+  }
+
   isDragonChoose() {
     this.currentState = FormState.Dragon;
+  }
+
+  isAdminFormChoose() {
+    this.currentState = FormState.AdminForm;
   }
 
   isCoordinatesChoose() {
@@ -76,6 +88,7 @@ export class HomeComponent {
   isCaveChoose() {
     this.currentState = FormState.Cave;
   }
+
   isHeadChoose() {
     this.currentState = FormState.Head;
   }

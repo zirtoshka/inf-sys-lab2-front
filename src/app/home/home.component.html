@@ -7,6 +7,8 @@
       <li nz-menu-item (click)="isHeadChoose()">dragon head</li>
       <li nz-menu-item (click)="isLocationChoose()">location</li>
       <li nz-menu-item (click)="isPersonChoose()">person</li>
+      <li nz-menu-item (click)="isAdminFormChoose()">admin form</li>
+      <li nz-menu-item (click)="isAdminPageChoose()">admin page</li>
     </ul>
   </nz-header>
   <nz-content>
@@ -37,6 +39,14 @@
     <div *ngIf="this.currentState === 'head'">
       <app-dragonhead-form></app-dragonhead-form>
       <app-dragonhead-table></app-dragonhead-table>
+    </div>
+
+    <div *ngIf="this.currentState === 'adminForm'">
+      <app-admin-form></app-admin-form>
+    </div>
+
+    <div *ngIf="this.currentState === 'adminPage'">
+      <app-app-table></app-app-table>
     </div>
 
   </nz-content>

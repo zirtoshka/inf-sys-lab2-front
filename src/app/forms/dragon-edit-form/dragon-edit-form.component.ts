@@ -1,87 +1,65 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewChild} from '@angular/core';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  NonNullableFormBuilder,
-  ReactiveFormsModule,
-  Validators
-} from '@angular/forms';
-import {Color} from '../../dragondto/color';
-import {Location} from '../../dragondto/location';
-import {Country} from '../../dragondto/country';
-import {Coordinates} from '../../dragondto/coordinates';
-import {DragonCave} from '../../dragondto/dragoncave';
-import {Person} from '../../dragondto/person';
-import {DragonCharacter} from '../../dragondto/dragoncharacter';
-import {DragonHead} from '../../dragondto/dragonhead';
-import {NzFormControlComponent, NzFormDirective, NzFormItemComponent, NzFormLabelComponent} from 'ng-zorro-antd/form';
-import {NzColDirective} from 'ng-zorro-antd/grid';
-import {NzInputDirective, NzInputGroupComponent} from 'ng-zorro-antd/input';
-import {NgForOf, NgIf} from '@angular/common';
-import {NzOptionComponent, NzSelectComponent} from 'ng-zorro-antd/select';
-import {NzDividerComponent} from 'ng-zorro-antd/divider';
-import {NzSwitchComponent} from 'ng-zorro-antd/switch';
-import {NzButtonComponent} from 'ng-zorro-antd/button';
-import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
-import {PersonFormComponent} from '../person-form/person-form.component';
+import {ChangeDetectorRef, Component, inject, ViewChild} from '@angular/core';
 import {CoordinatesFormComponent} from '../coordinates-form/coordinates-form.component';
 import {DragonCaveFormComponent} from '../dragoncave-form/dragoncave-form.component';
 import {DragonHeadFormComponent} from '../dragonhead-form/dragon-head-form.component';
-import {Head} from 'rxjs';
-import {DragonService} from '../../services/dragon.service';
+import {NgForOf} from '@angular/common';
+import {NzButtonComponent} from 'ng-zorro-antd/button';
+import {NzColDirective} from 'ng-zorro-antd/grid';
+import {NzFormControlComponent, NzFormDirective, NzFormItemComponent, NzFormLabelComponent} from 'ng-zorro-antd/form';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
+import {NzInputDirective, NzInputGroupComponent} from 'ng-zorro-antd/input';
+import {NzModalComponent} from 'ng-zorro-antd/modal';
+import {NzOptionComponent, NzSelectComponent} from 'ng-zorro-antd/select';
+import {NzSwitchComponent} from 'ng-zorro-antd/switch';
+import {PersonFormComponent} from '../person-form/person-form.component';
+import {FormGroup, NonNullableFormBuilder, ReactiveFormsModule, Validators} from '@angular/forms';
+import {DragonService} from '../../services/dragon.service';
 import {Dragon} from '../../dragondto/dragon';
-
+import {Coordinates} from '../../dragondto/coordinates';
+import {DragonCave} from '../../dragondto/dragoncave';
+import {DragonHead} from '../../dragondto/dragonhead';
+import {Location} from '../../dragondto/location';
+import {Person} from '../../dragondto/person';
+import {Color} from '../../dragondto/color';
+import {Country} from '../../dragondto/country';
+import {DragonCharacter} from '../../dragondto/dragoncharacter';
 
 @Component({
-  selector: 'app-dragon-form',
+  selector: 'app-dragon-edit-form',
   standalone: true,
   imports: [
-    NzFormDirective,
-    ReactiveFormsModule,
-    NzFormItemComponent,
-    NzColDirective,
-    NzFormControlComponent,
-    NzFormLabelComponent,
-    NzInputDirective,
-    NzInputGroupComponent,
-    NgForOf,
-    NzOptionComponent,
-    NzSelectComponent,
-    NgIf,
-    NzDividerComponent,
-    NzSwitchComponent,
-    FormsModule,
-    NzButtonComponent,
-    NzModalComponent,
-    PersonFormComponent,
     CoordinatesFormComponent,
     DragonCaveFormComponent,
     DragonHeadFormComponent,
-    NzIconDirective
+    NgForOf,
+    NzButtonComponent,
+    NzColDirective,
+    NzFormControlComponent,
+    NzFormDirective,
+    NzFormItemComponent,
+    NzFormLabelComponent,
+    NzIconDirective,
+    NzInputDirective,
+    NzInputGroupComponent,
+    NzModalComponent,
+    NzOptionComponent,
+    NzSelectComponent,
+    NzSwitchComponent,
+    PersonFormComponent,
+    ReactiveFormsModule
   ],
-  providers: [NzModalService],
-  templateUrl: './dragon-form.component.html',
-  styleUrl: './dragon-form.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-
+  templateUrl: './dragon-edit-form.component.html',
+  styleUrl: './dragon-edit-form.component.css'
 })
-export class DragonFormComponent {
-  @ViewChild(PersonFormComponent) personFormComponent!: PersonFormComponent;
-  @ViewChild(CoordinatesFormComponent) coordinatesFormComponent!: CoordinatesFormComponent;
-  @ViewChild(DragonCaveFormComponent) caveFormComponent!: DragonCaveFormComponent;
-  @ViewChild(DragonHeadFormComponent) headFormComponent!: DragonHeadFormComponent;
-
+export class DragonEditFormComponent {
   private dragonService = inject(DragonService);
 
   showAddButton = true;
   defaultData: Dragon | undefined;
+  listSelectedHeads: DragonHead[] = [];
+  selectedHeads: DragonHead[]|undefined;
 
-  isKillerModalVisible = false;
-  isCoordinatesModalVisible = false;
-  isCaveModalVisible = false;
-  isHeadModalVisible = false;
+
 
   validateForm: FormGroup;
 
@@ -127,7 +105,6 @@ export class DragonFormComponent {
   selectedKiller: any = null;
   selectedCoordinates: any = null;
   selectedCave: any = null;
-  selectedHeads: any = null;
 
 
   constructor(private fb: NonNullableFormBuilder, private cd: ChangeDetectorRef) {
@@ -147,22 +124,7 @@ export class DragonFormComponent {
     })
   }
 
-  ngAfterViewChecked(): void {
-    if (this.personFormComponent) {
-      this.personFormComponent.hideAddButtonFn();
-    }
-    if (this.caveFormComponent) {
-      this.caveFormComponent.hideAddButtonFn();
-    }
-    if (this.headFormComponent) {
-      this.headFormComponent.hideAddButtonFn();
-    }
-    if (this.coordinatesFormComponent) {
-      this.coordinatesFormComponent.hideAddButtonFn();
-    }
-    this.cd.detectChanges();
 
-  }
 
   addDragon() {
     if (this.validateForm.valid) {
@@ -212,6 +174,8 @@ export class DragonFormComponent {
 
   setDefaultData(data: Dragon) {
     this.defaultData = data;
+    this.selectedHeads = data.heads;
+
   }
 
   setCoordinates() {
@@ -230,36 +194,19 @@ export class DragonFormComponent {
 
   setKiller() {
     if (this.defaultData) {
+
       return this.existingPerson.find(data => data.id === this.defaultData?.killer?.id);
     }
     return null
   }
 
   setHeads(): DragonHead[] {
-    if (this.defaultData && this.defaultData.heads) {
+    if (this.defaultData) {
       return this.defaultData.heads.map((head) =>
         this.existingDragonHeads.find((existingHead) => existingHead.id === head.id)
       ).filter((head): head is DragonHead => !!head);
     }
     return [];
-  }
-
-
-
-  handleOkPerson() {
-    // this.personFormComponent.showAddButtonFn();
-  }
-
-  handleOkCoordinates() {
-    // this.coordinatesFormComponent.hideAddButtonFn();
-  }
-
-  handleOkCave() {
-    // this.caveFormComponent.hideAddButtonFn();
-  }
-
-  handleOkHead() {
-    // this.headFormComponent.showAddButtonFn();
   }
 
 }

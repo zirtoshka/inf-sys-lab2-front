@@ -64,7 +64,7 @@ export class AuthService {
     console.log("3333");
     headers = headers.set('Authorization', `Bearer ${token}`);
     console.log("444");
-    lastValueFrom(this.httpClient.get(`http://localhost:8080/dragon/user/hello`, {headers})) //todo change
+    lastValueFrom(this.httpClient.get(`http://localhost:8080/dragon/user/dragon/hello`, {headers})) //todo change
       .then(data => {
         this.router.navigate(['home']).then(() => {
           console.log('Navigation to home successful');

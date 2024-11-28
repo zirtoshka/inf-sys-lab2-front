@@ -4,6 +4,7 @@ import {LoginComponent} from './login/login.component';
 import {NotificationComponent} from './notification/notification.component';
 import {HeaderComponent} from './header/header.component';
 import {HomeComponent} from './home/home.component';
+import {WebSocketService} from './websocket.service';
 
 @Component({
   selector: 'app-root',
@@ -14,4 +15,9 @@ import {HomeComponent} from './home/home.component';
 })
 export class AppComponent {
   title = 'dragon-front';
+  constructor(private webSocketService: WebSocketService) {}
+
+  ngOnInit() {
+    this.webSocketService.connect();
+  }
 }
