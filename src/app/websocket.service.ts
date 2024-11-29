@@ -1,42 +1,47 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {catchError, Observable, of} from 'rxjs';
-import {StompService} from '@stomp/ng2-stompjs';
+import {CompatClient, Stomp, StompSubscription} from '@stomp/stompjs';
+import {DragonCave} from './dragondto/dragoncave';
+
+export type ListenerCallBack = (message: DragonCave) => void;
 
 @Injectable({
   providedIn: 'root'
 })
-export class WebSocketService {
+export class WebSocketService implements OnDestroy{
 
-  constructor(private stompService: StompService) {
-    this.stompService.configure({
-      brokerURL: 'http://localhost:8080/ws',
-      connectHeaders: {
-        Authorization: `Bearer ${localStorage.getItem('auth_token')}`
-      },
-      debug: (str) => {
-        console.log(str);
-      }
-    });
+  private connection: CompatClient | undefined = undefined;
 
-    this.stompService.activate();
+  private subscription: StompSubscription | undefined;
 
-  }
-
-  subscribeToTopic() {
-    this.stompService.subscribe('/topic/some-topic').pipe(
-      catchError((err) => {
-        console.error('WebSocket error while subscribing:', err);
-        return of([]);
-      })
-    ).subscribe((message) => {
-      console.log('Received message:', message);
-    });
+  constructor() {
+    this.connection = Stomp.client('ws://localhost:8080/ws');
+    this.connection.connect({}, () => {});
   }
 
 
-
-  getCavesUpdates(): Observable<any> {
-    return this.stompService.subscribe('/topic/caves');
+  public send(task: DragonCave): void {
+    if (this.connection && this.connection.connected) {
+      this.connection.send('/topic/caves', {}, JSON.stringify(task));
+    }
   }
+
+  public listen(fun: ListenerCallBack): void {
+    if (this.connection) {
+      this.connection.connect({}, () => {
+        this.subscription = this.connection!.subscribe('/topic/caves', message => fun(JSON.parse(message.body)));
+      });
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
+  }
+
+  // getCavesUpdates(): Observable<any> {
+  //   return this.stompService.subscribe('/topic/caves');
+  // }
 
 }

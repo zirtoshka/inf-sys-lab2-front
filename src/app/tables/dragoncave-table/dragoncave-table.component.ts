@@ -56,14 +56,33 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
     const state = this.tableStateService.getState('dragoncave');
     this.currPage = state.currentPage;
     this.pageSize = state.pageSize;
+    this.loadInitialCaves();
 
-    this.socketSubscription = this.webSocketService.getCavesUpdates().subscribe((message: any) => {
-      if (message.body) {
-        const updatedCave = JSON.parse(message.body);
-        this.handleCaveUpdate(updatedCave);
-      }
+    this.webSocketService.listen(task => {
+      this.handleCaveUpdate(task);
     });
   }
+
+  private loadInitialCaves(): void {
+    this.caveService.getCaves(0, 5, undefined, undefined, undefined).subscribe({
+      next: (response) => {
+        this.listOfCaves = response.content.map(cave => ({
+          id: cave.id,
+          numberOfTreasures: cave.numberOfTreasures,
+          canEdit: cave.canEdit,
+        }));
+
+        this.currPage = response.number ;
+        this.pageSize = response.size;
+
+        this.cd.detectChanges(); // Обновляем представление
+      },
+      error: (err) => {
+        console.error('Ошибка загрузки:', err);
+      },
+    });
+  }
+
 
 
   handleCaveUpdate(updatedCave: any): void {
