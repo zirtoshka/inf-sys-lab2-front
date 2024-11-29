@@ -14,7 +14,6 @@ import {CoordinatesService} from '../../services/coordinates.service';
 
 @Component({
   selector: 'app-coordinates-table',
-  standalone: true,
   imports: [
     NzTableComponent,
     NzThAddOnComponent,
@@ -26,10 +25,10 @@ import {CoordinatesService} from '../../services/coordinates.service';
     CoordinatesFormComponent,
     NzButtonComponent,
     NzModalComponent,
-
   ],
   providers: [NzModalService],
   templateUrl: './coordinates-table.component.html',
+  standalone: true,
   styleUrl: './coordinates-table.component.css'
 })
 export class CoordinatesTableComponent {

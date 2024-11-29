@@ -20,7 +20,6 @@ import {DragonEditFormComponent} from '../../forms/dragon-edit-form/dragon-edit-
 
 @Component({
   selector: 'app-dragon-table',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     FormsModule,
@@ -37,6 +36,7 @@ import {DragonEditFormComponent} from '../../forms/dragon-edit-form/dragon-edit-
   ],
   providers: [NzModalService],
   templateUrl: './dragon-table.component.html',
+  standalone: true,
   styleUrl: './dragon-table.component.css'
 })
 export class DragonTableComponent {

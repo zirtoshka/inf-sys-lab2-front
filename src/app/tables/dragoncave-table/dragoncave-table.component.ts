@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, inject, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {NgForOf} from '@angular/common';
 import {NzTableComponent, NzThAddOnComponent} from 'ng-zorro-antd/table';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -9,11 +9,12 @@ import {CoordinatesFormComponent} from '../../forms/coordinates-form/coordinates
 import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
 import {CaveService} from '../../services/cave.service';
 import {DragonCaveFormComponent} from '../../forms/dragoncave-form/dragoncave-form.component';
-import {Coordinates} from '../../dragondto/coordinates';
+import {WebSocketService} from '../../websocket.service';
+import {TableStateService} from '../../table-state.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-dragoncave-table',
-  standalone: true,
   imports: [
     NgForOf,
     NzTableComponent,
@@ -26,32 +27,65 @@ import {Coordinates} from '../../dragondto/coordinates';
     NzModalComponent,
     DragonCaveFormComponent
   ],
-  providers: [NzModalService],
+  providers: [NzModalService, WebSocketService],
   templateUrl: './dragoncave-table.component.html',
+  standalone: true,
   styleUrl: './dragoncave-table.component.css'
 })
-export class DragoncaveTableComponent {
+export class DragoncaveTableComponent implements OnInit, OnDestroy {
+  private tableStateService = inject(TableStateService);
+  private webSocketService = inject(WebSocketService);
+
   private caveService = inject(CaveService);
   @ViewChild(DragonCaveFormComponent) caveFormComponent!: DragonCaveFormComponent;
   isCaveModalVisible = false;
   dataEdit: DragonCave | null;
 
-  listOfCaves: DragonCave[] = [
-    {id: 1, numberOfTreasures: 10, canEdit: true},
-    {id: 2, numberOfTreasures: 30, canEdit: true},
-    {id: 3, numberOfTreasures: 2, canEdit: true},
-    {id: 4, numberOfTreasures: 30, canEdit: true},
-    {id: 5, numberOfTreasures: 2, canEdit: true},
-    {id: 6, numberOfTreasures: 30, canEdit: true},
-    {id: 7, numberOfTreasures: 2, canEdit: true},
-    {id: 8, numberOfTreasures: 30, canEdit: true},
-    {id: 9, numberOfTreasures: 2, canEdit: true},
-    {id: 10, numberOfTreasures: 30, canEdit: true},
-  ];
+  listOfCaves: DragonCave[] = [];
+  currPage: number = 1;
+  pageSize: number = 3;
+  // filters: todo
+  private socketSubscription: Subscription | undefined;
+
 
   constructor(private cd: ChangeDetectorRef) {
     this.dataEdit = null;
   }
+
+  ngOnInit(): void {
+    const state = this.tableStateService.getState('dragoncave');
+    this.currPage = state.currentPage;
+    this.pageSize = state.pageSize;
+
+    this.socketSubscription = this.webSocketService.getCavesUpdates().subscribe((message: any) => {
+      if (message.body) {
+        const updatedCave = JSON.parse(message.body);
+        this.handleCaveUpdate(updatedCave);
+      }
+    });
+  }
+
+
+  handleCaveUpdate(updatedCave: any): void {
+    const index = this.listOfCaves.findIndex(cave => cave.id === updatedCave.id);
+    if (index === -1) {
+      // Если пещера не найдена, добавляем новую
+      this.listOfCaves.push(updatedCave);
+    } else {
+      // Если пещера уже существует, обновляем ее данные
+      this.listOfCaves[index] = updatedCave;
+    }
+  }
+
+
+  ngOnDestroy(): void {
+    if (this.socketSubscription) {
+      this.socketSubscription.unsubscribe();
+    }
+  }
+
+
+
 
   sortOrderId: 'ascend' | 'descend' | null = null;
   sortOrderTreasures: 'ascend' | 'descend' | null = null;
@@ -94,7 +128,6 @@ export class DragoncaveTableComponent {
   }
 
 
-
   handleOkCave() {
     this.caveFormComponent.updateCave();
   }
@@ -115,8 +148,6 @@ export class DragoncaveTableComponent {
     this.dataEdit = data;
 
   }
-
-
 
 
 }

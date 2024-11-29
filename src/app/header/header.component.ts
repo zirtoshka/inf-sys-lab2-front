@@ -8,15 +8,15 @@ import {NzButtonComponent} from "ng-zorro-antd/button";
 
 @Component({
   selector: 'app-header',
+  imports: [
+    NzPageHeaderComponent,
+    NzMenuDirective,
+    NzMenuItemComponent,
+    NzIconDirective,
+    NzButtonComponent,
+    RouterLink
+  ],
   standalone: true,
-    imports: [
-        NzPageHeaderComponent,
-        NzMenuDirective,
-        NzMenuItemComponent,
-        NzIconDirective,
-        NzButtonComponent,
-        RouterLink
-    ],
   templateUrl: './header.component.html'
 })
 export class HeaderComponent {

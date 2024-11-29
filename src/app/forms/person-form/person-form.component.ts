@@ -27,7 +27,6 @@ import {Coordinates} from '../../dragondto/coordinates';
 
 @Component({
   selector: 'app-person-form',
-  standalone: true,
   imports: [
     FormsModule,
     NzButtonComponent,
@@ -53,6 +52,7 @@ import {Coordinates} from '../../dragondto/coordinates';
   ],
   providers: [NzModalService],
   templateUrl: './person-form.component.html',
+  standalone: true,
   styleUrl: './person-form.component.css'
 })
 export class PersonFormComponent {

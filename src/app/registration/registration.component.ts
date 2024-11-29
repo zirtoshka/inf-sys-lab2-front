@@ -29,7 +29,6 @@ import {NotificationComponent} from '../notification/notification.component';
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
-  standalone: true,
   imports: [
     ReactiveFormsModule,
     NzColDirective,
@@ -49,7 +48,7 @@ import {NotificationComponent} from '../notification/notification.component';
     NzIconDirective,
     NgIf
   ],
-
+  standalone: true,
   styleUrls: ['./registration.component.css']
 })
 export class RegistrationComponent {

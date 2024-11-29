@@ -18,7 +18,6 @@ import {NzSwitchComponent} from 'ng-zorro-antd/switch';
 
 @Component({
   selector: 'app-dragoncave-form',
-  standalone: true,
   imports: [
     FormsModule,
     NzButtonComponent,
@@ -35,6 +34,7 @@ import {NzSwitchComponent} from 'ng-zorro-antd/switch';
     NzSwitchComponent
   ],
   templateUrl: './dragoncave-form.component.html',
+  standalone: true,
   styleUrl: './dragoncave-form.component.css'
 })
 export class DragonCaveFormComponent {

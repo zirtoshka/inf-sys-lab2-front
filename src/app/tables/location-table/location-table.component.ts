@@ -14,7 +14,6 @@ import {LocationService} from '../../services/location.service';
 
 @Component({
   selector: 'app-location-table',
-  standalone: true,
   imports: [
     NgForOf,
     NzPaginationComponent,
@@ -30,6 +29,7 @@ import {LocationService} from '../../services/location.service';
   ],
   providers: [NzModalService],
   templateUrl: './location-table.component.html',
+  standalone: true,
   styleUrl: './location-table.component.css'
 })
 export class LocationTableComponent {

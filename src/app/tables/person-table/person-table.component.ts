@@ -15,7 +15,6 @@ import {Location} from '../../dragondto/location';
 
 @Component({
   selector: 'app-person-table',
-  standalone: true,
   imports: [
     NzThAddOnComponent,
     ReactiveFormsModule,
@@ -31,6 +30,7 @@ import {Location} from '../../dragondto/location';
   ],
   providers: [NzModalService],
   templateUrl: './person-table.component.html',
+  standalone: true,
   styleUrl: './person-table.component.css'
 })
 export class PersonTableComponent {

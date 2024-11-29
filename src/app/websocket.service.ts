@@ -1,31 +1,42 @@
-import { Injectable } from '@angular/core';
-import * as Stomp from '@stomp/stompjs';
-import * as SockJS from "sockjs-client";
+import {Injectable} from '@angular/core';
+import {catchError, Observable, of} from 'rxjs';
+import {StompService} from '@stomp/ng2-stompjs';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class WebSocketService {
-  private stompClient: Stomp.Client;
 
-  connect() {
-    const socket = new SockJS('http://localhost:8080/ws'); // Ваш WebSocket endpoint
-    this.stompClient = Stomp.over(socket);
+  constructor(private stompService: StompService) {
+    this.stompService.configure({
+      brokerURL: 'http://localhost:8080/ws',
+      connectHeaders: {
+        Authorization: `Bearer ${localStorage.getItem('auth_token')}`
+      },
+      debug: (str) => {
+        console.log(str);
+      }
+    });
 
-    this.stompClient.connect({}, () => {
-      console.log('Connected to WebSocket');
-      // Подписка на обновления
-      this.stompClient.subscribe('/topic/updates', (message) => {
-        console.log('Received update:', JSON.parse(message.body));
-      });
+    this.stompService.activate();
+
+  }
+
+  subscribeToTopic() {
+    this.stompService.subscribe('/topic/some-topic').pipe(
+      catchError((err) => {
+        console.error('WebSocket error while subscribing:', err);
+        return of([]);
+      })
+    ).subscribe((message) => {
+      console.log('Received message:', message);
     });
   }
 
-  disconnect() {
-    if (this.stompClient) {
-      this.stompClient.disconnect(() => {
-        console.log('Disconnected from WebSocket');
-      });
-    }
+
+
+  getCavesUpdates(): Observable<any> {
+    return this.stompService.subscribe('/topic/caves');
   }
+
 }

@@ -10,7 +10,6 @@ import {NzIconDirective} from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-login',
-  standalone: true,
   imports: [
     NzFormDirective,
     ReactiveFormsModule,
@@ -23,6 +22,7 @@ import {NzIconDirective} from 'ng-zorro-antd/icon';
     NzIconDirective
   ],
   templateUrl: './login.component.html',
+  standalone: true,
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {

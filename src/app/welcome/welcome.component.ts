@@ -6,7 +6,6 @@ import {NgIf, NgOptimizedImage} from '@angular/common';
 
 @Component({
   selector: 'app-welcome',
-  standalone: true,
   imports: [
     NzButtonComponent,
     RouterLink,
@@ -14,6 +13,7 @@ import {NgIf, NgOptimizedImage} from '@angular/common';
     NgIf,
   ],
   templateUrl: './welcome.component.html',
+  standalone: true,
   styleUrl: './welcome.component.css'
 })
 export class WelcomeComponent {

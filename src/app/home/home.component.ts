@@ -19,13 +19,11 @@ import {PersonTableComponent} from '../tables/person-table/person-table.componen
 import {DragoncaveTableComponent} from '../tables/dragoncave-table/dragoncave-table.component';
 import {DragonheadTableComponent} from '../tables/dragonhead-table/dragonhead-table.component';
 import {AdminFormComponent} from '../forms/admin-form/admin-form.component';
-import {AppTableComponent} from '../tables/app-table/app-table.component';
 
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  standalone: true,
   imports: [
     NzHeaderComponent,
     NzLayoutComponent,
@@ -52,8 +50,8 @@ import {AppTableComponent} from '../tables/app-table/app-table.component';
     DragoncaveTableComponent,
     DragonheadTableComponent,
     AdminFormComponent,
-    AppTableComponent
   ],
+  standalone: true,
   styleUrls: ['./home.component.css']
 })
 

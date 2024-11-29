@@ -12,7 +12,6 @@ import {CoordinatesFormComponent} from '../../forms/coordinates-form/coordinates
 
 @Component({
   selector: 'app-dragonhead-table',
-  standalone: true,
   imports: [
     NgForOf,
     NzTableComponent,
@@ -27,6 +26,7 @@ import {CoordinatesFormComponent} from '../../forms/coordinates-form/coordinates
   ],
   providers: [NzModalService],
   templateUrl: './dragonhead-table.component.html',
+  standalone: true,
   styleUrl: './dragonhead-table.component.css'
 })
 export class DragonheadTableComponent {

@@ -19,7 +19,6 @@ import {Coordinates} from '../../dragondto/coordinates';
 
 @Component({
   selector: 'app-location-form',
-  standalone: true,
   imports: [
     FormsModule,
     NzButtonComponent,
@@ -36,6 +35,7 @@ import {Coordinates} from '../../dragondto/coordinates';
     NzSwitchComponent
   ],
   templateUrl: './location-form.component.html',
+  standalone: true,
   styleUrl: './location-form.component.css'
 })
 export class LocationFormComponent {

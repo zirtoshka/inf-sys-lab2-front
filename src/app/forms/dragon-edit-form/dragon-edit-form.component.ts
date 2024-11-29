@@ -26,7 +26,6 @@ import {DragonCharacter} from '../../dragondto/dragoncharacter';
 
 @Component({
   selector: 'app-dragon-edit-form',
-  standalone: true,
   imports: [
     CoordinatesFormComponent,
     DragonCaveFormComponent,
@@ -49,6 +48,7 @@ import {DragonCharacter} from '../../dragondto/dragoncharacter';
     ReactiveFormsModule
   ],
   templateUrl: './dragon-edit-form.component.html',
+  standalone: true,
   styleUrl: './dragon-edit-form.component.css'
 })
 export class DragonEditFormComponent {

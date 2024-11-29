@@ -20,7 +20,6 @@ import {NzModalComponent} from "ng-zorro-antd/modal";
 
 @Component({
   selector: 'app-coordinates-form',
-  standalone: true,
   imports: [
     FormsModule,
     NzButtonComponent,
@@ -39,6 +38,7 @@ import {NzModalComponent} from "ng-zorro-antd/modal";
     NzModalComponent
   ],
   templateUrl: './coordinates-form.component.html',
+  standalone: true,
   styleUrl: './coordinates-form.component.css'
 })
 export class CoordinatesFormComponent {

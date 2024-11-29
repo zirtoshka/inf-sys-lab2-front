@@ -5,10 +5,10 @@ import {NzButtonComponent} from 'ng-zorro-antd/button';
 
 @Component({
   selector: 'app-notification',
-  standalone: true,
   imports: [
     NzButtonComponent
   ],
+  standalone: true,
   templateUrl: './notification.component.html'
 })
 

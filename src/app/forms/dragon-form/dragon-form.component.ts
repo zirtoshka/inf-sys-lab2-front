@@ -36,7 +36,6 @@ import {Dragon} from '../../dragondto/dragon';
 
 @Component({
   selector: 'app-dragon-form',
-  standalone: true,
   imports: [
     NzFormDirective,
     ReactiveFormsModule,
@@ -64,8 +63,8 @@ import {Dragon} from '../../dragondto/dragon';
   providers: [NzModalService],
   templateUrl: './dragon-form.component.html',
   styleUrl: './dragon-form.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-
+  standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DragonFormComponent {
   @ViewChild(PersonFormComponent) personFormComponent!: PersonFormComponent;
