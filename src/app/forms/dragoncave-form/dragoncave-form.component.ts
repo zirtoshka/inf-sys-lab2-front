@@ -65,7 +65,7 @@ export class DragonCaveFormComponent {
     if (this.validateForm.valid && this.defaultData) {
       const cave: DragonCave = {
         id: this.defaultData.id,
-        numberOfTreasures: this.validateForm.value.treasures,
+        numberOfTreasures: this.validateForm.value.numberOfTreasures,
         canEdit: this.validateForm.value.canEdit
       };
       this.caveService.updateCave(cave)

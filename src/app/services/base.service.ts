@@ -14,30 +14,31 @@ export class BaseService {
 
   add(formData: any, action: string) {
     const jwtToken = this.authService.authToken;
-    let headers = new HttpHeaders();
-    headers.append('Authorization', `Bearer ${jwtToken}`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`);
     return this.httpClient
-      .post<any>(this.baseUrl + action, JSON.stringify(formData), {headers: headers});
+      .post<any>(this.baseUrl + action, formData, {headers});
 
   }
 
 
   update(formData: any, action: string) {
     const jwtToken = this.authService.authToken;
-    let headers = new HttpHeaders();
-    headers.append('Authorization', `Bearer ${jwtToken}`);
+    const headers = new HttpHeaders()
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .set('Content-Type', 'application/json');
     return this.httpClient
-      .post<any>(this.baseUrl + action, JSON.stringify(formData), {headers: headers});
+      .post<any>(this.baseUrl + action, formData, {headers});
   }
-
 
 
   delete(formData: any, action: string) {
     const jwtToken = this.authService.authToken;
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`);
+    const headers = new HttpHeaders()
+      .set('Authorization', `Bearer ${jwtToken}`)
+      .set('Content-Type', 'application/json');
 
     return this.httpClient
-      .delete<any>(this.baseUrl + action+formData.id, {headers});
+      .delete<any>(this.baseUrl + action + formData.id, {headers});
   }
 
   public get<T>(
@@ -55,6 +56,6 @@ export class BaseService {
       }
     });
 
-    return this.httpClient.get<T>(`${this.baseUrl}/${endpoint}`, { headers, params: httpParams });
+    return this.httpClient.get<T>(`${this.baseUrl}/${endpoint}`, {headers, params: httpParams});
   }
 }

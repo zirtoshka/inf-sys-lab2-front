@@ -71,6 +71,7 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
     });
 
 
+
   }
 
   private loadInitialCaves(): void {
@@ -166,6 +167,8 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
 
   handleOkCave() {
     this.caveFormComponent.updateCave();
+    this.isCaveModalVisible = false;
+
   }
 
   ngAfterViewChecked(): void {
