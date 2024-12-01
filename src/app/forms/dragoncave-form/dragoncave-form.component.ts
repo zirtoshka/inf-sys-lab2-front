@@ -45,7 +45,7 @@ export class DragonCaveFormComponent {
 
   constructor(private fb: NonNullableFormBuilder) {
     this.validateForm = this.fb.group({
-      treasures: ['', [Validators.required,
+      numberOfTreasures: ['', [Validators.required,
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
       canEdit: ["", Validators.required],
     });

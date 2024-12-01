@@ -59,8 +59,18 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
     this.loadInitialCaves();
 
     this.webSocketService.listen(task => {
-      this.handleCaveUpdate(task);
+      if (task.action === 'DELETE') {
+        this.handleCaveDelete(task.id);
+      } else if (task.action === 'UPDATE') {
+        this.handleCaveUpdate(task.cave);
+      } else if (task.action === 'ADD') {
+        this.handleCaveAdd(task.cave);
+      } else {
+        console.log("kokokokko");
+      }
     });
+
+
   }
 
   private loadInitialCaves(): void {
@@ -71,11 +81,11 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
           numberOfTreasures: cave.numberOfTreasures,
           canEdit: cave.canEdit,
         }));
-
-        this.currPage = response.number ;
+        console.log(this.listOfCaves)
+        this.currPage = response.number;
         this.pageSize = response.size;
 
-        this.cd.detectChanges(); // Обновляем представление
+        this.cd.detectChanges();
       },
       error: (err) => {
         console.error('Ошибка загрузки:', err);
@@ -84,16 +94,26 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
   }
 
 
+  handleCaveDelete(deletedCaveId: number): void {
+    this.listOfCaves = this.listOfCaves.filter(cave => cave.id !== deletedCaveId);
+    this.cd.detectChanges();
+  }
 
   handleCaveUpdate(updatedCave: any): void {
     const index = this.listOfCaves.findIndex(cave => cave.id === updatedCave.id);
     if (index === -1) {
-      // Если пещера не найдена, добавляем новую
       this.listOfCaves.push(updatedCave);
     } else {
-      // Если пещера уже существует, обновляем ее данные
       this.listOfCaves[index] = updatedCave;
     }
+    this.cd.detectChanges();
+
+  }
+
+  handleCaveAdd(cave: DragonCave) {
+    this.listOfCaves.push(cave);
+    this.cd.detectChanges();
+
   }
 
 
@@ -102,8 +122,6 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
       this.socketSubscription.unsubscribe();
     }
   }
-
-
 
 
   sortOrderId: 'ascend' | 'descend' | null = null;
@@ -143,7 +161,6 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
       .subscribe((res) => {
         console.log(res);
       })
-    this.listOfCaves = this.listOfCaves.filter(d => d.id !== id);
   }
 
 

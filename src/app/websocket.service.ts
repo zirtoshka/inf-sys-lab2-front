@@ -3,12 +3,12 @@ import {catchError, Observable, of} from 'rxjs';
 import {CompatClient, Stomp, StompSubscription} from '@stomp/stompjs';
 import {DragonCave} from './dragondto/dragoncave';
 
-export type ListenerCallBack = (message: DragonCave) => void;
+export type ListenerCallBack = (message: any) => void;
 
 @Injectable({
   providedIn: 'root'
 })
-export class WebSocketService implements OnDestroy{
+export class WebSocketService implements OnDestroy {
 
   private connection: CompatClient | undefined = undefined;
 
@@ -16,7 +16,8 @@ export class WebSocketService implements OnDestroy{
 
   constructor() {
     this.connection = Stomp.client('ws://localhost:8080/ws');
-    this.connection.connect({}, () => {});
+    this.connection.connect({}, () => {
+    });
   }
 
 

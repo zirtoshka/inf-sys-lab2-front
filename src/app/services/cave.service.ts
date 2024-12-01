@@ -20,14 +20,14 @@ export class CaveService {
   private baseService = inject(BaseService);
 
   addCave(formData: any) {
-    return this.baseService.add(formData, "/cave/addCave");
+    return this.baseService.add(formData, "/cave/add");
   }
 
   updateCave(formData: any) {
-    return this.baseService.update(formData, "/cave/updateCave");
+    return this.baseService.update(formData, "/cave/update");
   }
   deleteCave(formData: any) {
-    return this.baseService.delete(formData, "/cave/deleteCave");
+    return this.baseService.delete(formData, "/cave/delete/");
   }
 
   public getCaves(
@@ -37,7 +37,7 @@ export class CaveService {
     id?: number,
     canEdit?: boolean,
     userId?: number,
-    treasure?: number
+    numberOfTreasures?: number
   ): Observable<Page<DragonCave>> {
     const params = {
       offset: offset.toString(),
@@ -46,7 +46,7 @@ export class CaveService {
       id: id?.toString(),
       canEdit: canEdit?.toString(),
       userId: userId?.toString(),
-      numberOfTreasures: treasure?.toString(),
+      numberOfTreasures: numberOfTreasures?.toString(),
     };
 
     return this.baseService.get<Page<DragonCave>>('cave/get', params);

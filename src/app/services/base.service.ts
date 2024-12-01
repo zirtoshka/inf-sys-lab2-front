@@ -34,10 +34,10 @@ export class BaseService {
 
   delete(formData: any, action: string) {
     const jwtToken = this.authService.authToken;
-    let headers = new HttpHeaders();
-    headers.append('Authorization', `Bearer ${jwtToken}`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`);
+
     return this.httpClient
-      .post<any>(this.baseUrl + action, JSON.stringify(formData), {headers: headers});
+      .delete<any>(this.baseUrl + action+formData.id, {headers});
   }
 
   public get<T>(
