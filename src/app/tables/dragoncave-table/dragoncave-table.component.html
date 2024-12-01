@@ -4,8 +4,8 @@
 <nz-table [nzData]="listOfCaves" [nzBordered]="true">
   <thead>
   <tr>
-<!--    <th nzShowSort [nzSortOrder]="sortOrderId" (click)="sort('id')">ID</th>-->
-<!--    <th nzShowSort [nzSortOrder]="sortOrderTreasures" (click)="sort('numberOfTreasures')">numberOfTreasures</th>-->
+    <th nzShowSort [nzSortOrder]="sortOrderId" (click)="sort('id')">ID</th>
+    <th nzShowSort [nzSortOrder]="sortOrderTreasures" (click)="sort('numberOfTreasures')">numberOfTreasures</th>
     <th>id</th>
     <th>number of numberOfTreasures</th>
     <th>can edit</th>
@@ -16,18 +16,22 @@
   <tr *ngFor="let cave of listOfCaves">
     <td>{{ cave.id }}</td>
     <td>{{ cave.numberOfTreasures }}</td>
-    <td>{{cave.canEdit}}</td>
+    <td>{{ cave.canEdit }}</td>
     <td>
       <button nz-button nzSize="small" nzShape="round" nzType="primary" (click)="openEditModal(cave)">edit cave
       </button>
-      <a nz-popconfirm nzPopconfirmTitle="Are you sure?" (nzOnConfirm)="deleteRow(cave.id)">
-        Delete
-      </a>
+
+      <button nz-button nzSize="small"
+              nzShape="round"
+              nzType="primary"
+              nz-popconfirm nzPopconfirmTitle="Are you sure?"
+              (nzOnConfirm)="deleteRow(cave.id)">Delete
+      </button>
+
     </td>
   </tr>
   </tbody>
 </nz-table>
-
 
 
 <nz-modal [(nzVisible)]="isCaveModalVisible"
