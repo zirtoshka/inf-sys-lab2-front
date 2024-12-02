@@ -55,12 +55,16 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
   listOfCaves: DragonCave[] = [];
   currPage: number = 1;
   pageSize: number = 3;
-  // filters: todo
   private socketSubscription: Subscription | undefined;
 
   sortOrderId: 'ID_ASC' | 'ID_DESC' | null = null;
   sortOrderTreasures: 'TREASURE_ASC' | 'TREASURE_DESC' | null = null;
   canEditFilter: 'all' | 'true' | 'false' = 'all';
+
+
+  idFilter: number | undefined;
+  treasuresFilter: number | undefined ;
+
 
   constructor(private cd: ChangeDetectorRef) {
     this.dataEdit = null;
@@ -91,8 +95,8 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
     }
   }
 
-  private loadCaves(page: number, size: number, sort?: string, id?:number, canEdit?:boolean): void {
-    this.caveService.getCaves(page, size, sort, id, canEdit).subscribe({
+  private loadCaves(page: number, size: number, sort?: string, id?:number, canEdit?:boolean, numberOfTreasures?:number ): void {
+    this.caveService.getCaves(page, size, sort, id, canEdit,undefined, numberOfTreasures).subscribe({
       next: (response) => {
         this.listOfCaves = response.content.map(cave => ({
           id: cave.id,
@@ -163,6 +167,17 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
     this.applyCanEditFilter();
   }
 
+  applyFilters(): void {
+    this.loadCaves(this.currPage, this.pageSize, undefined, this.idFilter,undefined, this.treasuresFilter);
+  }
+
+  resetFilters(): void {
+    this.idFilter = undefined;
+    this.treasuresFilter = undefined;
+    this.loadCaves(0,5);
+  }
+
+
   applyCanEditFilter(): void {
     console.log(this.canEditFilter);
     if (this.canEditFilter === 'all') {
@@ -171,14 +186,6 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
       const filterValue = this.canEditFilter === 'true';
       this.loadCaves(0, 5,undefined,undefined, filterValue);
     }
-  }
-
-  searchValue = '';
-  onSearch(): void {
-    this.listOfCaves = this.listOfCaves.filter(item =>
-      item.id.toString().includes(this.searchValue.toLowerCase()) ||
-      (item.numberOfTreasures !== null
-        && item.numberOfTreasures.toString().includes(this.searchValue)));
   }
 
 

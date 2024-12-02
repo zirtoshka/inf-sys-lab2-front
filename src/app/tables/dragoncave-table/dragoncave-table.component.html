@@ -1,5 +1,9 @@
-<p>dragoncave-table works!</p>
-<input [(ngModel)]="searchValue" (ngModelChange)="onSearch()" placeholder="search" style="margin-bottom: 16px;">
+<div style="margin-bottom: 16px;">
+  <input [(ngModel)]="idFilter" placeholder="Filter by ID" style="margin-right: 8px;" />
+  <input [(ngModel)]="treasuresFilter" placeholder="Filter by Treasures" style="margin-right: 8px;" />
+  <button nz-button nzType="primary" (click)="applyFilters()">Apply Filters</button>
+  <button nz-button nzType="default" (click)="resetFilters()">Reset</button>
+</div>
 
 <div style="margin-bottom: 16px;">
   <label>Filter by "Can Edit": </label>
