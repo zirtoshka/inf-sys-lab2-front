@@ -16,6 +16,7 @@ import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {NzDropDownDirective} from 'ng-zorro-antd/dropdown';
 import {NzMenuDirective, NzMenuItemComponent} from 'ng-zorro-antd/menu';
 import {NzRadioComponent} from 'ng-zorro-antd/radio';
+import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
 
 
 @Component({
@@ -37,6 +38,7 @@ import {NzRadioComponent} from 'ng-zorro-antd/radio';
     NzMenuItemComponent,
     NzMenuDirective,
     NzRadioComponent,
+    NzPaginationComponent,
   ],
   providers: [NzModalService, WebSocketService],
   templateUrl: './dragoncave-table.component.html',
@@ -65,6 +67,8 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
   idFilter: number | undefined;
   treasuresFilter: number | undefined ;
 
+
+  totalElements = 1000;
 
   constructor(private cd: ChangeDetectorRef) {
     this.dataEdit = null;
@@ -98,13 +102,16 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
   private loadCaves(page: number, size: number, sort?: string, id?:number, canEdit?:boolean, numberOfTreasures?:number ): void {
     this.caveService.getCaves(page, size, sort, id, canEdit,undefined, numberOfTreasures).subscribe({
       next: (response) => {
+        console.log(response);
         this.listOfCaves = response.content.map(cave => ({
           id: cave.id,
           numberOfTreasures: cave.numberOfTreasures,
           canEdit: cave.canEdit,
         }));
-        this.currPage = response.number;
+        this.currPage = response.number+1;
         this.pageSize = response.size;
+        this.totalElements = response.totalElements;
+
 
         this.cd.detectChanges();
       },
@@ -115,7 +122,7 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
   }
 
   private loadInitialCaves(): void {
-    this.loadCaves(0, 5);
+    this.loadCaves(this.currPage, this.pageSize);
   }
 
 
@@ -147,10 +154,10 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
   sort(key: 'id' | 'numberOfTreasures'): void {
     if (key === 'id') {
       this.sortOrderId = this.sortOrderId === 'ID_ASC' ? 'ID_DESC' : 'ID_ASC';
-      this.loadCaves(0, 5, this.sortOrderId);
+      this.loadCaves(this.currPage, this.pageSize, this.sortOrderId);
     } else if (key === 'numberOfTreasures') {
       this.sortOrderTreasures = this.sortOrderTreasures === 'TREASURE_ASC' ? 'TREASURE_DESC' : 'TREASURE_ASC';
-      this.loadCaves(0, 5, this.sortOrderTreasures);
+      this.loadCaves(this.currPage, this.pageSize, this.sortOrderTreasures);
     }
   }
   getSortIcon(property: string): string {
@@ -174,19 +181,31 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
   resetFilters(): void {
     this.idFilter = undefined;
     this.treasuresFilter = undefined;
-    this.loadCaves(0,5);
+    this.loadCaves(this.currPage, this.pageSize);
   }
 
 
   applyCanEditFilter(): void {
-    console.log(this.canEditFilter);
     if (this.canEditFilter === 'all') {
-      this.loadCaves(0, 5);
+      this.loadCaves(this.currPage, this.pageSize);
     } else {
       const filterValue = this.canEditFilter === 'true';
-      this.loadCaves(0, 5,undefined,undefined, filterValue);
+      this.loadCaves(this.currPage, this.pageSize,undefined,undefined, filterValue);
     }
   }
+
+  onPageChange(page: number): void {
+    console.log(page, "it's page", this.currPage);
+    this.currPage = page;
+    console.log("now", this.currPage);
+    this.loadCaves(this.currPage, this.pageSize);
+  }
+  onPageSizeChange(size: number): void {
+    this.pageSize = size;
+    this.currPage = 1;
+    this.loadCaves(this.currPage, this.pageSize);
+  }
+
 
 
   deleteRow(id: number): void {

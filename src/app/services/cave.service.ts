@@ -40,8 +40,9 @@ export class CaveService {
     userId?: number,
     numberOfTreasures?: number
   ): Observable<Page<DragonCave>> {
+    console.log(offset, limit, id, canEdit);
     const params = {
-      offset: offset.toString(),
+      offset: offset-1,
       limit: limit.toString(),
       sort,
       id: id?.toString(),

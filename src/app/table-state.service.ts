@@ -18,8 +18,9 @@ export class TableStateService {
     if (!this.tableState.has(tableKey)) {
       this.tableState.set(tableKey, {
         currentPage: 1,
-        pageSize: 10,
-        filters: {}
+        pageSize: 2,
+        filters: {},
+
       });
     }
     return this.tableState.get(tableKey)!;
