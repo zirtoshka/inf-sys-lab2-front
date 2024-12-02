@@ -19,6 +19,8 @@ import {PersonTableComponent} from '../tables/person-table/person-table.componen
 import {DragoncaveTableComponent} from '../tables/dragoncave-table/dragoncave-table.component';
 import {DragonheadTableComponent} from '../tables/dragonhead-table/dragonhead-table.component';
 import {AdminFormComponent} from '../forms/admin-form/admin-form.component';
+import {AdminAppTableComponent} from '../tables/admin-app-table/admin-app-table.component';
+import {AuthService} from '../auth-tools/auth.service';
 
 
 @Component({
@@ -50,6 +52,7 @@ import {AdminFormComponent} from '../forms/admin-form/admin-form.component';
     DragoncaveTableComponent,
     DragonheadTableComponent,
     AdminFormComponent,
+    AdminAppTableComponent,
   ],
   standalone: true,
   styleUrls: ['./home.component.css']
@@ -57,10 +60,16 @@ import {AdminFormComponent} from '../forms/admin-form/admin-form.component';
 
 
 export class HomeComponent {
+  constructor(private authService: AuthService) {
+  }
+
   currentState: FormState = FormState.Dragon;
 
   isAdminPageChoose() {
-    this.currentState = FormState.AdminPage;
+    //todo check admin/user
+    if (this.authService.isAdmin()) {
+      this.currentState = FormState.AdminPage;
+    }
   }
 
   isDragonChoose() {

@@ -1,11 +1,12 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {Router} from '@angular/router';
-import {NotificationComponent} from '../notification/notification.component';
 import {deleteCookie, getCookie, setCookie} from './cookie-utils';
 import {catchError, lastValueFrom, throwError} from 'rxjs';
 import {Token} from '../dtos/token';
 import {NzNotificationService} from 'ng-zorro-antd/notification';
+import { jwtDecode } from "jwt-decode";
+
 
 const TOKEN_PATH = 'token';
 
@@ -56,21 +57,40 @@ export class AuthService {
     return this.authToken != null;
   }
 
+
+
+  decodeToken(): any {
+    if(!this.isLoggedIn) {return null}
+    const token = this.authToken;
+    if (!token) {
+      return null;
+    }
+    try {
+      return jwtDecode(token);
+    } catch (error) {
+      console.error('Ошибка декодирования токена:', error);
+      return null;
+    }
+  }
+
+  isAdmin(): boolean {
+    if (this.isLoggedIn){
+      const decoded = this.decodeToken();
+      return decoded?.role?.includes('ROLE_ADMIN') || false;
+    }
+    return false;
+  }
+
   private auth(name: string, token: string) {
-    console.log(token);
     this.authToken = token;
     this.username = name;
     let headers = new HttpHeaders();
-    console.log("3333");
     headers = headers.set('Authorization', `Bearer ${token}`);
-    console.log("444");
     lastValueFrom(this.httpClient.get(`http://localhost:8080/dragon/user/dragon/hello`, {headers})) //todo change
       .then(data => {
         this.router.navigate(['home']).then(() => {
-          console.log('Navigation to home successful');
         }).catch(err => {
           deleteCookie(TOKEN_PATH);
-          console.log("ogogogo");
           // this.messageService.createErrorNotification();
           console.error('Navigation failed', err);
         });
