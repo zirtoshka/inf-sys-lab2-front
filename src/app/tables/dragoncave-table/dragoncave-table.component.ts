@@ -38,7 +38,7 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
 
   private caveService = inject(CaveService);
   @ViewChild(DragonCaveFormComponent) caveFormComponent!: DragonCaveFormComponent;
-  isCaveModalVisible = false;
+  isEditCaveModalVisible = false;
   dataEdit: DragonCave | null;
 
   listOfCaves: DragonCave[] = [];
@@ -47,6 +47,8 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
   // filters: todo
   private socketSubscription: Subscription | undefined;
 
+  sortOrderId: 'ID_ASC' | 'ID_DESC' | null = null;
+  sortOrderTreasures: 'TREASURE_ASC' | 'TREASURE_DESC' | null = null;
 
   constructor(private cd: ChangeDetectorRef) {
     this.dataEdit = null;
@@ -69,20 +71,22 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
         console.log("kokokokko");
       }
     });
-
-
-
   }
 
-  private loadInitialCaves(): void {
-    this.caveService.getCaves(0, 5, undefined, undefined, undefined).subscribe({
+  ngOnDestroy(): void {
+    if (this.socketSubscription) {
+      this.socketSubscription.unsubscribe();
+    }
+  }
+
+  private loadCaves(page: number, size: number, sort?: string): void {
+    this.caveService.getCaves(page, size, sort, undefined, undefined).subscribe({
       next: (response) => {
         this.listOfCaves = response.content.map(cave => ({
           id: cave.id,
           numberOfTreasures: cave.numberOfTreasures,
           canEdit: cave.canEdit,
         }));
-        console.log(this.listOfCaves)
         this.currPage = response.number;
         this.pageSize = response.size;
 
@@ -92,6 +96,10 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
         console.error('Ошибка загрузки:', err);
       },
     });
+  }
+
+  private loadInitialCaves(): void {
+    this.loadCaves(0, 5);
   }
 
 
@@ -118,43 +126,28 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
   }
 
 
-  ngOnDestroy(): void {
-    if (this.socketSubscription) {
-      this.socketSubscription.unsubscribe();
-    }
-  }
 
-
-  sortOrderId: 'ascend' | 'descend' | null = null;
-  sortOrderTreasures: 'ascend' | 'descend' | null = null;
 
   sort(key: 'id' | 'numberOfTreasures'): void {
     if (key === 'id') {
-      this.sortOrderId = this.sortOrderId === 'ascend' ? 'descend' : 'ascend';
+      this.sortOrderId = this.sortOrderId === 'ID_ASC' ? 'ID_DESC' : 'ID_ASC';
+      this.loadCaves(0, 5, this.sortOrderId);
     } else if (key === 'numberOfTreasures') {
-      this.sortOrderTreasures = this.sortOrderTreasures === 'ascend' ? 'descend' : 'ascend';
+      this.sortOrderTreasures = this.sortOrderTreasures === 'TREASURE_ASC' ? 'TREASURE_DESC' : 'TREASURE_ASC';
+      this.loadCaves(0, 5, this.sortOrderTreasures);
     }
-
-    this.listOfCaves.sort((a, b) => {
-      if (key === 'id') {
-        return this.sortOrderId === 'ascend' ? a.id - b.id : b.id - a.id;
-      } else if (key === 'numberOfTreasures') {
-        const xA = a.numberOfTreasures === null ? -Infinity : a.numberOfTreasures;
-        const xB = b.numberOfTreasures === null ? -Infinity : b.numberOfTreasures;
-        return this.sortOrderTreasures === 'ascend' ? xA - xB : xB - xA;
-      }
-      return 0;
-    });
   }
 
-  searchValue = '';
 
+
+  searchValue = '';
   onSearch(): void {
     this.listOfCaves = this.listOfCaves.filter(item =>
       item.id.toString().includes(this.searchValue.toLowerCase()) ||
       (item.numberOfTreasures !== null
         && item.numberOfTreasures.toString().includes(this.searchValue)));
   }
+
 
   deleteRow(id: number): void {
     this.caveService.deleteCave(
@@ -167,8 +160,7 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
 
   handleOkCave() {
     this.caveFormComponent.updateCave();
-    this.isCaveModalVisible = false;
-
+    this.isEditCaveModalVisible = false;
   }
 
   ngAfterViewChecked(): void {
@@ -183,7 +175,7 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
   }
 
   openEditModal(data: DragonCave): void {
-    this.isCaveModalVisible = true;
+    this.isEditCaveModalVisible = true;
     this.dataEdit = data;
 
   }

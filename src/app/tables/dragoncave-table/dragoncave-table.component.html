@@ -24,8 +24,10 @@
       <button nz-button nzSize="small"
               nzShape="round"
               nzType="primary"
-              nz-popconfirm nzPopconfirmTitle="Are you sure?"
-              (nzOnConfirm)="deleteRow(cave.id)">Delete
+              nz-popconfirm
+              nzPopconfirmTitle="Are you sure?"
+              (nzOnConfirm)="deleteRow(cave.id)">
+        delete
       </button>
 
     </td>
@@ -34,16 +36,16 @@
 </nz-table>
 
 
-<nz-modal [(nzVisible)]="isCaveModalVisible"
+<nz-modal [(nzVisible)]="isEditCaveModalVisible"
           nzTitle="edit cave"
           [nzContent]="caveForma"
-          (nzOnCancel)="this.isCaveModalVisible = false;"
+          (nzOnCancel)="this.isEditCaveModalVisible = false;"
           [nzFooter]="caveFooter">
   <ng-template #caveForma>
     <app-dragoncave-form></app-dragoncave-form>
   </ng-template>
   <ng-template #caveFooter>
-    <button nz-button nzType="default" (click)="this.isCaveModalVisible = false;">cancel</button>
+    <button nz-button nzType="default" (click)="this.isEditCaveModalVisible = false;">cancel</button>
     <button nz-button nzType="primary" (click)="handleOkCave()">save</button>
   </ng-template>
 </nz-modal>
