@@ -33,12 +33,14 @@ export class CaveService {
   public getCaves(
     offset: number = 0,
     limit: number = 5,
-    sort: string ='ID_ASC',
-    id?: number,
-    canEdit?: boolean,
+    sort?: string | undefined,
+    id?: number | undefined,
+    canEdit?: undefined | boolean,
     userId?: number,
     numberOfTreasures?: number
   ): Observable<Page<DragonCave>> {
+    console.log("sdklskdlfkslklwekdl")
+    console.log(canEdit?.toString())
     const params = {
       offset: offset.toString(),
       limit: limit.toString(),

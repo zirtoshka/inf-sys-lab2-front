@@ -1,6 +1,16 @@
 <p>dragoncave-table works!</p>
 <input [(ngModel)]="searchValue" (ngModelChange)="onSearch()" placeholder="search" style="margin-bottom: 16px;">
 
+<div style="margin-bottom: 16px;">
+  <label>Filter by "Can Edit": </label>
+  <label nz-radio-group>
+    <label nz-radio-button nzValue="all" (click)="setCanEditFilter('all')">All</label>
+    <label nz-radio-button nzValue="true" (click)="setCanEditFilter('true')">True</label>
+    <label nz-radio-button nzValue="false" (click)="setCanEditFilter('false')">False</label>
+  </label>
+
+</div>
+
 <nz-table [nzData]="listOfCaves" [nzBordered]="true">
   <thead>
   <tr>

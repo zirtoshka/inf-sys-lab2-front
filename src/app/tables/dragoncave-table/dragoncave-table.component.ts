@@ -13,6 +13,11 @@ import {WebSocketService} from '../../websocket.service';
 import {TableStateService} from '../../table-state.service';
 import {Subscription} from 'rxjs';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
+import {NzDropDownDirective} from 'ng-zorro-antd/dropdown';
+import {NzMenuDirective, NzMenuItemComponent} from 'ng-zorro-antd/menu';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import {NzRadioComponent} from 'ng-zorro-antd/radio';
+
 
 @Component({
   selector: 'app-dragoncave-table',
@@ -28,7 +33,12 @@ import {NzIconDirective} from 'ng-zorro-antd/icon';
     NzModalComponent,
     DragonCaveFormComponent,
     NzIconDirective,
-    NgClass
+    NgClass,
+    NzDropDownDirective,
+    NzDropDownModule,
+    NzMenuItemComponent,
+    NzMenuDirective,
+    NzRadioComponent,
   ],
   providers: [NzModalService, WebSocketService],
   templateUrl: './dragoncave-table.component.html',
@@ -52,6 +62,7 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
 
   sortOrderId: 'ID_ASC' | 'ID_DESC' | null = null;
   sortOrderTreasures: 'TREASURE_ASC' | 'TREASURE_DESC' | null = null;
+  canEditFilter: 'all' | 'true' | 'false' = 'all';
 
   constructor(private cd: ChangeDetectorRef) {
     this.dataEdit = null;
@@ -82,8 +93,9 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
     }
   }
 
-  private loadCaves(page: number, size: number, sort?: string): void {
-    this.caveService.getCaves(page, size, sort, undefined, undefined).subscribe({
+  private loadCaves(page: number, size: number, sort?: string, id?:number, canEdit?:boolean): void {
+    console.log("load")
+    this.caveService.getCaves(page, size, sort, id, canEdit).subscribe({
       next: (response) => {
         this.listOfCaves = response.content.map(cave => ({
           id: cave.id,
@@ -149,7 +161,20 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
     return 'down-circle';
   }
 
+  setCanEditFilter(value: 'all' | 'true' | 'false'): void {
+    this.canEditFilter = value;
+    this.applyCanEditFilter();
+  }
 
+  applyCanEditFilter(): void {
+    console.log(this.canEditFilter);
+    if (this.canEditFilter === 'all') {
+      this.loadCaves(0, 5);
+    } else {
+      const filterValue = this.canEditFilter === 'true';
+      this.loadCaves(0, 5,undefined,undefined, filterValue);
+    }
+  }
 
   searchValue = '';
   onSearch(): void {
