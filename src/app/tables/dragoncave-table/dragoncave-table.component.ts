@@ -15,7 +15,6 @@ import {Subscription} from 'rxjs';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {NzDropDownDirective} from 'ng-zorro-antd/dropdown';
 import {NzMenuDirective, NzMenuItemComponent} from 'ng-zorro-antd/menu';
-import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
 import {NzRadioComponent} from 'ng-zorro-antd/radio';
 
 
@@ -35,7 +34,6 @@ import {NzRadioComponent} from 'ng-zorro-antd/radio';
     NzIconDirective,
     NgClass,
     NzDropDownDirective,
-    NzDropDownModule,
     NzMenuItemComponent,
     NzMenuDirective,
     NzRadioComponent,
@@ -94,7 +92,6 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
   }
 
   private loadCaves(page: number, size: number, sort?: string, id?:number, canEdit?:boolean): void {
-    console.log("load")
     this.caveService.getCaves(page, size, sort, id, canEdit).subscribe({
       next: (response) => {
         this.listOfCaves = response.content.map(cave => ({

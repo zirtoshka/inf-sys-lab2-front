@@ -26,6 +26,7 @@ export class CaveService {
   updateCave(formData: any) {
     return this.baseService.update(formData, "/cave/update");
   }
+
   deleteCave(formData: any) {
     return this.baseService.delete(formData, "/cave/delete/");
   }
@@ -39,8 +40,6 @@ export class CaveService {
     userId?: number,
     numberOfTreasures?: number
   ): Observable<Page<DragonCave>> {
-    console.log("sdklskdlfkslklwekdl")
-    console.log(canEdit?.toString())
     const params = {
       offset: offset.toString(),
       limit: limit.toString(),
