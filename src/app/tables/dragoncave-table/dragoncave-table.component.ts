@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {NgForOf} from '@angular/common';
+import {NgClass, NgForOf} from '@angular/common';
 import {NzTableComponent, NzThAddOnComponent} from 'ng-zorro-antd/table';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {DragonCave} from '../../dragondto/dragoncave';
@@ -12,6 +12,7 @@ import {DragonCaveFormComponent} from '../../forms/dragoncave-form/dragoncave-fo
 import {WebSocketService} from '../../websocket.service';
 import {TableStateService} from '../../table-state.service';
 import {Subscription} from 'rxjs';
+import {NzIconDirective} from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-dragoncave-table',
@@ -25,7 +26,9 @@ import {Subscription} from 'rxjs';
     NzPopconfirmDirective,
     CoordinatesFormComponent,
     NzModalComponent,
-    DragonCaveFormComponent
+    DragonCaveFormComponent,
+    NzIconDirective,
+    NgClass
   ],
   providers: [NzModalService, WebSocketService],
   templateUrl: './dragoncave-table.component.html',
@@ -137,6 +140,14 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
       this.loadCaves(0, 5, this.sortOrderTreasures);
     }
   }
+  getSortIcon(property: string): string {
+    if (property === 'id') {
+      return this.sortOrderId === 'ID_ASC' ? 'up-circle' : this.sortOrderId === 'ID_DESC' ? 'down-circle' : 'down-circle';
+    } else if (property === 'numberOfTreasures') {
+      return this.sortOrderTreasures === 'TREASURE_ASC' ? 'up-circle' : this.sortOrderTreasures === 'TREASURE_DESC' ? 'down-circle' : 'down-circle';
+    }
+    return 'down-circle';
+  }
 
 
 
@@ -179,6 +190,8 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
     this.dataEdit = data;
 
   }
+
+
 
 
 }

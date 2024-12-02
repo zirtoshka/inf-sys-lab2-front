@@ -4,10 +4,15 @@
 <nz-table [nzData]="listOfCaves" [nzBordered]="true">
   <thead>
   <tr>
-    <th nzShowSort [nzSortOrder]="sortOrderId" (click)="sort('id')">ID</th>
-    <th nzShowSort [nzSortOrder]="sortOrderTreasures" (click)="sort('numberOfTreasures')">numberOfTreasures</th>
-    <th>id</th>
-    <th>number of numberOfTreasures</th>
+    <th (click)="sort('id')">
+      ID
+      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('id')" [ngClass]="{'sorted-asc': sortOrderId === 'ID_ASC', 'sorted-desc': sortOrderId === 'ID_DESC'}"></i>
+    </th>
+
+    <th (click)="sort('numberOfTreasures')">
+      numberOfTreasures
+      <i nz-icon [nzType]="getSortIcon('numberOfTreasures')" [ngClass]="{'sorted-asc': sortOrderTreasures === 'TREASURE_ASC', 'sorted-desc': sortOrderTreasures === 'TREASURE_DESC'}"></i>
+    </th>
     <th>can edit</th>
     <th>actions</th>
   </tr>
