@@ -51,11 +51,8 @@ export class AdminAppTableComponent extends BaseTableComponent<Application>{
   statusFilter: 'ALL' | 'NEW' | 'CLOSE' | 'APPROVED' | 'CANCELED' = 'ALL';
 
 
-  sortOrderId: 'ID_ASC' | 'ID_DESC' | null = null;
   sortOrderUserId: 'USER_ASC' | 'USER_DESC' | null = null;
   sortOrderCreatedAt: 'DATE_ASC' | 'DATE_DESC' | null = null;
-
-
 
 
 

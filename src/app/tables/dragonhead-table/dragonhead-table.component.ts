@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, inject, ViewChild} from '@angular/core';
-import {NgForOf} from '@angular/common';
+import {NgClass, NgForOf} from '@angular/common';
 import {NzTableComponent, NzThAddOnComponent} from 'ng-zorro-antd/table';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {DragonHead} from '../../dragondto/dragonhead';
@@ -9,6 +9,12 @@ import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
 import {HeadService} from '../../services/head.service';
 import {DragonHeadFormComponent} from '../../forms/dragonhead-form/dragon-head-form.component';
 import {CoordinatesFormComponent} from '../../forms/coordinates-form/coordinates-form.component';
+import {BaseTableComponent} from '../base-table-component';
+import {WebSocketService} from '../../websocket.service';
+import {DragonCave} from '../../dragondto/dragoncave';
+import {NzRadioComponent} from 'ng-zorro-antd/radio';
+import {DtoTable} from '../dto-table';
+import {NzIconDirective} from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-dragonhead-table',
@@ -22,67 +28,61 @@ import {CoordinatesFormComponent} from '../../forms/coordinates-form/coordinates
     NzPopconfirmDirective,
     CoordinatesFormComponent,
     NzModalComponent,
-    DragonHeadFormComponent
+    DragonHeadFormComponent,
+    NzRadioComponent,
+    NzIconDirective,
+    NgClass
   ],
-  providers: [NzModalService],
+  providers: [NzModalService,WebSocketService],
   templateUrl: './dragonhead-table.component.html',
   standalone: true,
   styleUrl: './dragonhead-table.component.css'
 })
-export class DragonheadTableComponent {
+export class DragonheadTableComponent extends DtoTable<DragonHead>{
   private headService: HeadService = inject(HeadService);
   @ViewChild(DragonHeadFormComponent) headFormComponent!: DragonHeadFormComponent;
   isHeadModalVisible = false;
-  dataEdit: DragonHead | null;
+  dataEdit: DragonHead | undefined;
+
+  sortOrderEyes: 'EYES_ASC' | 'EYES_DESC' | null = null;
 
 
-  listOfHeads: DragonHead[] = [
-    {id: 1, eyesCount: 10, canEdit: true},
-    {id: 2, eyesCount: 30, canEdit: true},
-    {id: 3, eyesCount: 2, canEdit: true},
-    {id: 4, eyesCount: 30, canEdit: true},
-    {id: 5, eyesCount: 2, canEdit: true},
-    {id: 6, eyesCount: 30, canEdit: true},
-    {id: 7, eyesCount: 2, canEdit: true},
-    {id: 8, eyesCount: 30, canEdit: true},
-    {id: 9, eyesCount: 2, canEdit: true},
-    {id: 10, eyesCount: 30, canEdit: true},
-  ];
-
-  constructor(private cd: ChangeDetectorRef) {
-    this.dataEdit = null;
+  constructor(cd: ChangeDetectorRef) {
+    super(cd, inject(WebSocketService));
+    this.sortOrder={
+      id:undefined,
+      eyes:undefined,
+    };
+    this.filters={
+      id:undefined,
+      canEdit:undefined,
+      eyes:undefined,
+    };
   }
 
-  sortOrderId: 'ascend' | 'descend' | null = null;
-  sortOrderEyes: 'ascend' | 'descend' | null = null;
 
-  sort(key: 'id' | 'eyesCount'): void {
-    if (key === 'id') {
-      this.sortOrderId = this.sortOrderId === 'ascend' ? 'descend' : 'ascend';
-    } else if (key === 'eyesCount') {
-      this.sortOrderEyes = this.sortOrderEyes === 'ascend' ? 'descend' : 'ascend';
-    }
-
-    this.listOfHeads.sort((a, b) => {
-      if (key === 'id') {
-        return this.sortOrderId === 'ascend' ? a.id - b.id : b.id - a.id;
-      } else if (key === 'eyesCount') {
-        const xA = a.eyesCount === null ? -Infinity : a.eyesCount;
-        const xB = b.eyesCount === null ? -Infinity : b.eyesCount;
-        return this.sortOrderEyes === 'ascend' ? xA - xB : xB - xA;
-      }
-      return 0;
+  loadData(page: number, size: number, sort?: string, filters?: Record<string, any>): void {
+    this.headService.getHeads(page, size, sort,
+      filters?.['id'], filters?.['canEdit'],undefined,
+      filters?.['eyes']
+    ).subscribe({
+      next: (response) => {
+        this.listOfData = response.content.map(cave => ({
+          id: cave.id,
+          eyesCount: cave.eyesCount,
+          canEdit: cave.canEdit,
+        }));
+        this.currPage = response.number + 1;
+        this.pageSize = response.size;
+        this.totalElements = response.totalElements;
+        this.cd.detectChanges();
+      },
+      error: (err) => {
+        console.error('Ошибка загрузки:', err); //todo
+      },
     });
   }
 
-  searchValue = '';
-
-  onSearch(): void {
-    this.listOfHeads = this.listOfHeads.filter(item =>
-      item.id.toString().includes(this.searchValue.toLowerCase()) ||
-      (item.eyesCount !== null
-        && item.eyesCount.toString().includes(this.searchValue)));
-  }
 
 
   deleteRow(id: number): void {
@@ -91,12 +91,12 @@ export class DragonheadTableComponent {
       .subscribe((res) => {
         console.log(res);
       })
-    this.listOfHeads = this.listOfHeads.filter(d => d.id !== id);
   }
 
 
   handleOkHead() {
     this.headFormComponent.updateHead();
+    this.isHeadModalVisible=false;
   }
 
   ngAfterViewChecked(): void {
@@ -113,7 +113,14 @@ export class DragonheadTableComponent {
   openEditModal(data: DragonHead): void {
     this.isHeadModalVisible = true;
     this.dataEdit = data;
+  }
 
+  getId(item: DragonHead): any {
+    return item.id;
+  }
+
+  getWebSocketTopic(): string {
+    return 'heads';
   }
 
 }

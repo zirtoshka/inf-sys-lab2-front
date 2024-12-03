@@ -14,15 +14,15 @@ export class CaveService {
   private baseService = inject(BaseService);
 
   addCave(formData: any) {
-    return this.baseService.add(formData, "/cave/add");
+    return this.baseService.add(formData, "cave/add");
   }
 
   updateCave(formData: any) {
-    return this.baseService.update(formData, "/cave/update");
+    return this.baseService.update(formData, "cave/update");
   }
 
   deleteCave(formData: any) {
-    return this.baseService.delete(formData, "/cave/delete/");
+    return this.baseService.delete(formData, "cave/delete/");
   }
 
   public getCaves(
@@ -34,7 +34,6 @@ export class CaveService {
     userId?: number,
     numberOfTreasures?: number
   ): Observable<Page<DragonCave>> {
-    console.log(offset, limit, id, canEdit);
     const params = {
       offset: offset-1,
       limit: limit.toString(),

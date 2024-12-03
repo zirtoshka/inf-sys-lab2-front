@@ -16,6 +16,7 @@ import {NzMenuDirective, NzMenuItemComponent} from 'ng-zorro-antd/menu';
 import {NzRadioComponent} from 'ng-zorro-antd/radio';
 import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
 import {BaseTableComponent} from '../base-table-component';
+import {DtoTable} from '../dto-table';
 
 
 
@@ -45,16 +46,14 @@ import {BaseTableComponent} from '../base-table-component';
   standalone: true,
   styleUrl: './dragoncave-table.component.css'
 })
-export class DragoncaveTableComponent extends BaseTableComponent<DragonCave> {
+export class DragoncaveTableComponent extends DtoTable<DragonCave> {
 
   private caveService = inject(CaveService);
   @ViewChild(DragonCaveFormComponent) caveFormComponent!: DragonCaveFormComponent;
   isEditCaveModalVisible = false;
   dataEdit: DragonCave | undefined;
 
-  sortOrderId: 'ID_ASC' | 'ID_DESC' | null = null;
   sortOrderTreasures: 'TREASURE_ASC' | 'TREASURE_DESC' | null = null;
-  canEditFilter: 'all' | 'true' | 'false' = 'all';
 
 
   constructor(cd: ChangeDetectorRef) {
@@ -94,19 +93,7 @@ export class DragoncaveTableComponent extends BaseTableComponent<DragonCave> {
   }
 
 
-  setCanEditFilter(value: 'all' | 'true' | 'false'): void {
-    this.canEditFilter = value;
-    this.applyCanEditFilter();
-  }
 
-  applyCanEditFilter(): void {
-    if (this.canEditFilter === 'all') {
-      this.filters['canEdit'] = undefined;
-    } else {
-      this.filters['canEdit'] = this.canEditFilter === 'true';
-    }
-    this.loadData(this.currPage, this.pageSize, undefined,  this.filters);
-  }
 
 
   deleteRow(id: number): void {

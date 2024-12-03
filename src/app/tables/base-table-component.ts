@@ -9,8 +9,11 @@ export abstract class BaseTableComponent<T> implements OnInit, OnDestroy {
   pageSize: number = 3;
   totalElements: number = 0;
 
-  sortOrder: Record<string, string|undefined> = {};
+
+  sortOrder: Record<string, string | undefined> = {};
   filters: Record<string, any> = {};
+  sortOrderId: 'ID_ASC' | 'ID_DESC' | null = null;
+
 
   private socketSubscription: Subscription | undefined;
 
