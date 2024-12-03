@@ -12,11 +12,9 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ApplicationService} from '../../services/application.service';
 import {Application, Status} from '../../application';
 import {WebSocketService} from '../../websocket.service';
-import {Subscription} from 'rxjs';
 import {NzMenuDirective, NzMenuItemComponent} from 'ng-zorro-antd/menu';
 import {NzDropDownDirective, NzDropdownMenuComponent} from 'ng-zorro-antd/dropdown';
 import {BaseTableComponent} from '../base-table-component';
-import {DragonCave} from '../../dragondto/dragoncave';
 
 @Component({
   selector: 'app-admin-app-table',
@@ -44,7 +42,7 @@ import {DragonCave} from '../../dragondto/dragoncave';
 })
 export class AdminAppTableComponent extends BaseTableComponent<Application>{
 
-  statuses: string[] = ['APPROVED', 'CANCELED'];
+  statuses: Status[] = [Status.APPROVED, Status.CANCELED];
 
   private applicationsService = inject(ApplicationService);
 
@@ -100,12 +98,6 @@ export class AdminAppTableComponent extends BaseTableComponent<Application>{
   }
 
 
-
-
-
-
-
-
   setStatusFilter(value: 'ALL' | 'NEW' | 'CLOSE' | 'APPROVED' | 'CANCELED'): void {
     this.statusFilter = value;
     this.applyStatusFilter();
@@ -122,26 +114,12 @@ export class AdminAppTableComponent extends BaseTableComponent<Application>{
 
 
 
-  // getSortIcon(property: string): string {
-  //   if (property === 'id') {
-  //     return this.sortOrderId === 'ID_ASC' ? 'up-circle' : this.sortOrderId === 'ID_DESC' ? 'down-circle' : 'down-circle';
-  //   } else if (property === 'userId') {
-  //     return this.sortOrderUserId === 'USER_ASC' ? 'up-circle' : this.sortOrderUserId === 'USER_DESC' ? 'down-circle' : 'down-circle';
-  //   } else if (property === 'createdAt') {
-  //     return this.sortOrderCreatedAt === 'DATE_ASC' ? 'up-circle' : this.sortOrderCreatedAt === 'DATE_DESC' ? 'down-circle' : 'down-circle';
-  //   }
-  //   return 'down-circle';
-  // }
-
-
-
-//todo
   changeStatus(id: number, status: string): void {
     this.applicationsService.updateApp({id, status}).subscribe({
       next: (response) => {
         const app = this.listOfData.find((app) => app.id === id);
         if (app) {
-          app.status = response.status;
+          app.status = response.message as Status;
         }
         this.cd.detectChanges();
       },
