@@ -11,10 +11,10 @@
     <ng-template #unCheckedTemplate><span nz-icon nzType="close"></span></ng-template>
   </nz-form-item>
   <nz-form-item>
-    <nz-form-label [nzSm]="10" [nzXs]="24" nzRequired nzFor="eyes">eyes count</nz-form-label>
+    <nz-form-label [nzSm]="10" [nzXs]="24" nzRequired nzFor="eyesCount">eyes count</nz-form-label>
     <nz-form-control nzErrorTip="eyes count is a number">
       <nz-input-group>
-        <input formControlName="eyes" nz-input placeholder="eyes count" [ngModel]="defaultData?.eyesCount"/>
+        <input formControlName="eyesCount" nz-input placeholder="eyes count" [ngModel]="defaultData?.eyesCount"/>
       </nz-input-group>
     </nz-form-control>
   </nz-form-item>

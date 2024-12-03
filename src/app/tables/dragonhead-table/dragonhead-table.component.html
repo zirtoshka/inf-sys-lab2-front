@@ -50,6 +50,16 @@
   </tbody>
 </nz-table>
 
+<nz-pagination
+  [(nzPageIndex)]="currPage"
+  [(nzPageSize)]="pageSize"
+  [nzTotal]="totalElements"
+  [nzShowSizeChanger]="true"
+  (nzPageIndexChange)="onPageChange($event)"
+  [nzPageSizeOptions]="[2, 3, 5, 10]"
+  (nzPageSizeChange)="onPageSizeChange($event)"
+  [nzShowQuickJumper]="true">
+</nz-pagination>
 
 <nz-modal [(nzVisible)]="isHeadModalVisible"
           nzTitle="edit head"

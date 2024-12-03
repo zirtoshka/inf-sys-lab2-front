@@ -45,7 +45,7 @@ export class DragonHeadFormComponent {
 
   constructor(private fb: NonNullableFormBuilder) {
     this.validateForm = this.fb.group({
-      eyes: ['', [Validators.required,
+      eyesCount: ['', [Validators.required,
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
       canEdit: ['', [Validators.required,]]
     });
@@ -64,7 +64,7 @@ export class DragonHeadFormComponent {
     if (this.validateForm.valid && this.defaultData) {
       const head: DragonHead = {
         id: this.defaultData.id,
-        eyesCount: this.validateForm.value.eyes,
+        eyesCount: this.validateForm.value.eyesCount,
         canEdit: this.validateForm.value.canEdit
       };
       this.headService.updateHead(

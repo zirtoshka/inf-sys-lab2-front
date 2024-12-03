@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Component, inject, ViewChild} from '@angular/core';
-import {NgForOf} from '@angular/common';
+import {NgClass, NgForOf} from '@angular/common';
 import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
 import {NzTableComponent, NzThAddOnComponent} from 'ng-zorro-antd/table';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -9,8 +9,12 @@ import {NzPopconfirmDirective} from "ng-zorro-antd/popconfirm";
 import {CoordinatesFormComponent} from '../../forms/coordinates-form/coordinates-form.component';
 import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
 import {LocationFormComponent} from '../../forms/location-form/location-form.component';
-import {Coordinates} from '../../dragondto/coordinates';
 import {LocationService} from '../../services/location.service';
+import {DtoTable} from '../dto-table';
+import {WebSocketService} from '../../websocket.service';
+import {DragonCave} from '../../dragondto/dragoncave';
+import {NzRadioComponent} from 'ng-zorro-antd/radio';
+import {NzIconDirective} from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-location-table',
@@ -25,80 +29,76 @@ import {LocationService} from '../../services/location.service';
     NzPopconfirmDirective,
     CoordinatesFormComponent,
     NzModalComponent,
-    LocationFormComponent
+    LocationFormComponent,
+    NzRadioComponent,
+    NzIconDirective,
+    NgClass
   ],
   providers: [NzModalService],
   templateUrl: './location-table.component.html',
   standalone: true,
   styleUrl: './location-table.component.css'
 })
-export class LocationTableComponent {
+export class LocationTableComponent extends DtoTable<Location> {
   private locationService = inject(LocationService);
   @ViewChild(LocationFormComponent) locationFormComponent!: LocationFormComponent;
-  dataEdit: Location | null;
+  dataEdit: Location | undefined;
   isLocationModalVisible = false;
 
-  listOfLocations: Location[] = [
-    {id: 1, x: 10, y: 20, z: 30, name: 'A', canEdit: true},
-    {id: 2, x: 15, y: 25, z: 35, name: 'B', canEdit: true},
-    {id: 3, x: 20, y: 30, z: 40, name: 'C', canEdit: true},
-    {id: 4, x: 25, y: 35, z: 45, name: 'D', canEdit: true},
-    {id: 5, x: 30, y: 40, z: 50, name: 'E', canEdit: true},
-    {id: 6, x: 35, y: 45, z: 55, name: 'F', canEdit: true},
-    {id: 7, x: 40, y: 50, z: 60, name: 'G', canEdit: true},
-  ];
+  sortOrderX: 'X_ASC' | 'X_DESC' | null = null;
+  sortOrderY: 'Y_ASC' | 'Y_DESC' | null = null;
+  sortOrderZ: 'Z_ASC' | 'Z_DESC' | null = null;
+  sortOrderName: 'NAME_ASC' | 'NAME_DESC' | null = null;
 
-  constructor(private cd: ChangeDetectorRef) {
-    this.dataEdit = null;
+
+  constructor(cd: ChangeDetectorRef) {
+    super(cd, inject(WebSocketService));
+    this.sortOrder = {
+      id: undefined,
+      x: undefined,
+      y: undefined,
+      z: undefined,
+      name: undefined,
+    }
+    this.filters={
+      id: undefined,
+      canEdit: undefined,
+      name:undefined,
+      x:undefined,
+      y:undefined,
+      z:undefined,
+    }
   }
 
-  sortOrderId: 'ascend' | 'descend' | null = null;
-  sortOrderX: 'ascend' | 'descend' | null = null;
-  sortOrderY: 'ascend' | 'descend' | null = null;
-  sortOrderZ: 'ascend' | 'descend' | null = null;
-  sortOrderName: 'ascend' | 'descend' | null = null;
 
-  sort(key: 'id' | 'x' | 'y' | 'z' | 'name'): void {
-    if (key === 'id') {
-      this.sortOrderId = this.sortOrderId === 'ascend' ? 'descend' : 'ascend';
-    } else if (key === 'x') {
-      this.sortOrderX = this.sortOrderX === 'ascend' ? 'descend' : 'ascend';
-    } else if (key === 'y') {
-      this.sortOrderY = this.sortOrderY === 'ascend' ? 'descend' : 'ascend';
-    } else if (key === 'z') {
-      this.sortOrderZ = this.sortOrderZ === 'ascend' ? 'descend' : 'ascend';
-    } else if (key === 'name') {
-      this.sortOrderName = this.sortOrderName === 'ascend' ? 'descend' : 'ascend';
-    }
-
-    this.listOfLocations.sort((a, b) => {
-      if (key === 'id') {
-        return this.sortOrderId === 'ascend' ? a.id - b.id : b.id - a.id;
-      } else if (key === 'x') {
-        const xA = a.x === null ? -Infinity : a.x;
-        const xB = b.x === null ? -Infinity : b.x;
-        return this.sortOrderX === 'ascend' ? xA - xB : xB - xA;
-      } else if (key === 'y') {
-        return this.sortOrderY === 'ascend' ? a.y - b.y : b.y - a.y;
-      } else if (key === 'z') {
-        return this.sortOrderZ === 'ascend' ? a.z - b.z : b.z - a.z;
-      } else if (key === 'name') {
-        return this.sortOrderName === 'ascend' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
-      }
-      return 0;
+  loadData(page: number, size: number, sort?: string, filters?: Record<string, any>): void {
+    this.locationService.getLocations(page, size, sort,
+      filters?.['id'], filters?.['canEdit'],undefined,
+      filters?.['name'], filters?.['x'],filters?.['y'],filters?.['z'],
+    ).subscribe({
+      next: (response) => {
+        this.listOfData = response.content.map(loc => ({
+          id: loc.id,
+          x: loc.x,
+          y:loc.y,
+          canEdit: loc.canEdit,
+          z:loc.z,
+          name: loc.name,
+        }));
+        this.currPage = response.number + 1;
+        this.pageSize = response.size;
+        this.totalElements = response.totalElements;
+        this.cd.detectChanges();
+      },
+      error: (err) => {
+        console.error('Ошибка загрузки:', err); //todo
+      },
     });
   }
 
-  searchValue = '';
 
-  onSearch(): void {
-    this.listOfLocations = this.listOfLocations.filter(item =>
-      item.name.toLowerCase().includes(this.searchValue.toLowerCase()) ||
-      (item.x !== null && item.x.toString().includes(this.searchValue)) ||
-      item.y.toString().includes(this.searchValue) ||
-      item.z.toString().includes(this.searchValue)
-    );
-  }
+
+
 
 
   deleteRow(id: number): void {
@@ -107,12 +107,12 @@ export class LocationTableComponent {
       .subscribe((res) => {
         console.log(res);
       })
-    this.listOfLocations = this.listOfLocations.filter(d => d.id !== id);
   }
 
 
   handleOkLocation() {
     this.locationFormComponent.updateLocation();
+    this.isLocationModalVisible=false;
   }
 
   ngAfterViewChecked(): void {
@@ -129,6 +129,13 @@ export class LocationTableComponent {
   openEditModal(data: Location): void {
     this.isLocationModalVisible = true;
     this.dataEdit = data;
+  }
 
+  getId(item: Location): any {
+    return item.id;
+  }
+
+  getWebSocketTopic(): string {
+    return 'locations';
   }
 }

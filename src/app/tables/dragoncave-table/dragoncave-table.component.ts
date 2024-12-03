@@ -59,8 +59,8 @@ export class DragoncaveTableComponent extends DtoTable<DragonCave> {
   constructor(cd: ChangeDetectorRef) {
     super(cd, inject(WebSocketService));
     this.sortOrder = {
-      ID: undefined,
-      TREASURE: undefined,
+      id: undefined,
+      treasure: undefined,
     }
     this.filters = {
       id: undefined,

@@ -48,11 +48,11 @@ export class LocationFormComponent {
 
   constructor(private fb: NonNullableFormBuilder) {
     this.validateForm = this.fb.group({
-      xValue: ['', [
+      x: ['', [
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
-      yValue: ['', [Validators.required,
+      y: ['', [Validators.required,
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
-      zValue: ['', [Validators.required,
+      z: ['', [Validators.required,
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
       name: ['', [Validators.required]],
       canEdit: [false]
@@ -73,9 +73,9 @@ export class LocationFormComponent {
     if (this.validateForm.valid && this.defaultData) {
       const location: Location = {
         id: this.defaultData.id,
-        x: this.validateForm.value.xValue,
-        y: this.validateForm.value.yValue,
-        z: this.validateForm.value.zValue,
+        x: this.validateForm.value.x,
+        y: this.validateForm.value.y,
+        z: this.validateForm.value.z,
         name: this.validateForm.value.name,
         canEdit: this.validateForm.value.canEdit
       };

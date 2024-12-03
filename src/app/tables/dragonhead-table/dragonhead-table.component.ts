@@ -15,6 +15,7 @@ import {DragonCave} from '../../dragondto/dragoncave';
 import {NzRadioComponent} from 'ng-zorro-antd/radio';
 import {DtoTable} from '../dto-table';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
+import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
 
 @Component({
   selector: 'app-dragonhead-table',
@@ -31,7 +32,8 @@ import {NzIconDirective} from 'ng-zorro-antd/icon';
     DragonHeadFormComponent,
     NzRadioComponent,
     NzIconDirective,
-    NgClass
+    NgClass,
+    NzPaginationComponent
   ],
   providers: [NzModalService,WebSocketService],
   templateUrl: './dragonhead-table.component.html',

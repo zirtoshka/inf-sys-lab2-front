@@ -1,24 +1,59 @@
-<input [(ngModel)]="searchValue" (ngModelChange)="onSearch()" placeholder="search" style="margin-bottom: 16px;">
+<br>
+<div style="margin-bottom: 16px;">
+  <input [(ngModel)]="this.filters['id']" placeholder="Filter by ID" style="margin-right: 8px;"/>
+  <input [(ngModel)]="this.filters['name']" placeholder="Filter by name" style="margin-right: 8px;"/>
+  <input [(ngModel)]="this.filters['x']" placeholder="Filter by x" style="margin-right: 8px;"/>
+  <input [(ngModel)]="this.filters['y']" placeholder="Filter by y" style="margin-right: 8px;"/>
+  <input [(ngModel)]="this.filters['z']" placeholder="Filter by z" style="margin-right: 8px;"/>
+  <button nz-button nzType="primary" (click)="applyFilters()">Apply Filters</button>
+  <button nz-button nzType="default" (click)="resetFilters()">Reset</button>
+</div>
 
-<nz-table [nzData]="listOfLocations" [nzBordered]="true">
+<div style="margin-bottom: 16px;">
+  <label>Filter by "Can Edit": </label>
+  <label nz-radio-group>
+    <label nz-radio-button nzValue="all" (click)="setCanEditFilter('all')">All</label>
+    <label nz-radio-button nzValue="true" (click)="setCanEditFilter('true')">True</label>
+    <label nz-radio-button nzValue="false" (click)="setCanEditFilter('false')">False</label>
+  </label>
+
+</div>
+
+<nz-table [nzData]="listOfData" [nzBordered]="true" nzShowPagination="false">
   <thead>
   <tr>
-    <!--    <th nzShowSort [nzSortOrder]="sortOrderId" (click)="sort('id')">ID</th>-->
-    <!--    <th nzShowSort [nzSortOrder]="sortOrderX" (click)="sort('x')">X</th>-->
-    <!--    <th nzShowSort [nzSortOrder]="sortOrderY" (click)="sort('y')">Y</th>-->
-    <!--    <th nzShowSort [nzSortOrder]="sortOrderZ" (click)="sort('z')">Z</th>-->
-    <!--    <th nzShowSort [nzSortOrder]="sortOrderName" (click)="sort('name')">name</th>-->
-    <th>id</th>
-    <th>x</th>
-    <th>y</th>
-    <th>z</th>
-    <th>name</th>
+    <th (click)="sort('id')">
+      ID
+      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('ID')"
+         [ngClass]="{'sorted-asc': sortOrderId === 'ID_ASC', 'sorted-desc': sortOrderId === 'ID_DESC'}"></i>
+    </th>
+
+    <th (click)="sort('x')">
+      x
+      <i nz-icon [nzType]="getSortIcon('x')"
+         [ngClass]="{'sorted-asc': sortOrderX === 'X_ASC', 'sorted-desc': sortOrderX === 'X_DESC'}"></i>
+    </th>
+    <th (click)="sort('y')">
+      y
+      <i nz-icon [nzType]="getSortIcon('y')"
+         [ngClass]="{'sorted-asc': sortOrderY === 'Y_ASC', 'sorted-desc': sortOrderY === 'Y_DESC'}"></i>
+    </th>
+    <th (click)="sort('z')">
+      z
+      <i nz-icon [nzType]="getSortIcon('z')"
+         [ngClass]="{'sorted-asc': sortOrderZ === 'Z_ASC', 'sorted-desc': sortOrderZ === 'Z_DESC'}"></i>
+    </th>
+    <th (click)="sort('name')">
+      name
+      <i nz-icon [nzType]="getSortIcon('name')"
+         [ngClass]="{'sorted-asc': sortOrderName === 'NAME_ASC', 'sorted-desc': sortOrderName === 'NAME_DESC'}"></i>
+    </th>
     <th>can edit</th>
     <th style="width: 15%;">actions</th>
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let location of listOfLocations">
+  <tr *ngFor="let location of listOfData" class="hoverable-row">
     <td>{{ location.id }}</td>
     <td>{{ location.x }}</td>
     <td>{{ location.y }}</td>
@@ -36,7 +71,16 @@
   </tbody>
 </nz-table>
 
-<!--<nz-pagination [nzPageIndex]="1" [nzPageSize]="10" [nzTotal]="listOfLocations.length" style="margin-top: 16px;"></nz-pagination>-->
+<nz-pagination
+  [(nzPageIndex)]="currPage"
+  [(nzPageSize)]="pageSize"
+  [nzTotal]="totalElements"
+  [nzShowSizeChanger]="true"
+  (nzPageIndexChange)="onPageChange($event)"
+  [nzPageSizeOptions]="[2, 3, 5, 10]"
+  (nzPageSizeChange)="onPageSizeChange($event)"
+  [nzShowQuickJumper]="true">
+</nz-pagination>
 
 <nz-modal [(nzVisible)]="isLocationModalVisible"
           nzTitle="edit location"
