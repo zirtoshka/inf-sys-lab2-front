@@ -18,7 +18,7 @@
 
 </div>
 
-<nz-table [nzData]="listOfApplications" [nzBordered]="true"
+<nz-table [nzData]="listOfData" [nzBordered]="true"
           nzShowPagination="false">
   <thead>
   <tr>
@@ -42,20 +42,25 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let app of listOfApplications">
+  <tr *ngFor="let app of listOfData">
     <td>{{ app.id }}</td>
     <td>{{ app.createdAt }}</td>
     <td>{{ app.userId }}</td>
     <td>{{app.status}}</td>
     <td>
-      <button nz-button nzSize="small"
-              nzShape="round"
-              nzType="primary"
-              nz-popconfirm
-              nzPopconfirmTitle="Are you sure?"
-      >
-        change status
-      </button>
+      <div nz-dropdown [nzDropdownMenu]="menu" nzTrigger="click">
+        <button nz-button nzSize="small" nzShape="round" nzType="primary">
+          Change Status
+          <i nz-icon nzType="down"></i>
+        </button>
+      </div>
+      <nz-dropdown-menu #menu="nzDropdownMenu">
+        <ul nz-menu>
+          <li nz-menu-item *ngFor="let status of statuses" (click)="changeStatus(app.id, status)">
+            {{ status }}
+          </li>
+        </ul>
+      </nz-dropdown-menu>
 
     </td>
   </tr>

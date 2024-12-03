@@ -22,13 +22,13 @@
   <tr>
     <th (click)="sort('id')">
       ID
-      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('id')"
+      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('ID')"
          [ngClass]="{'sorted-asc': sortOrderId === 'ID_ASC', 'sorted-desc': sortOrderId === 'ID_DESC'}"></i>
     </th>
 
-    <th (click)="sort('numberOfTreasures')">
+    <th (click)="sort('treasure')">
       numberOfTreasures
-      <i nz-icon [nzType]="getSortIcon('numberOfTreasures')"
+      <i nz-icon [nzType]="getSortIcon('TREASURE')"
          [ngClass]="{'sorted-asc': sortOrderTreasures === 'TREASURE_ASC', 'sorted-desc': sortOrderTreasures === 'TREASURE_DESC'}"></i>
     </th>
     <th>can edit</th>

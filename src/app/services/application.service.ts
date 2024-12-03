@@ -12,14 +12,14 @@ export class ApplicationService {
   private baseService = inject(BaseService);
 
   addApplication() {
-    return this.baseService.addApp("/app/add");
+    return this.baseService.add(undefined,"app/add"); //todo check undefined
   }
 
   updateApp(formData: any) {
     if (!this.baseService.isAdmin()) {
       return throwError(() => new Error('Access denied: Only admins can fetch applications'));
     }
-    return this.baseService.update(formData, "/app/changeStatus");
+    return this.baseService.update(formData, "app/changeStatus");
   }
 
   getApp(

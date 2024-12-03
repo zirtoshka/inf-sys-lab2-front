@@ -9,7 +9,7 @@ export abstract class BaseTableComponent<T> implements OnInit, OnDestroy {
   pageSize: number = 3;
   totalElements: number = 0;
 
-  sortOrder: Record<string, any> = {};
+  sortOrder: Record<string, string|undefined> = {};
   filters: Record<string, any> = {};
 
   private socketSubscription: Subscription | undefined;
@@ -29,7 +29,7 @@ export abstract class BaseTableComponent<T> implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadData(this.currPage, this.pageSize);
-    this.socketSubscription=this.webSocketService.listen(
+    this.socketSubscription = this.webSocketService.listen(
       (task) => this.handleWebSocketEvent(task),
       this.getWebSocketTopic()
     );
@@ -69,8 +69,16 @@ export abstract class BaseTableComponent<T> implements OnInit, OnDestroy {
   }
 
   sort(key: string): void {
+    key = key.toUpperCase();
     this.sortOrder[key] = this.sortOrder[key] === `${key}_ASC` ? `${key}_DESC` : `${key}_ASC`;
     this.loadData(this.currPage, this.pageSize, this.sortOrder[key], this.filters);
+  }
+
+  getSortIcon(property: string): string {
+    const stateSort = this.sortOrder[property];
+    if (stateSort && stateSort.includes('ASC')) return 'up-circle';
+    if (stateSort && stateSort.includes('DESC')) return 'down-circle';
+    return 'up-circle';
   }
 
   applyFilters(): void {
@@ -83,6 +91,7 @@ export abstract class BaseTableComponent<T> implements OnInit, OnDestroy {
   }
 
   abstract getWebSocketTopic(): string;
+
   abstract getId(item: T): any;
 
 }

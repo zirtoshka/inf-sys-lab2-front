@@ -86,7 +86,7 @@ export class AuthService {
     this.username = name;
     let headers = new HttpHeaders();
     headers = headers.set('Authorization', `Bearer ${token}`);
-    lastValueFrom(this.httpClient.get(`http://localhost:8080/dragon/user/dragon/hello`, {headers})) //todo change
+    lastValueFrom(this.httpClient.get(`http://localhost:8080/dragon/dragon/hello`, {headers})) //todo change
       .then(data => {
         this.router.navigate(['home']).then(() => {
         }).catch(err => {

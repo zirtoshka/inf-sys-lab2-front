@@ -12,9 +12,11 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ApplicationService} from '../../services/application.service';
 import {Application, Status} from '../../application';
 import {WebSocketService} from '../../websocket.service';
-import {TableStateService} from '../../table-state.service';
-import {DragonCave} from '../../dragondto/dragoncave';
 import {Subscription} from 'rxjs';
+import {NzMenuDirective, NzMenuItemComponent} from 'ng-zorro-antd/menu';
+import {NzDropDownDirective, NzDropdownMenuComponent} from 'ng-zorro-antd/dropdown';
+import {BaseTableComponent} from '../base-table-component';
+import {DragonCave} from '../../dragondto/dragoncave';
 
 @Component({
   selector: 'app-admin-app-table',
@@ -31,20 +33,20 @@ import {Subscription} from 'rxjs';
     NzTableComponent,
     ReactiveFormsModule,
     FormsModule,
-    NgClass
+    NgClass,
+    NzMenuDirective,
+    NzMenuItemComponent,
+    NzDropDownDirective,
+    NzDropdownMenuComponent
   ],
   templateUrl: './admin-app-table.component.html',
   styleUrl: './admin-app-table.component.css'
 })
-export class AdminAppTableComponent implements OnInit, OnDestroy{
-  private tableStateService = inject(TableStateService);
+export class AdminAppTableComponent extends BaseTableComponent<Application>{
+
+  statuses: string[] = ['APPROVED', 'CANCELED'];
+
   private applicationsService = inject(ApplicationService);
-  private webSocketService = inject(WebSocketService);
-
-  private socketSubscription: Subscription | undefined;
-
-  listOfApplications: Application[] = [];
-  dataEdit: Application | null;
 
   idFilter: number | undefined;
   userIdFilter: number | undefined;
@@ -56,44 +58,31 @@ export class AdminAppTableComponent implements OnInit, OnDestroy{
   sortOrderCreatedAt: 'DATE_ASC' | 'DATE_DESC' | null = null;
 
 
-  currPage: number = 1;
-  pageSize: number = 3;
-  totalElements = 1000;
 
 
-  constructor(private cd: ChangeDetectorRef) {
-    this.dataEdit = null;
-  }
 
-  ngOnInit(): void {
-    const state = this.tableStateService.getState('applications');
-    this.currPage = state.currentPage;
-    this.pageSize = state.pageSize;
-    this.loadApplications(this.currPage, this.pageSize);
-
-    this.webSocketService.listen(task => {
-       if (task.action === 'UPDATE') {
-        this.handleAppUpdate(task.application);
-      } else if (task.action === 'ADD') {
-        this.handleAppAdd(task.application);
-      } else {
-        console.log("kokokokko");
-      }
-    }, "application");
-  }
-  ngOnDestroy(): void {
-    if (this.socketSubscription) {
-      this.socketSubscription.unsubscribe();
+  constructor(cd: ChangeDetectorRef) {
+    super(cd, inject(WebSocketService));
+    this.sortOrder={
+      id:undefined,
+      userId:undefined,
+      createdAt:undefined,
+    };
+    this.filters={
+      id:undefined,
+      userId:undefined,
+      status:undefined,
     }
   }
 
-  private loadApplications(page: number, size: number, sort?: string, id?: number, userId?: number,
-                           createdAt?: string,
-                           status?: Status): void {
-    this.applicationsService.getApp(page, size, sort, id, userId, createdAt, status).subscribe({
+
+
+  loadData(page: number, size: number, sort?: string, filters?:Record<string, any>): void {
+    this.applicationsService.getApp(page, size, sort,
+      filters?.['id'], filters?.['userId'], filters?.['createdAt'], filters?.['status'])
+      .subscribe({
       next: (response) => {
-        console.log(response);
-        this.listOfApplications = response.content.map(app => ({
+        this.listOfData = response.content.map(app => ({
           id: app.id,
           userId: app.userId,
           createdAt: app.createdAt,
@@ -105,41 +94,16 @@ export class AdminAppTableComponent implements OnInit, OnDestroy{
         this.cd.detectChanges();
       },
       error: (err) => {
-        console.error('Ошибка загрузки:', err);
+        console.error('Ошибка загрузки:', err); //todo
       },
     });
   }
 
 
 
-  handleAppUpdate(updatedApp: any): void {
-    const index = this.listOfApplications.findIndex(app => app.id === updatedApp.id);
-    if (index === -1) {
-      this.listOfApplications.push(updatedApp);
-    } else {
-      this.listOfApplications[index] = updatedApp;
-    }
-    this.cd.detectChanges();
-  }
-
-  handleAppAdd(app: Application) {
-    this.listOfApplications.push(app);
-    this.cd.detectChanges();
-  }
-
-  applyFilters(): void {
-    this.loadApplications(this.currPage, this.pageSize,
-      undefined, this.idFilter, this.userIdFilter);
-  }
 
 
 
-
-  resetFilters(): void {
-    this.idFilter = undefined;
-    this.userIdFilter = undefined;
-    this.loadApplications(this.currPage, this.pageSize);
-  }
 
 
   setStatusFilter(value: 'ALL' | 'NEW' | 'CLOSE' | 'APPROVED' | 'CANCELED'): void {
@@ -149,47 +113,50 @@ export class AdminAppTableComponent implements OnInit, OnDestroy{
 
   applyStatusFilter(): void {
     if (this.statusFilter === 'ALL') {
-      this.loadApplications(this.currPage, this.pageSize);
+      this.loadData(this.currPage, this.pageSize);
     } else {
-      this.loadApplications(this.currPage, this.pageSize, undefined, undefined,
-        undefined, undefined,
-        this.statusFilter as Status);
+      this.loadData(this.currPage, this.pageSize, undefined, this.filters);
     }
   }
 
 
-  sort(key: 'id' | 'userId' | 'createdAt'): void {
-    if (key === 'id') {
-      this.sortOrderId = this.sortOrderId === 'ID_ASC' ? 'ID_DESC' : 'ID_ASC';
-      this.loadApplications(this.currPage, this.pageSize, this.sortOrderId);
-    } else if (key === 'userId') {
-      this.sortOrderUserId = this.sortOrderUserId === 'USER_ASC' ? 'USER_DESC' : 'USER_ASC';
-      this.loadApplications(this.currPage, this.pageSize, this.sortOrderUserId);
-    } else if (key === 'createdAt') {
-      this.sortOrderCreatedAt = this.sortOrderCreatedAt === 'DATE_ASC' ? 'DATE_DESC' : 'DATE_ASC';
-      this.loadApplications(this.currPage, this.pageSize, this.sortOrderCreatedAt);
-    }
+
+
+  // getSortIcon(property: string): string {
+  //   if (property === 'id') {
+  //     return this.sortOrderId === 'ID_ASC' ? 'up-circle' : this.sortOrderId === 'ID_DESC' ? 'down-circle' : 'down-circle';
+  //   } else if (property === 'userId') {
+  //     return this.sortOrderUserId === 'USER_ASC' ? 'up-circle' : this.sortOrderUserId === 'USER_DESC' ? 'down-circle' : 'down-circle';
+  //   } else if (property === 'createdAt') {
+  //     return this.sortOrderCreatedAt === 'DATE_ASC' ? 'up-circle' : this.sortOrderCreatedAt === 'DATE_DESC' ? 'down-circle' : 'down-circle';
+  //   }
+  //   return 'down-circle';
+  // }
+
+
+
+//todo
+  changeStatus(id: number, status: string): void {
+    this.applicationsService.updateApp({id, status}).subscribe({
+      next: (response) => {
+        const app = this.listOfData.find((app) => app.id === id);
+        if (app) {
+          app.status = response.status;
+        }
+        this.cd.detectChanges();
+      },
+      error: (err) => {
+        console.error('Ошибка при изменении статуса:', err);
+      },
+    });
   }
 
-  getSortIcon(property: string): string {
-    if (property === 'id') {
-      return this.sortOrderId === 'ID_ASC' ? 'up-circle' : this.sortOrderId === 'ID_DESC' ? 'down-circle' : 'down-circle';
-    } else if (property === 'userId') {
-      return this.sortOrderUserId === 'USER_ASC' ? 'up-circle' : this.sortOrderUserId === 'USER_DESC' ? 'down-circle' : 'down-circle';
-    }else if (property === 'createdAt') {
-      return this.sortOrderCreatedAt === 'DATE_ASC' ? 'up-circle' : this.sortOrderCreatedAt === 'DATE_DESC' ? 'down-circle' : 'down-circle';
-    }
-    return 'down-circle';
+  getId(item: Application): any {
+    return item.id;
   }
 
-  onPageChange(page: number): void {
-    this.currPage = page;
-    this.loadApplications(this.currPage, this.pageSize);
-  }
-  onPageSizeChange(size: number): void {
-    this.pageSize = size;
-    this.currPage = 1;
-    this.loadApplications(this.currPage, this.pageSize);
+  getWebSocketTopic(): string {
+    return 'applications';
   }
 }
 

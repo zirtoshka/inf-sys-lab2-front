@@ -1,4 +1,20 @@
-/* You can add global styles to this file, and also import other style files */
-
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.sorted-asc {
+  color: green;
+}
+
+.sorted-desc {
+  color: red;
+}
+
+
+.hoverable-row {
+  transition: background-color 0.3s ease;
+}
+
+.hoverable-row:hover {
+  background-color: rgba(255, 105, 180, 0.16);
+  cursor: pointer;
+}

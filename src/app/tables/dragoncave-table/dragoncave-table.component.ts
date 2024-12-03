@@ -10,8 +10,6 @@ import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
 import {CaveService} from '../../services/cave.service';
 import {DragonCaveFormComponent} from '../../forms/dragoncave-form/dragoncave-form.component';
 import {WebSocketService} from '../../websocket.service';
-import {TableStateService} from '../../table-state.service';
-import {Subscription} from 'rxjs';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {NzDropDownDirective} from 'ng-zorro-antd/dropdown';
 import {NzMenuDirective, NzMenuItemComponent} from 'ng-zorro-antd/menu';
@@ -59,14 +57,11 @@ export class DragoncaveTableComponent extends BaseTableComponent<DragonCave> {
   canEditFilter: 'all' | 'true' | 'false' = 'all';
 
 
-  idFilter: number | undefined;
-  treasuresFilter: number | undefined;
-
   constructor(cd: ChangeDetectorRef) {
     super(cd, inject(WebSocketService));
     this.sortOrder = {
-      id: null,
-      treasures: null,
+      ID: undefined,
+      TREASURE: undefined,
     }
     this.filters = {
       id: undefined,
@@ -78,11 +73,10 @@ export class DragoncaveTableComponent extends BaseTableComponent<DragonCave> {
 
   loadData(page: number, size: number, sort?: string, filters?: Record<string, any>): void {
     this.caveService.getCaves(page, size, sort,
-      filters?.['id'], filters?.['canEdit'],
+      filters?.['id'], filters?.['canEdit'],undefined,
       filters?.['treasures']
     ).subscribe({
       next: (response) => {
-        console.log(response);
         this.listOfData = response.content.map(cave => ({
           id: cave.id,
           numberOfTreasures: cave.numberOfTreasures,
@@ -91,27 +85,14 @@ export class DragoncaveTableComponent extends BaseTableComponent<DragonCave> {
         this.currPage = response.number + 1;
         this.pageSize = response.size;
         this.totalElements = response.totalElements;
-
-
         this.cd.detectChanges();
       },
       error: (err) => {
-        console.error('Ошибка загрузки:', err);
+        console.error('Ошибка загрузки:', err); //todo
       },
     });
   }
 
-
-
-
-  getSortIcon(property: string): string {
-    if (property === 'id') {
-      return this.sortOrderId === 'ID_ASC' ? 'up-circle' : this.sortOrderId === 'ID_DESC' ? 'down-circle' : 'down-circle';
-    } else if (property === 'numberOfTreasures') {
-      return this.sortOrderTreasures === 'TREASURE_ASC' ? 'up-circle' : this.sortOrderTreasures === 'TREASURE_DESC' ? 'down-circle' : 'down-circle';
-    }
-    return 'down-circle';
-  }
 
   setCanEditFilter(value: 'all' | 'true' | 'false'): void {
     this.canEditFilter = value;
@@ -163,7 +144,7 @@ export class DragoncaveTableComponent extends BaseTableComponent<DragonCave> {
   }
 
   getWebSocketTopic(): string {
-    return 'cave';
+    return 'caves';
   }
 
 }
