@@ -1,5 +1,5 @@
 import {ChangeDetectorRef, Directive, OnDestroy, OnInit} from '@angular/core';
-import {Subscription} from 'rxjs';
+import {filter, Subscription} from 'rxjs';
 import {WebSocketService} from '../websocket.service';
 
 @Directive()
@@ -73,8 +73,7 @@ export abstract class BaseTableComponent<T> implements OnInit, OnDestroy {
     this.loadData(this.currPage, this.pageSize, this.sortOrder[key], this.filters);
   }
 
-  applyFilters(filters: Record<string, any>): void {
-    this.filters = filters;
+  applyFilters(): void {
     this.loadData(this.currPage, this.pageSize, undefined, this.filters);
   }
 

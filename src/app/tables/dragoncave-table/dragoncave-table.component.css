@@ -5,3 +5,13 @@
 .sorted-desc {
   color: red;
 }
+
+
+.hoverable-row {
+  transition: background-color 0.3s ease; /* Для плавного эффекта */
+}
+
+.hoverable-row:hover {
+  background-color: rgba(255, 105, 180, 0.16); /* Цвет выделения */
+  cursor: pointer; /* Изменение курсора на указатель */
+}

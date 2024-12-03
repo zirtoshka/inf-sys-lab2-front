@@ -118,17 +118,13 @@ export class DragoncaveTableComponent extends BaseTableComponent<DragonCave> {
     this.applyCanEditFilter();
   }
 
-
-
-
-
   applyCanEditFilter(): void {
     if (this.canEditFilter === 'all') {
-      this.loadData(this.currPage, this.pageSize);
+      this.filters['canEdit'] = undefined;
     } else {
-      const filterValue = this.canEditFilter === 'true';
-      this.loadData(this.currPage, this.pageSize, undefined,  this.filters);
+      this.filters['canEdit'] = this.canEditFilter === 'true';
     }
+    this.loadData(this.currPage, this.pageSize, undefined,  this.filters);
   }
 
 
