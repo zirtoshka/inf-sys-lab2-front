@@ -12,7 +12,6 @@ import {LocationFormComponent} from '../../forms/location-form/location-form.com
 import {LocationService} from '../../services/location.service';
 import {DtoTable} from '../dto-table';
 import {WebSocketService} from '../../websocket.service';
-import {DragonCave} from '../../dragondto/dragoncave';
 import {NzRadioComponent} from 'ng-zorro-antd/radio';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
 
@@ -41,15 +40,7 @@ import {NzIconDirective} from 'ng-zorro-antd/icon';
 })
 export class LocationTableComponent extends DtoTable<Location> {
   private locationService = inject(LocationService);
-  @ViewChild(LocationFormComponent) locationFormComponent!: LocationFormComponent;
-  dataEdit: Location | undefined;
-  isLocationModalVisible = false;
-
-  sortOrderX: 'X_ASC' | 'X_DESC' | null = null;
-  sortOrderY: 'Y_ASC' | 'Y_DESC' | null = null;
-  sortOrderZ: 'Z_ASC' | 'Z_DESC' | null = null;
-  sortOrderName: 'NAME_ASC' | 'NAME_DESC' | null = null;
-
+  @ViewChild(LocationFormComponent) declare formComponent: LocationFormComponent;
 
   constructor(cd: ChangeDetectorRef) {
     super(cd, inject(WebSocketService));
@@ -60,29 +51,29 @@ export class LocationTableComponent extends DtoTable<Location> {
       z: undefined,
       name: undefined,
     }
-    this.filters={
+    this.filters = {
       id: undefined,
       canEdit: undefined,
-      name:undefined,
-      x:undefined,
-      y:undefined,
-      z:undefined,
+      name: undefined,
+      x: undefined,
+      y: undefined,
+      z: undefined,
     }
   }
 
 
   loadData(page: number, size: number, sort?: string, filters?: Record<string, any>): void {
     this.locationService.getLocations(page, size, sort,
-      filters?.['id'], filters?.['canEdit'],undefined,
-      filters?.['name'], filters?.['x'],filters?.['y'],filters?.['z'],
+      filters?.['id'], filters?.['canEdit'], undefined,
+      filters?.['name'], filters?.['x'], filters?.['y'], filters?.['z'],
     ).subscribe({
       next: (response) => {
         this.listOfData = response.content.map(loc => ({
           id: loc.id,
           x: loc.x,
-          y:loc.y,
+          y: loc.y,
           canEdit: loc.canEdit,
-          z:loc.z,
+          z: loc.z,
           name: loc.name,
         }));
         this.currPage = response.number + 1;
@@ -96,39 +87,12 @@ export class LocationTableComponent extends DtoTable<Location> {
     });
   }
 
-
-
-
-
-
   deleteRow(id: number): void {
     this.locationService.deleteLocation(
       {id: id})
       .subscribe((res) => {
         console.log(res);
       })
-  }
-
-
-  handleOkLocation() {
-    this.locationFormComponent.updateLocation();
-    this.isLocationModalVisible=false;
-  }
-
-  ngAfterViewChecked(): void {
-    if (this.locationFormComponent) {
-      if (this.dataEdit) {
-        this.locationFormComponent.setDefaultData(this.dataEdit);
-      }
-      this.locationFormComponent.hideAddButtonFn();
-    }
-    this.cd.detectChanges();
-
-  }
-
-  openEditModal(data: Location): void {
-    this.isLocationModalVisible = true;
-    this.dataEdit = data;
   }
 
   getId(item: Location): any {

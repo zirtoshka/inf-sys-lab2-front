@@ -39,35 +39,29 @@ import {NzIconDirective} from 'ng-zorro-antd/icon';
   standalone: true,
   styleUrl: './coordinates-table.component.css'
 })
-export class CoordinatesTableComponent  extends DtoTable<Coordinates>{
+export class CoordinatesTableComponent extends DtoTable<Coordinates> {
   private coordinatesService = inject(CoordinatesService);
-  @ViewChild(CoordinatesFormComponent) coordinatesFormComponent!: CoordinatesFormComponent;
-  isCoordinatesModalVisible = false;
-  dataEdit: Coordinates | undefined;
-
-
-  sortOrderX: 'X_ASC' | 'X_DESC' | null = null;
-  sortOrderY: 'Y_ASC' | 'Y_DESC' | null = null;
-
-  constructor( cd: ChangeDetectorRef) {
+  @ViewChild(CoordinatesFormComponent) declare formComponent: CoordinatesFormComponent;
+  
+  constructor(cd: ChangeDetectorRef) {
     super(cd, inject(WebSocketService));
-    this.sortOrder={
-      id:undefined,
-      x:undefined,
-      y:undefined
+    this.sortOrder = {
+      id: undefined,
+      x: undefined,
+      y: undefined
     };
-    this.filters={
-      id:undefined,
-      x:undefined,
-      y:undefined,
+    this.filters = {
+      id: undefined,
+      x: undefined,
+      y: undefined,
       canEdit: undefined,
     }
   }
 
   loadData(page: number, size: number, sort?: string, filters?: Record<string, any>): void {
     this.coordinatesService.getCoordinates(page, size, sort,
-      filters?.['id'], filters?.['canEdit'],undefined,
-      filters?.['x'],filters?.['y']
+      filters?.['id'], filters?.['canEdit'], undefined,
+      filters?.['x'], filters?.['y']
     ).subscribe({
       next: (response) => {
         this.listOfData = response.content.map(coord => ({
@@ -87,38 +81,12 @@ export class CoordinatesTableComponent  extends DtoTable<Coordinates>{
     });
   }
 
-
-
-
-
   deleteRow(id: number): void {
     this.coordinatesService.deleteCoordinates(
       {id: id})
       .subscribe((res) => {
         console.log(res);
       })
-  }
-
-
-  handleOkCoordinates() {
-    this.coordinatesFormComponent.updateCoordinates();
-    this.isCoordinatesModalVisible=false;
-  }
-
-  ngAfterViewChecked(): void {
-    if (this.coordinatesFormComponent) {
-      if (this.dataEdit) {
-        this.coordinatesFormComponent.setDefaultData(this.dataEdit);
-      }
-      this.coordinatesFormComponent.hideAddButtonFn();
-    }
-    this.cd.detectChanges();
-
-  }
-
-  openEditModal(data: Coordinates): void {
-    this.isCoordinatesModalVisible = true;
-    this.dataEdit = data;
   }
 
   getId(item: Coordinates): any {

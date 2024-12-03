@@ -25,18 +25,18 @@
     <th (click)="sort('id')">
       ID
       <i nz-icon nzTheme="outline" [nzType]="getSortIcon('id')"
-         [ngClass]="{'sorted-asc': sortOrderId === 'ID_ASC', 'sorted-desc': sortOrderId === 'ID_DESC'}"></i>
+         [ngClass]="{'sorted-asc': sortOrder['id'] === 'ID_ASC', 'sorted-desc': sortOrder['id'] === 'ID_DESC'}"></i>
     </th>
 
     <th (click)="sort('createdAt')">
       created at
       <i nz-icon [nzType]="getSortIcon('createdAt')"
-         [ngClass]="{'sorted-asc': sortOrderCreatedAt === 'DATE_ASC', 'sorted-desc': sortOrderCreatedAt === 'DATE_DESC'}"></i>
+         [ngClass]="{'sorted-asc': sortOrder['createdAt'] === 'DATE_ASC', 'sorted-desc': sortOrder['createdAt'] === 'DATE_DESC'}"></i>
     </th>
     <th (click)="sort('userId')">
       user id
       <i nz-icon [nzType]="getSortIcon('userId')"
-         [ngClass]="{'sorted-asc': sortOrderUserId === 'USER_ASC', 'sorted-desc': sortOrderUserId === 'USER_DESC'}"></i>
+         [ngClass]="{'sorted-asc': sortOrder['userId'] === 'USER_ASC', 'sorted-desc': sortOrder['userId'] === 'USER_DESC'}"></i>
     </th>
     <th>status</th>
   </tr>

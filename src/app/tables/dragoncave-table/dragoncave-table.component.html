@@ -22,13 +22,13 @@
     <th (click)="sort('id')">
       ID
       <i nz-icon nzTheme="outline" [nzType]="getSortIcon('ID')"
-         [ngClass]="{'sorted-asc': sortOrderId === 'ID_ASC', 'sorted-desc': sortOrderId === 'ID_DESC'}"></i>
+         [ngClass]="{'sorted-asc': sortOrder['id'] === 'ID_ASC', 'sorted-desc': sortOrder['id'] === 'ID_DESC'}"></i>
     </th>
 
     <th (click)="sort('treasure')">
       numberOfTreasures
       <i nz-icon [nzType]="getSortIcon('TREASURE')"
-         [ngClass]="{'sorted-asc': sortOrderTreasures === 'TREASURE_ASC', 'sorted-desc': sortOrderTreasures === 'TREASURE_DESC'}"></i>
+         [ngClass]="{'sorted-asc': sortOrder['treasure'] === 'TREASURE_ASC', 'sorted-desc': sortOrder['treasure'] === 'TREASURE_DESC'}"></i>
     </th>
     <th>can edit</th>
     <th>actions</th>
@@ -69,16 +69,16 @@
   [nzShowQuickJumper]="true">
 </nz-pagination>
 
-<nz-modal [(nzVisible)]="isEditCaveModalVisible"
+<nz-modal [(nzVisible)]="isEditModalVisible"
           nzTitle="edit cave"
           [nzContent]="caveForma"
-          (nzOnCancel)="this.isEditCaveModalVisible = false;"
+          (nzOnCancel)="this.isEditModalVisible = false;"
           [nzFooter]="caveFooter">
   <ng-template #caveForma>
     <app-dragoncave-form></app-dragoncave-form>
   </ng-template>
   <ng-template #caveFooter>
-    <button nz-button nzType="default" (click)="this.isEditCaveModalVisible = false;">cancel</button>
-    <button nz-button nzType="primary" (click)="handleOkCave()">save</button>
+    <button nz-button nzType="default" (click)="this.isEditModalVisible = false;">cancel</button>
+    <button nz-button nzType="primary" (click)="handleOk()">save</button>
   </ng-template>
 </nz-modal>

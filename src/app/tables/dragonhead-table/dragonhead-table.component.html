@@ -21,13 +21,13 @@
     <th (click)="sort('id')">
       ID
       <i nz-icon nzTheme="outline" [nzType]="getSortIcon('ID')"
-         [ngClass]="{'sorted-asc': sortOrderId === 'ID_ASC', 'sorted-desc': sortOrderId === 'ID_DESC'}"></i>
+         [ngClass]="{'sorted-asc': sortOrder['id'] === 'ID_ASC', 'sorted-desc': sortOrder['id'] === 'ID_DESC'}"></i>
     </th>
 
     <th (click)="sort('eyes')">
       eyes count
       <i nz-icon [nzType]="getSortIcon('eyes')"
-         [ngClass]="{'sorted-asc': sortOrderEyes === 'EYES_ASC', 'sorted-desc': sortOrderEyes === 'EYES_DESC'}"></i>
+         [ngClass]="{'sorted-asc': sortOrder['eyes'] === 'EYES_ASC', 'sorted-desc': sortOrder['eyes'] === 'EYES_DESC'}"></i>
     </th>
     <th>can edit</th>
     <th style="width: 15%;">actions</th>
@@ -61,16 +61,16 @@
   [nzShowQuickJumper]="true">
 </nz-pagination>
 
-<nz-modal [(nzVisible)]="isHeadModalVisible"
+<nz-modal [(nzVisible)]="isEditModalVisible"
           nzTitle="edit head"
           [nzContent]="headForma"
-          (nzOnCancel)="this.isHeadModalVisible = false;"
+          (nzOnCancel)="this.isEditModalVisible = false;"
           [nzFooter]="headFooter">
   <ng-template #headForma>
     <app-dragonhead-form></app-dragonhead-form>
   </ng-template>
   <ng-template #headFooter>
-    <button nz-button nzType="default" (click)="this.isHeadModalVisible = false;">cancel</button>
-    <button nz-button nzType="primary" (click)="handleOkHead()">save</button>
+    <button nz-button nzType="default" (click)="this.isEditModalVisible = false;">cancel</button>
+    <button nz-button nzType="primary" (click)="handleOk()">save</button>
   </ng-template>
 </nz-modal>

@@ -35,37 +35,32 @@ import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
     NgClass,
     NzPaginationComponent
   ],
-  providers: [NzModalService,WebSocketService],
+  providers: [NzModalService, WebSocketService],
   templateUrl: './dragonhead-table.component.html',
   standalone: true,
   styleUrl: './dragonhead-table.component.css'
 })
-export class DragonheadTableComponent extends DtoTable<DragonHead>{
+export class DragonheadTableComponent extends DtoTable<DragonHead> {
   private headService: HeadService = inject(HeadService);
-  @ViewChild(DragonHeadFormComponent) headFormComponent!: DragonHeadFormComponent;
-  isHeadModalVisible = false;
-  dataEdit: DragonHead | undefined;
-
-  sortOrderEyes: 'EYES_ASC' | 'EYES_DESC' | null = null;
-
+  @ViewChild(DragonHeadFormComponent) declare formComponent: DragonHeadFormComponent;
 
   constructor(cd: ChangeDetectorRef) {
     super(cd, inject(WebSocketService));
-    this.sortOrder={
-      id:undefined,
-      eyes:undefined,
+    this.sortOrder = {
+      id: undefined,
+      eyes: undefined,
     };
-    this.filters={
-      id:undefined,
-      canEdit:undefined,
-      eyes:undefined,
+    this.filters = {
+      id: undefined,
+      canEdit: undefined,
+      eyes: undefined,
     };
   }
 
 
   loadData(page: number, size: number, sort?: string, filters?: Record<string, any>): void {
     this.headService.getHeads(page, size, sort,
-      filters?.['id'], filters?.['canEdit'],undefined,
+      filters?.['id'], filters?.['canEdit'], undefined,
       filters?.['eyes']
     ).subscribe({
       next: (response) => {
@@ -85,8 +80,6 @@ export class DragonheadTableComponent extends DtoTable<DragonHead>{
     });
   }
 
-
-
   deleteRow(id: number): void {
     this.headService.deleteHead(
       {id: id})
@@ -95,27 +88,6 @@ export class DragonheadTableComponent extends DtoTable<DragonHead>{
       })
   }
 
-
-  handleOkHead() {
-    this.headFormComponent.updateHead();
-    this.isHeadModalVisible=false;
-  }
-
-  ngAfterViewChecked(): void {
-    if (this.headFormComponent) {
-      if (this.dataEdit) {
-        this.headFormComponent.setDefaultData(this.dataEdit);
-      }
-      this.headFormComponent.hideAddButtonFn();
-    }
-    this.cd.detectChanges();
-
-  }
-
-  openEditModal(data: DragonHead): void {
-    this.isHeadModalVisible = true;
-    this.dataEdit = data;
-  }
 
   getId(item: DragonHead): any {
     return item.id;

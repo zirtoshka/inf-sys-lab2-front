@@ -23,17 +23,17 @@
     <th (click)="sort('id')">
       ID
       <i nz-icon nzTheme="outline" [nzType]="getSortIcon('ID')"
-         [ngClass]="{'sorted-asc': sortOrderId === 'ID_ASC', 'sorted-desc': sortOrderId === 'ID_DESC'}"></i>
+         [ngClass]="{'sorted-asc': sortOrder['id'] === 'ID_ASC', 'sorted-desc': sortOrder['id'] === 'ID_DESC'}"></i>
     </th>
     <th (click)="sort('x')">
       x
       <i nz-icon nzTheme="outline" [nzType]="getSortIcon('x')"
-         [ngClass]="{'sorted-asc': sortOrderX === 'X_ASC', 'sorted-desc': sortOrderX === 'X_DESC'}"></i>
+         [ngClass]="{'sorted-asc': sortOrder['x'] === 'X_ASC', 'sorted-desc': sortOrder['x'] === 'X_DESC'}"></i>
     </th>
     <th (click)="sort('y')">
       y
       <i nz-icon nzTheme="outline" [nzType]="getSortIcon('y')"
-         [ngClass]="{'sorted-asc': sortOrderY === 'Y_ASC', 'sorted-desc': sortOrderY === 'Y_DESC'}"></i>
+         [ngClass]="{'sorted-asc': sortOrder['y'] === 'Y_ASC', 'sorted-desc': sortOrder['y'] === 'Y_DESC'}"></i>
     </th>
     <th>can edit</th>
     <th style="width: 15%;">actions</th>
@@ -67,10 +67,10 @@
   [nzShowQuickJumper]="true">
 </nz-pagination>
 
-<nz-modal [(nzVisible)]="isCoordinatesModalVisible"
+<nz-modal [(nzVisible)]="isEditModalVisible"
           nzTitle="edit coordinates"
           [nzContent]="coordinatesForma"
-          (nzOnCancel)="this.isCoordinatesModalVisible = false;"
+          (nzOnCancel)="this.isEditModalVisible = false;"
           [nzFooter]="coordFooter">
   <ng-template #coordinatesForma>
     <app-coordinates-form>
@@ -78,8 +78,8 @@
     </app-coordinates-form>
   </ng-template>
   <ng-template #coordFooter>
-    <button nz-button nzType="default" (click)="this.isCoordinatesModalVisible = false;">cancel</button>
-    <button nz-button nzType="primary" (click)="handleOkCoordinates()">save</button>
+    <button nz-button nzType="default" (click)="this.isEditModalVisible = false;">cancel</button>
+    <button nz-button nzType="primary" (click)="handleOk()">save</button>
   </ng-template>
 </nz-modal>
 

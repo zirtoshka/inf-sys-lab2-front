@@ -25,28 +25,28 @@
     <th (click)="sort('id')">
       ID
       <i nz-icon nzTheme="outline" [nzType]="getSortIcon('ID')"
-         [ngClass]="{'sorted-asc': sortOrderId === 'ID_ASC', 'sorted-desc': sortOrderId === 'ID_DESC'}"></i>
+         [ngClass]="{'sorted-asc': sortOrder['id'] === 'ID_ASC', 'sorted-desc': sortOrder['id'] === 'ID_DESC'}"></i>
     </th>
 
     <th (click)="sort('x')">
       x
       <i nz-icon [nzType]="getSortIcon('x')"
-         [ngClass]="{'sorted-asc': sortOrderX === 'X_ASC', 'sorted-desc': sortOrderX === 'X_DESC'}"></i>
+         [ngClass]="{'sorted-asc': sortOrder['x'] === 'X_ASC', 'sorted-desc': sortOrder['x'] === 'X_DESC'}"></i>
     </th>
     <th (click)="sort('y')">
       y
       <i nz-icon [nzType]="getSortIcon('y')"
-         [ngClass]="{'sorted-asc': sortOrderY === 'Y_ASC', 'sorted-desc': sortOrderY === 'Y_DESC'}"></i>
+         [ngClass]="{'sorted-asc': sortOrder['y'] === 'Y_ASC', 'sorted-desc': sortOrder['y'] === 'Y_DESC'}"></i>
     </th>
     <th (click)="sort('z')">
       z
       <i nz-icon [nzType]="getSortIcon('z')"
-         [ngClass]="{'sorted-asc': sortOrderZ === 'Z_ASC', 'sorted-desc': sortOrderZ === 'Z_DESC'}"></i>
+         [ngClass]="{'sorted-asc': sortOrder['z'] === 'Z_ASC', 'sorted-desc': sortOrder['z'] === 'Z_DESC'}"></i>
     </th>
     <th (click)="sort('name')">
       name
       <i nz-icon [nzType]="getSortIcon('name')"
-         [ngClass]="{'sorted-asc': sortOrderName === 'NAME_ASC', 'sorted-desc': sortOrderName === 'NAME_DESC'}"></i>
+         [ngClass]="{'sorted-asc': sortOrder['name'] === 'NAME_ASC', 'sorted-desc': sortOrder['name'] === 'NAME_DESC'}"></i>
     </th>
     <th>can edit</th>
     <th style="width: 15%;">actions</th>
@@ -82,10 +82,10 @@
   [nzShowQuickJumper]="true">
 </nz-pagination>
 
-<nz-modal [(nzVisible)]="isLocationModalVisible"
+<nz-modal [(nzVisible)]="isEditModalVisible"
           nzTitle="edit location"
           [nzContent]="locationForma"
-          (nzOnCancel)="this.isLocationModalVisible = false;"
+          (nzOnCancel)="this.isEditModalVisible = false;"
           [nzFooter]="locationFooter">
   <ng-template #locationForma>
     <app-location-form>
@@ -93,7 +93,7 @@
     </app-location-form>
   </ng-template>
   <ng-template #locationFooter>
-    <button nz-button nzType="default" (click)="this.isLocationModalVisible = false;">cancel</button>
-    <button nz-button nzType="primary" (click)="handleOkLocation()">save</button>
+    <button nz-button nzType="default" (click)="this.isEditModalVisible = false;">cancel</button>
+    <button nz-button nzType="primary" (click)="handleOk()">save</button>
   </ng-template>
 </nz-modal>

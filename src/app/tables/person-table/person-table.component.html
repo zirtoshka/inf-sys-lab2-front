@@ -1,31 +1,80 @@
-<p>person-table works!</p>
-<input [(ngModel)]="searchValue" (ngModelChange)="onSearch()" placeholder="search" style="margin-bottom: 16px;">
+<br>
+<div style="margin-bottom: 16px;">
+  <input [(ngModel)]="this.filters['id']" placeholder="Filter by ID" style="margin-right: 8px;"/>
+  <input [(ngModel)]="this.filters['name']" placeholder="Filter by name" style="margin-right: 8px;"/>
+  <input [(ngModel)]="this.filters['hairColor']" placeholder="Filter by hairColor" style="margin-right: 8px;"/>
+  <input [(ngModel)]="this.filters['eyeColor']" placeholder="Filter by eyeColor" style="margin-right: 8px;"/>
+  <input [(ngModel)]="this.filters['locationId']" placeholder="Filter by locationId" style="margin-right: 8px;"/>
+  <input [(ngModel)]="this.filters['height']" placeholder="Filter by height" style="margin-right: 8px;"/>
+  <input [(ngModel)]="this.filters['passportID']" placeholder="Filter by passportID" style="margin-right: 8px;"/>
+  <input [(ngModel)]="this.filters['nationality']" placeholder="Filter by nationality" style="margin-right: 8px;"/>
 
-<nz-table [nzData]="listOfPeople" [nzBordered]="true">
+  <button nz-button nzType="primary" (click)="applyFilters()">Apply Filters</button>
+  <button nz-button nzType="default" (click)="resetFilters()">Reset</button>
+</div>
+
+<div style="margin-bottom: 16px;">
+  <label>Filter by "Can Edit": </label>
+  <label nz-radio-group>
+    <label nz-radio-button nzValue="all" (click)="setCanEditFilter('all')">All</label>
+    <label nz-radio-button nzValue="true" (click)="setCanEditFilter('true')">True</label>
+    <label nz-radio-button nzValue="false" (click)="setCanEditFilter('false')">False</label>
+  </label>
+</div>
+
+
+<nz-table [nzData]="listOfData" [nzBordered]="true" nzShowPagination="false">
+
   <thead>
   <tr>
-    <!--    <th nzShowSort [nzSortOrder]="sortOrderId" (click)="sort('id')">ID</th>-->
-    <!--    <th nzShowSort [nzSortOrder]="sortOrderName" (click)="sort('name')">name</th>-->
-    <!--    <th nzShowSort [nzSortOrder]="sortOrderEyeColor" (click)="sort('eyeColor')">eye color</th>-->
-    <!--    <th nzShowSort [nzSortOrder]="sortOrderHairColor" (click)="sort('hairColor')">hair color</th>-->
-    <!--    <th nzShowSort [nzSortOrder]="sortOrderLocation" (click)="sort('location')">location</th>-->
-    <!--    <th nzShowSort [nzSortOrder]="sortOrderHeight" (click)="sort('height')">height</th>-->
-    <!--    <th nzShowSort [nzSortOrder]="sortOrderPassportID" (click)="sort('passportID')">passport id</th>-->
-    <!--    <th nzShowSort [nzSortOrder]="sortOrderNationality" (click)="sort('nationality')">nationality</th>-->
-    <th>id</th>
-    <th>name</th>
-    <th>eye color</th>
-    <th>hair color</th>
-    <th>location</th>
-    <th>height</th>
-    <th>passportID</th>
-    <th>nationality</th>
+    <th (click)="sort('id')">
+      ID
+      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('ID')"
+         [ngClass]="{'sorted-asc': sortOrder['id'] === 'ID_ASC', 'sorted-desc': sortOrder['id'] === 'ID_DESC'}"></i>
+    </th>
+    <th (click)="sort('name')">
+      name
+      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('name')"
+         [ngClass]="{'sorted-asc': sortOrder['name'] === 'NAME_ASC', 'sorted-desc': sortOrder['name'] === 'NAME_DESC'}"></i>
+    </th>
+    <th (click)="sort('eye')">
+      eye
+      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('eye')"
+         [ngClass]="{'sorted-asc': sortOrder['eye'] === 'EYE_ASC', 'sorted-desc': sortOrder['eye'] === 'EYE_DESC'}"></i>
+    </th>
+    <th (click)="sort('hair')">
+      hair
+      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('hair')"
+         [ngClass]="{'sorted-asc': sortOrder['hair'] === 'HAIR_ASC', 'sorted-desc': sortOrder['hair'] === 'HAIR_DESC'}"></i>
+    </th>
+    <th (click)="sort('location')">
+      location
+      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('location')"
+         [ngClass]="{'sorted-asc': sortOrder['location'] === 'LOCATION_ASC', 'sorted-desc': sortOrder['location'] === 'LOCATION_DESC'}"></i>
+    </th>
+
+    <th (click)="sort('height')">
+      height
+      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('height')"
+         [ngClass]="{'sorted-asc': sortOrder['height'] === 'HEIGHT_ASC', 'sorted-desc': sortOrder['height'] === 'HEIGHT_DESC'}"></i>
+    </th>
+    <th (click)="sort('passport')">
+      passportID
+      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('passport')"
+         [ngClass]="{'sorted-asc': sortOrder['passport'] === 'PASSPORT_ASC', 'sorted-desc': sortOrder['passport'] === 'PASSPORT_DESC'}"></i>
+    </th>
+
+    <th (click)="sort('nationality')">
+      nationality
+      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('nationality')"
+         [ngClass]="{'sorted-asc': sortOrder['nationality'] === 'NATIONALITY_ASC', 'sorted-desc': sortOrder['nationality'] === 'NATIONALITY_DESC'}"></i>
+    </th>
     <th>can edit</th>
     <th>actions</th>
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let person of listOfPeople">
+  <tr *ngFor="let person of listOfData" class="hoverable-row">
     <td>{{ person.id }}</td>
     <td>{{ person.name }}</td>
     <td>{{ person.eyeColor }}</td>
@@ -48,18 +97,29 @@
   </tbody>
 </nz-table>
 
+<nz-pagination
+  [(nzPageIndex)]="currPage"
+  [(nzPageSize)]="pageSize"
+  [nzTotal]="totalElements"
+  [nzShowSizeChanger]="true"
+  (nzPageIndexChange)="onPageChange($event)"
+  [nzPageSizeOptions]="[2, 3, 5, 10]"
+  (nzPageSizeChange)="onPageSizeChange($event)"
+  [nzShowQuickJumper]="true">
+</nz-pagination>
 
-<nz-modal [(nzVisible)]="isPersonModalVisible"
+
+<nz-modal [(nzVisible)]="isEditModalVisible"
           nzTitle="edit person"
           [nzContent]="personForma"
-          (nzOnCancel)="this.isPersonModalVisible = false;"
+          (nzOnCancel)="this.isEditModalVisible = false;"
           [nzFooter]="personFooter">
   <ng-template #personForma>
     <app-person-form></app-person-form>
   </ng-template>
   <ng-template #personFooter>
-    <button nz-button nzType="default" (click)="this.isPersonModalVisible = false;">cancel</button>
-    <button nz-button nzType="primary" (click)="handleOkCoordinates()">save</button>
+    <button nz-button nzType="default" (click)="this.isEditModalVisible = false;">cancel</button>
+    <button nz-button nzType="primary" (click)="handleOk()">save</button>
   </ng-template>
 </nz-modal>
 

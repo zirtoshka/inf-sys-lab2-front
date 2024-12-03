@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, ViewChild} from '@angular/core';
 import {NgClass, NgForOf} from '@angular/common';
 import {NzTableComponent, NzThAddOnComponent} from 'ng-zorro-antd/table';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -15,9 +15,7 @@ import {NzDropDownDirective} from 'ng-zorro-antd/dropdown';
 import {NzMenuDirective, NzMenuItemComponent} from 'ng-zorro-antd/menu';
 import {NzRadioComponent} from 'ng-zorro-antd/radio';
 import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
-import {BaseTableComponent} from '../base-table-component';
 import {DtoTable} from '../dto-table';
-
 
 
 @Component({
@@ -48,12 +46,11 @@ import {DtoTable} from '../dto-table';
 })
 export class DragoncaveTableComponent extends DtoTable<DragonCave> {
 
-  private caveService = inject(CaveService);
-  @ViewChild(DragonCaveFormComponent) caveFormComponent!: DragonCaveFormComponent;
-  isEditCaveModalVisible = false;
-  dataEdit: DragonCave | undefined;
 
-  sortOrderTreasures: 'TREASURE_ASC' | 'TREASURE_DESC' | null = null;
+  @ViewChild(DragonCaveFormComponent) declare formComponent: DragonCaveFormComponent;
+
+  private caveService = inject(CaveService);
+
 
 
   constructor(cd: ChangeDetectorRef) {
@@ -72,7 +69,7 @@ export class DragoncaveTableComponent extends DtoTable<DragonCave> {
 
   loadData(page: number, size: number, sort?: string, filters?: Record<string, any>): void {
     this.caveService.getCaves(page, size, sort,
-      filters?.['id'], filters?.['canEdit'],undefined,
+      filters?.['id'], filters?.['canEdit'], undefined,
       filters?.['treasures']
     ).subscribe({
       next: (response) => {
@@ -92,10 +89,6 @@ export class DragoncaveTableComponent extends DtoTable<DragonCave> {
     });
   }
 
-
-
-
-
   deleteRow(id: number): void {
     this.caveService.deleteCave(
       {id: id})
@@ -104,27 +97,6 @@ export class DragoncaveTableComponent extends DtoTable<DragonCave> {
       })
   }
 
-
-  handleOkCave() {
-    this.caveFormComponent.updateCave();
-    this.isEditCaveModalVisible = false;
-  }
-
-  ngAfterViewChecked(): void {
-    if (this.caveFormComponent) {
-      if (this.dataEdit) {
-        this.caveFormComponent.setDefaultData(this.dataEdit);
-      }
-      this.caveFormComponent.hideAddButtonFn();
-    }
-    this.cd.detectChanges();
-
-  }
-
-  openEditModal(data: DragonCave): void {
-    this.isEditCaveModalVisible = true;
-    this.dataEdit = data;
-  }
 
   getId(item: DragonCave): any {
     return item.id;
