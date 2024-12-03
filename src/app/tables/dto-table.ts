@@ -1,6 +1,6 @@
 import {BaseTableComponent} from './base-table-component';
 
-export abstract class DtoTable<T> extends BaseTableComponent<T>{
+export abstract class DtoTable<T> extends BaseTableComponent<T> {
   canEditFilter: 'all' | 'true' | 'false' = 'all';
 
   setCanEditFilter(value: 'all' | 'true' | 'false'): void {
@@ -14,6 +14,8 @@ export abstract class DtoTable<T> extends BaseTableComponent<T>{
     } else {
       this.filters['canEdit'] = this.canEditFilter === 'true';
     }
-    this.loadData(this.currPage, this.pageSize, undefined,  this.filters);
+    this.loadData(this.currPage, this.pageSize, undefined, this.filters);
   }
+
+  abstract deleteRow(id: number): void;
 }

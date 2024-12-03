@@ -51,9 +51,9 @@ export class CoordinatesFormComponent {
   constructor(private fb: NonNullableFormBuilder) {
 
     this.validateForm = this.fb.group({
-      xValue: ['', [Validators.required,
+      x: ['', [Validators.required,
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
-      yValue: ['', [Validators.required,
+      y: ['', [Validators.required,
         Validators.min(-182),
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
       canEdit: ['', [Validators.required,]]
@@ -76,8 +76,8 @@ export class CoordinatesFormComponent {
     if (this.validateForm.valid && this.defaultData) {
       const coordinates: Coordinates = {
         id: this.defaultData.id,
-        x: this.validateForm.value.xValue,
-        y: this.validateForm.value.yValue,
+        x: this.validateForm.value.x,
+        y: this.validateForm.value.y,
         canEdit: this.validateForm.value.canEdit
       };
       this.coordinatesService.updateCoordinates(
@@ -86,11 +86,6 @@ export class CoordinatesFormComponent {
         console.log(coord);
       })
     }
-  }
-
-
-  getFormData() {
-    return this.validateForm.value;
   }
 
   hideAddButtonFn() {
