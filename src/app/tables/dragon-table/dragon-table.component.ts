@@ -3,7 +3,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Dragon} from '../../dragondto/dragon';
 import {Color} from '../../dragondto/color';
 import {DragonCharacter} from '../../dragondto/dragoncharacter';
-import {NgForOf, NgIf} from '@angular/common';
+import {NgClass, NgForOf, NgIf} from '@angular/common';
 import {NzTableComponent, NzThAddOnComponent} from 'ng-zorro-antd/table';
 import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
 import {Coordinates} from '../../dragondto/coordinates';
@@ -17,6 +17,11 @@ import {DragonHeadFormComponent} from '../../forms/dragonhead-form/dragon-head-f
 import {DragonFormComponent} from '../../forms/dragon-form/dragon-form.component';
 import {DragonService} from '../../services/dragon.service';
 import {DragonEditFormComponent} from '../../forms/dragon-edit-form/dragon-edit-form.component';
+import {DtoTable} from '../dto-table';
+import {WebSocketService} from '../../websocket.service';
+import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
+import {NzRadioComponent} from 'ng-zorro-antd/radio';
+import {NzIconDirective} from 'ng-zorro-antd/icon';
 
 @Component({
   selector: 'app-dragon-table',
@@ -32,134 +37,91 @@ import {DragonEditFormComponent} from '../../forms/dragon-edit-form/dragon-edit-
     NzPopconfirmDirective,
     DragonHeadFormComponent,
     DragonFormComponent,
-    DragonEditFormComponent
+    DragonEditFormComponent,
+    NzPaginationComponent,
+    NzRadioComponent,
+    NzIconDirective,
+    NgClass
   ],
   providers: [NzModalService],
   templateUrl: './dragon-table.component.html',
   standalone: true,
   styleUrl: './dragon-table.component.css'
 })
-export class DragonTableComponent {
+export class DragonTableComponent extends DtoTable<Dragon> {
   private dragonService: DragonService = inject(DragonService);
-  @ViewChild(DragonEditFormComponent) dragonEditFormComponent!: DragonEditFormComponent;
-  isDragonModalVisible = false;
-  dataEdit: Dragon | null;
+  @ViewChild(DragonEditFormComponent) declare formComponent: DragonEditFormComponent;
 
-
-  listOfDragons: Dragon[] = [
-    {
-      id: 1,
-      name: 'Дракон огня',
-      coordinates: {id: 1, x: 10, y: 20, canEdit: true},
-      creationDate: '2022-01-01',
-      cave: {id: 1, numberOfTreasures: 2, canEdit: true},
-      killer: {
-        id: 1,
-        name: 'Иван Иванов',
-        eyeColor: Color.RED,
-        hairColor: Color.BROWN,
-        location: {id: 1, x: 10, y: 20, z: 30, name: 'Москва', canEdit: true},
-        height: 175,
-        passportID: '123456789',
-        nationality: Country.USA,
-        canEdit: true
-      },
-      age: 100,
-      wingspan: 25,
-      color: Color.RED,
-      character: DragonCharacter.CHAOTIC,
-      heads: [
-        {id: 1, eyesCount: 10, canEdit: true},
-        {id: 2, eyesCount: 30, canEdit: true}],
-      canEdit: true
-    },
-    {
-      id: 2,
-      name: 'Ледяной дракон',
-      coordinates: {id: 1, x: 10, y: 20, canEdit: true},
-      creationDate: '2023-05-20',
-      cave: {id: 2, numberOfTreasures: 2, canEdit: true},
-      killer: null,
-      age: 200,
-      wingspan: 30,
-      color: Color.WHITE,
-      character: DragonCharacter.GOOD,
-      heads: [
-        {id: 1, eyesCount: 10, canEdit: true}],
-      canEdit: true
-    },
-  ];
-
-  constructor(private cd: ChangeDetectorRef) {
-    this.dataEdit = null;
+  constructor(cd: ChangeDetectorRef) {
+    super(cd, inject(WebSocketService));
+    this.sortOrder = {
+      id: undefined,
+      name: undefined,
+      coord: undefined,
+      date: undefined,
+      cave: undefined,
+      person: undefined,
+      age: undefined,
+      wingspan: undefined,
+      color: undefined,
+      character: undefined,
+      heads: undefined, //todo no ideas
+    };
+    this.filters = {
+      id: undefined,
+      name: undefined,
+      coordinatesId: undefined,
+      userId: undefined,
+      creationDate: undefined,
+      caveId: undefined,
+      killerId: undefined,
+      age: undefined,
+      wingspan: undefined,
+      color: undefined,
+      character: undefined,
+      headCount: undefined, //todo no ideas
+    }
   }
 
-  sortOrderId: 'ascend' | 'descend' | null = null;
-  sortOrderName: 'ascend' | 'descend' | null = null;
-  sortOrderCoordinates: 'ascend' | 'descend' | null = null;
-  sortOrderCreationDate: 'ascend' | 'descend' | null = null;
-  sortOrderCave: 'ascend' | 'descend' | null = null;
-  sortOrderKiller: 'ascend' | 'descend' | null = null;
-  sortOrderAge: 'ascend' | 'descend' | null = null;
-  sortOrderWingspan: 'ascend' | 'descend' | null = null;
-  sortOrderColor: 'ascend' | 'descend' | null = null;
-  sortOrderCharacter: 'ascend' | 'descend' | null = null;
-
-  sort(key: keyof Dragon): void {
-    if (key === 'id') {
-      this.sortOrderId = this.sortOrderId === 'ascend' ? 'descend' : 'ascend';
-    } else if (key === 'name') {
-      this.sortOrderName = this.sortOrderName === 'ascend' ? 'descend' : 'ascend';
-    } else if (key === 'coordinates') {
-      this.sortOrderCoordinates = this.sortOrderCoordinates === 'ascend' ? 'descend' : 'ascend';
-    } else if (key === 'creationDate') {
-      this.sortOrderCreationDate = this.sortOrderCreationDate === 'ascend' ? 'descend' : 'ascend';
-    } else if (key === 'cave') {
-      this.sortOrderCave = this.sortOrderCave === 'ascend' ? 'descend' : 'ascend';
-    } else if (key === 'killer') {
-      this.sortOrderKiller = this.sortOrderKiller === 'ascend' ? 'descend' : 'ascend';
-    } else if (key === 'age') {
-      this.sortOrderAge = this.sortOrderAge === 'ascend' ? 'descend' : 'ascend';
-    } else if (key === 'wingspan') {
-      this.sortOrderWingspan = this.sortOrderWingspan === 'ascend' ? 'descend' : 'ascend';
-    } else if (key === 'color') {
-      this.sortOrderColor = this.sortOrderColor === 'ascend' ? 'descend' : 'ascend';
-    } else if (key === 'character') {
-      this.sortOrderCharacter = this.sortOrderCharacter === 'ascend' ? 'descend' : 'ascend';
-    }
-
-    this.listOfDragons.sort((a, b) => {
-      if (key === 'id') {
-        return this.sortOrderId === 'ascend' ? a.id - b.id : b.id - a.id;
-      } else if (key === 'name') {
-        return this.sortOrderName === 'ascend' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
-      } else if (key === 'coordinates') {
-        return this.sortOrderCoordinates === 'ascend' ? a.coordinates.x - b.coordinates.x : b.coordinates.x - a.coordinates.x;
-      } else if (key === 'creationDate') {
-        return this.sortOrderCreationDate === 'ascend' ? new Date(a.creationDate).getTime() - new Date(b.creationDate).getTime() : new Date(b.creationDate).getTime() - new Date(a.creationDate).getTime();
-      } else if (key === 'killer') {
-        return this.sortOrderKiller === 'ascend' ? (a.killer?.name || '').localeCompare(b.killer?.name || '') : (b.killer?.name || '').localeCompare(a.killer?.name || '');
-      } else if (key === 'age') {
-        return this.sortOrderAge === 'ascend' ? (a.age || 0) - (b.age || 0) : (b.age || 0) - (a.age || 0);
-      } else if (key === 'wingspan') {
-        return this.sortOrderWingspan === 'ascend' ? (a.wingspan || 0) - (b.wingspan || 0) : (b.wingspan || 0) - (a.wingspan || 0);
-      } else if (key === 'color') {
-        return this.sortOrderColor === 'ascend' ? a.color.localeCompare(b.color) : b.color.localeCompare(a.color);
-      } else if (key === 'character') {
-        return this.sortOrderCharacter === 'ascend' ? a.character.localeCompare(b.character) : b.character.localeCompare(a.character);
-      }
-      return 0;
+  loadData(page: number, size: number, sort?: string, filters?: Record<string, any>): void {
+    this.dragonService.getDragons(page, size, sort,
+      filters?.['id'], filters?.['canEdit'], undefined,
+      filters?.['name'], filters?.['coordinatesId'],
+      filters?.['creationDate'],
+      filters?.['caveId'],
+      filters?.['killerId'],
+      filters?.['age'],
+      filters?.['wingspan'],
+      filters?.['color'],
+      filters?.['character'],
+      filters?.['headCount']
+    ).subscribe({
+      next: (response) => {
+        this.listOfData = response.content.map(dragon => ({
+          id: dragon.id,
+          name: dragon.name,
+          coordinates: dragon.coordinates,
+          creationDate: dragon.creationDate,
+          cave: dragon.cave,
+          killer: dragon.killer,
+          age: dragon.age,
+          wingspan: dragon.wingspan,
+          color: dragon.color,
+          character: dragon.character,
+          heads: dragon.heads,
+          canEdit: dragon.canEdit
+        }));
+        this.currPage = response.number + 1;
+        this.pageSize = response.size;
+        this.totalElements = response.totalElements;
+        this.cd.detectChanges();
+      },
+      error: (err) => {
+        console.error('Ошибка загрузки:', err); //todo
+      },
     });
   }
 
-  searchValue = '';
-
-  onSearch(): void {
-    this.listOfDragons = this.listOfDragons.filter(dragon =>
-      dragon.name.toLowerCase().includes(this.searchValue.toLowerCase()) ||
-      dragon.id.toString().includes(this.searchValue.toLowerCase())
-    );
-  }
 
   //dragon
   deleteRow(id: number): void {
@@ -168,29 +130,15 @@ export class DragonTableComponent {
       .subscribe((res) => {
         console.log(res);
       })
-    this.listOfDragons = this.listOfDragons.filter(d => d.id !== id);
   }
 
 
-  handleOkHead() {
-    this.dragonEditFormComponent.updateDragon();
+  getId(item: Dragon): any {
+    return item.id;
   }
 
-  ngAfterViewChecked(): void {
-    if (this.dragonEditFormComponent) {
-      if (this.dataEdit) {
-        this.dragonEditFormComponent.setDefaultData(this.dataEdit);
-      }
-      this.dragonEditFormComponent.hideAddButtonFn();
-    }
-    this.cd.detectChanges();
-
-  }
-
-  openEditModal(data: Dragon): void {
-    this.isDragonModalVisible = true;
-    this.dataEdit = data;
-
+  getWebSocketTopic(): string {
+    return 'dragons';
   }
 
 

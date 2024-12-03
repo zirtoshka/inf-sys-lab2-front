@@ -1,26 +1,99 @@
-<p>dragon-table works!</p>
-<input [(ngModel)]="searchValue" (ngModelChange)="onSearch()" placeholder="search" style="margin-bottom: 16px;">
+<br>
+<div style="margin-bottom: 16px;">
+  <input [(ngModel)]="this.filters['id']" placeholder="Filter by ID" style="margin-right: 8px;"/>
+  <input [(ngModel)]="this.filters['name']" placeholder="Filter by name" style="margin-right: 8px;"/>
+  <input [(ngModel)]="this.filters['coordinatesId']" placeholder="Filter by coordinatesId" style="margin-right: 8px;"/>
+  <input [(ngModel)]="this.filters['creationDate']" placeholder="Filter by creationDate" style="margin-right: 8px;"/>
+  <input [(ngModel)]="this.filters['caveId']" placeholder="Filter by caveId" style="margin-right: 8px;"/>
+  <input [(ngModel)]="this.filters['killerId']" placeholder="Filter by killerId" style="margin-right: 8px;"/>
+  <input [(ngModel)]="this.filters['age']" placeholder="Filter by age" style="margin-right: 8px;"/>
+  <input [(ngModel)]="this.filters['wingspan']" placeholder="Filter by wingspan" style="margin-right: 8px;"/>
+  <input [(ngModel)]="this.filters['color']" placeholder="Filter by color" style="margin-right: 8px;"/>
+  <input [(ngModel)]="this.filters['character']" placeholder="Filter by character" style="margin-right: 8px;"/>
+  <input [(ngModel)]="this.filters['headCount']" placeholder="Filter by headCount" style="margin-right: 8px;"/>
 
-<nz-table [nzData]="listOfDragons" [nzBordered]="true">
+
+  <button nz-button nzType="primary" (click)="applyFilters()">Apply Filters</button>
+  <button nz-button nzType="default" (click)="resetFilters()">Reset</button>
+</div>
+
+<div style="margin-bottom: 16px;">
+  <label>Filter by "Can Edit": </label>
+  <label nz-radio-group>
+    <label nz-radio-button nzValue="all" (click)="setCanEditFilter('all')">All</label>
+    <label nz-radio-button nzValue="true" (click)="setCanEditFilter('true')">True</label>
+    <label nz-radio-button nzValue="false" (click)="setCanEditFilter('false')">False</label>
+  </label>
+</div>
+
+
+<nz-table [nzData]="listOfData" [nzBordered]="true" nzShowPagination="false">
   <thead>
   <tr>
-    <th>id</th>
-    <th>name</th>
-    <th>coordinates</th>
-    <th>creation date</th>
-    <th>cave</th>
-    <th>killer</th>
-    <th>age</th>
-    <th>wingspan</th>
-    <th>color</th>
-    <th>character</th>
-    <th>head</th>
+    <th (click)="sort('id')">
+      ID
+      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('ID')"
+         [ngClass]="{'sorted-asc': sortOrder['id'] === 'ID_ASC', 'sorted-desc': sortOrder['id'] === 'ID_DESC'}"></i>
+    </th>
+
+    <th (click)="sort('name')">
+      name
+      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('name')"
+         [ngClass]="{'sorted-asc': sortOrder['name'] === 'NAME_ASC', 'sorted-desc': sortOrder['name'] === 'NAME_DESC'}"></i>
+    </th>
+    <th (click)="sort('coord')">
+      coordinates
+      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('coord')"
+         [ngClass]="{'sorted-asc': sortOrder['coord'] === 'COORD_ASC', 'sorted-desc': sortOrder['coord'] === 'COORD_DESC'}"></i>
+    </th>
+
+    <th (click)="sort('date')">
+      creation date
+      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('date')"
+         [ngClass]="{'sorted-asc': sortOrder['date'] === 'DATE_ASC', 'sorted-desc': sortOrder['date'] === 'DATE_DESC'}"></i>
+    </th>
+    <th (click)="sort('cave')">
+      cave
+      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('cave')"
+         [ngClass]="{'sorted-asc': sortOrder['cave'] === 'CAVE_ASC', 'sorted-desc': sortOrder['cave'] === 'CAVE_DESC'}"></i>
+    </th>
+    <th (click)="sort('person')">
+      killer
+      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('person')"
+         [ngClass]="{'sorted-asc': sortOrder['person'] === 'PERSON_ASC', 'sorted-desc': sortOrder['person'] === 'PERSON_DESC'}"></i>
+    </th>
+    <th (click)="sort('age')">
+      age
+      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('age')"
+         [ngClass]="{'sorted-asc': sortOrder['age'] === 'AGE_ASC', 'sorted-desc': sortOrder['age'] === 'AGE_DESC'}"></i>
+    </th>
+    <th (click)="sort('wingspan')">
+      wingspan
+      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('wingspan')"
+         [ngClass]="{'sorted-asc': sortOrder['wingspan'] === 'WINGSPAN_ASC', 'sorted-desc': sortOrder['wingspan'] === 'WINGSPAN_DESC'}"></i>
+    </th>
+
+    <th (click)="sort('color')">
+      color
+      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('color')"
+         [ngClass]="{'sorted-asc': sortOrder['color'] === 'COLOR_ASC', 'sorted-desc': sortOrder['color'] === 'COLOR_DESC'}"></i>
+    </th>
+    <th (click)="sort('character')">
+      character
+      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('character')"
+         [ngClass]="{'sorted-asc': sortOrder['character'] === 'CHARACTER_ASC', 'sorted-desc': sortOrder['character'] === 'CHARACTER_DESC'}"></i>
+    </th>
+    <th (click)="sort('heads')">
+      heads
+      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('heads')"
+         [ngClass]="{'sorted-asc': sortOrder['heads'] === 'HEADS_ASC', 'sorted-desc': sortOrder['heads'] === 'HEADS_DESC'}"></i>
+    </th>
     <th>can edit</th>
     <th>actions</th>
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let dragon of listOfDragons">
+  <tr *ngFor="let dragon of listOfData">
     <td>{{ dragon.id }}</td>
     <td>{{ dragon.name }}</td>
     <td>
@@ -43,10 +116,10 @@
     <td>{{ dragon.character }}</td>
     <td>
       <a (click)="openHeadsModal(dragon.heads)">
-        number of heads: {{ dragon.heads.length}}
+        number of heads: {{ dragon.heads.length }}
       </a>
     </td>
-    <td>{{ dragon.canEdit ? 'Yes' : 'No'  }}</td>
+    <td>{{ dragon.canEdit ? 'Yes' : 'No' }}</td>
 
     <td>
       <button nz-button nzSize="small" nzShape="round" nzType="primary" (click)="openEditModal(dragon)">edit head
@@ -59,22 +132,31 @@
   </tbody>
 </nz-table>
 
+<nz-pagination
+  [(nzPageIndex)]="currPage"
+  [(nzPageSize)]="pageSize"
+  [nzTotal]="totalElements"
+  [nzShowSizeChanger]="true"
+  (nzPageIndexChange)="onPageChange($event)"
+  [nzPageSizeOptions]="[2, 3, 5, 10]"
+  (nzPageSizeChange)="onPageSizeChange($event)"
+  [nzShowQuickJumper]="true">
+</nz-pagination>
 
-<nz-modal [(nzVisible)]="isDragonModalVisible"
+
+<nz-modal [(nzVisible)]="isEditModalVisible"
           nzTitle="edit dragon"
           [nzContent]="dragonForma"
-          (nzOnCancel)="this.isDragonModalVisible = false;"
+          (nzOnCancel)="this.isEditModalVisible = false;"
           [nzFooter]="dragonFooter">
   <ng-template #dragonForma>
     <app-dragon-edit-form></app-dragon-edit-form>
   </ng-template>
   <ng-template #dragonFooter>
-    <button nz-button nzType="default" (click)="this.isDragonModalVisible = false;">cancel</button>
-    <button nz-button nzType="primary" (click)="handleOkHead()">save</button>
+    <button nz-button nzType="default" (click)="this.isEditModalVisible = false;">cancel</button>
+    <button nz-button nzType="primary" (click)="handleOk()">save</button>
   </ng-template>
 </nz-modal>
-
-
 
 
 <nz-modal
@@ -89,7 +171,7 @@
       <p><strong>ID:</strong> {{ selectedCoordinates.id }}</p>
       <p><strong>x:</strong> {{ selectedCoordinates.x }}</p>
       <p><strong>y:</strong> {{ selectedCoordinates.y }}</p>
-      <p><strong>can edit:</strong> {{ selectedCoordinates.canEdit ? 'Yes' : 'No'  }}</p>
+      <p><strong>can edit:</strong> {{ selectedCoordinates.canEdit ? 'Yes' : 'No' }}</p>
     </ng-container>
   </ng-template>
 </nz-modal>
@@ -106,7 +188,7 @@
     <ng-container *ngIf="selectedCave!=null">
       <p><strong>ID:</strong> {{ selectedCave.id }}</p>
       <p><strong>treasure:</strong> {{ selectedCave.numberOfTreasures }}</p>
-      <p><strong>can edit:</strong> {{ selectedCave.canEdit ? 'Yes' : 'No'  }}</p>
+      <p><strong>can edit:</strong> {{ selectedCave.canEdit ? 'Yes' : 'No' }}</p>
     </ng-container>
   </ng-template>
 </nz-modal>
@@ -138,11 +220,10 @@
       <p><strong>height:</strong> {{ selectedKiller.height }}</p>
       <p><strong>passportID:</strong> {{ selectedKiller.passportID }}</p>
       <p><strong>nationality:</strong> {{ selectedKiller.nationality }}</p>
-      <p><strong>can edit:</strong> {{ selectedKiller.canEdit ? 'Yes' : 'No'  }}</p>
+      <p><strong>can edit:</strong> {{ selectedKiller.canEdit ? 'Yes' : 'No' }}</p>
     </ng-container>
   </ng-template>
 </nz-modal>
-
 
 
 <nz-modal
@@ -159,7 +240,7 @@
           <p><strong>ID:</strong> {{ head.id }}</p>
           <p><strong>Eyes Count:</strong> {{ head.eyesCount ?? 'N/A' }}</p>
           <p><strong>can edit:</strong> {{ head.canEdit ? 'Yes' : 'No' }}</p>
-          <hr />
+          <hr/>
         </li>
       </ul>
     </ng-container>
