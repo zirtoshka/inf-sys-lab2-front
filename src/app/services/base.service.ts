@@ -9,8 +9,13 @@ import {Observable} from 'rxjs';
 )
 export class BaseService {
   private readonly baseUrl: string = 'http://localhost:8080/dragon/user';
+  private readonly baseUrlApp: string = 'http://localhost:8080/dragon';
   private httpClient = inject(HttpClient);
   private authService = inject(AuthService);
+
+  isAdmin(){
+    return this.authService.isAdmin();
+  }
 
   add(formData: any, action: string) {
     const jwtToken = this.authService.authToken;
@@ -18,6 +23,13 @@ export class BaseService {
     return this.httpClient
       .post<any>(this.baseUrl + action, formData, {headers});
 
+  }
+  addApp(action: string){
+    if(this.isAdmin()){return;}
+    const jwtToken = this.authService.authToken;
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`);
+    return this.httpClient
+      .get<any>(this.baseUrlApp + action,  {headers});
   }
 
 
@@ -55,7 +67,12 @@ export class BaseService {
         httpParams = httpParams.set(key, params[key]);
       }
     });
-
+    if (endpoint.includes("app")){
+      return this.httpClient.get<T>(`${this.baseUrlApp}/${endpoint}`, {headers, params: httpParams});
+    }
     return this.httpClient.get<T>(`${this.baseUrl}/${endpoint}`, {headers, params: httpParams});
   }
+
+
+
 }

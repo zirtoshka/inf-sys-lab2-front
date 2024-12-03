@@ -1,2 +1,11 @@
 <p>admin-form works!</p>
 
+
+<div *ngIf="!this.authService.isAdmin()">
+  <button nz-button nzType="primary" (click)="sendApp()">want become admin</button>
+</div>
+
+<div *ngIf="this.authService.isAdmin()">
+  you're admin already
+</div>
+

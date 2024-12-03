@@ -21,16 +21,16 @@ export class WebSocketService implements OnDestroy {
   }
 
 
-  public send(task: DragonCave): void {
+  public send(task: DragonCave, theme: string): void {
     if (this.connection && this.connection.connected) {
-      this.connection.send('/topic/caves', {}, JSON.stringify(task));
+      this.connection.send('/topic/'+theme, {}, JSON.stringify(task));
     }
   }
 
-  public listen(fun: ListenerCallBack): void {
+  public listen(fun: ListenerCallBack, theme: string): void {
     if (this.connection) {
       this.connection.connect({}, () => {
-        this.subscription = this.connection!.subscribe('/topic/caves', message => fun(JSON.parse(message.body)));
+        this.subscription = this.connection!.subscribe('/topic/'+theme, message => fun(JSON.parse(message.body)));
       });
     }
   }

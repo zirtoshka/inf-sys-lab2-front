@@ -90,7 +90,7 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
       } else {
         console.log("kokokokko");
       }
-    });
+    }, "cave");
   }
 
   ngOnDestroy(): void {
@@ -145,7 +145,6 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
   handleCaveAdd(cave: DragonCave) {
     this.listOfCaves.push(cave);
     this.cd.detectChanges();
-
   }
 
 
@@ -195,9 +194,7 @@ export class DragoncaveTableComponent implements OnInit, OnDestroy {
   }
 
   onPageChange(page: number): void {
-    console.log(page, "it's page", this.currPage);
     this.currPage = page;
-    console.log("now", this.currPage);
     this.loadCaves(this.currPage, this.pageSize);
   }
   onPageSizeChange(size: number): void {

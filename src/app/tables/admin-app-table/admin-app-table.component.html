@@ -1,1 +1,76 @@
-<p>admin-app-table works!</p>
+<br>
+<div style="margin-bottom: 16px;">
+  <input [(ngModel)]="idFilter" placeholder="Filter by ID" style="margin-right: 8px;"/>
+  <input [(ngModel)]="userIdFilter" placeholder="Filter by user id" style="margin-right: 8px;"/>
+  <button nz-button nzType="primary" (click)="applyFilters()">Apply Filters</button>
+  <button nz-button nzType="default" (click)="resetFilters()">Reset</button>
+</div>
+
+<div style="margin-bottom: 16px;">
+  <label>Filter by status: </label>
+  <label nz-radio-group>
+    <label nz-radio-button nzValue="all" (click)="setStatusFilter('ALL')">All</label>
+    <label nz-radio-button nzValue="NEW" (click)="setStatusFilter('NEW')">NEW</label>
+    <label nz-radio-button nzValue="CLOSE" (click)="setStatusFilter('CLOSE')">CLOSE</label>
+    <label nz-radio-button nzValue="APPROVED" (click)="setStatusFilter('APPROVED')">APPROVED</label>
+    <label nz-radio-button nzValue="CANCELED" (click)="setStatusFilter('CANCELED')">CANCELED</label>
+  </label>
+
+</div>
+
+<nz-table [nzData]="listOfApplications" [nzBordered]="true"
+          nzShowPagination="false">
+  <thead>
+  <tr>
+    <th (click)="sort('id')">
+      ID
+      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('id')"
+         [ngClass]="{'sorted-asc': sortOrderId === 'ID_ASC', 'sorted-desc': sortOrderId === 'ID_DESC'}"></i>
+    </th>
+
+    <th (click)="sort('createdAt')">
+      created at
+      <i nz-icon [nzType]="getSortIcon('createdAt')"
+         [ngClass]="{'sorted-asc': sortOrderCreatedAt === 'DATE_ASC', 'sorted-desc': sortOrderCreatedAt === 'DATE_DESC'}"></i>
+    </th>
+    <th (click)="sort('userId')">
+      user id
+      <i nz-icon [nzType]="getSortIcon('userId')"
+         [ngClass]="{'sorted-asc': sortOrderUserId === 'USER_ASC', 'sorted-desc': sortOrderUserId === 'USER_DESC'}"></i>
+    </th>
+    <th>status</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let app of listOfApplications">
+    <td>{{ app.id }}</td>
+    <td>{{ app.createdAt }}</td>
+    <td>{{ app.userId }}</td>
+    <td>{{app.status}}</td>
+    <td>
+      <button nz-button nzSize="small"
+              nzShape="round"
+              nzType="primary"
+              nz-popconfirm
+              nzPopconfirmTitle="Are you sure?"
+      >
+        change status
+      </button>
+
+    </td>
+  </tr>
+  </tbody>
+</nz-table>
+
+
+<nz-pagination
+  [(nzPageIndex)]="currPage"
+  [(nzPageSize)]="pageSize"
+  [nzTotal]="totalElements"
+  [nzShowSizeChanger]="true"
+  (nzPageIndexChange)="onPageChange($event)"
+  [nzPageSizeOptions]="[2, 3, 5, 10]"
+  (nzPageSizeChange)="onPageSizeChange($event)"
+  [nzShowQuickJumper]="true">
+</nz-pagination>
+

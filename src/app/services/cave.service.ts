@@ -2,15 +2,9 @@ import {inject, Injectable} from '@angular/core';
 import {BaseService} from './base.service';
 import {Observable} from 'rxjs';
 import {DragonCave} from '../dragondto/dragoncave';
-import {HttpHeaders, HttpParams} from '@angular/common/http';
+import {Page} from '../page';
 
-export interface Page<T> {
-  content: T[];
-  totalElements: number;
-  totalPages: number;
-  size: number;
-  number: number;
-}
+
 
 
 @Injectable({
