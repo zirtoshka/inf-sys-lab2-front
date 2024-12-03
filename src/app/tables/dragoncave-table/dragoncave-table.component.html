@@ -2,7 +2,7 @@
 <div style="margin-bottom: 16px;">
   <input [(ngModel)]="idFilter" placeholder="Filter by ID" style="margin-right: 8px;"/>
   <input [(ngModel)]="treasuresFilter" placeholder="Filter by Treasures" style="margin-right: 8px;"/>
-  <button nz-button nzType="primary" (click)="applyFilters()">Apply Filters</button>
+  <button nz-button nzType="primary" (click)="applyFilters(this.filters)">Apply Filters</button>
   <button nz-button nzType="default" (click)="resetFilters()">Reset</button>
 </div>
 
@@ -16,7 +16,7 @@
 
 </div>
 
-<nz-table [nzData]="listOfCaves" [nzBordered]="true"
+<nz-table [nzData]="listOfData" [nzBordered]="true"
           nzShowPagination="false">
   <thead>
   <tr>
@@ -36,7 +36,7 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let cave of listOfCaves">
+  <tr *ngFor="let cave of listOfData">
     <td>{{ cave.id }}</td>
     <td>{{ cave.numberOfTreasures }}</td>
     <td>{{ cave.canEdit }}</td>

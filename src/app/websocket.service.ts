@@ -1,5 +1,5 @@
 import {Injectable, OnDestroy} from '@angular/core';
-import {catchError, Observable, of} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {CompatClient, Stomp, StompSubscription} from '@stomp/stompjs';
 import {DragonCave} from './dragondto/dragoncave';
 
@@ -27,13 +27,17 @@ export class WebSocketService implements OnDestroy {
     }
   }
 
-  public listen(fun: ListenerCallBack, theme: string): void {
+  public listen(fun: ListenerCallBack, theme: string): Subscription | undefined {
     if (this.connection) {
       this.connection.connect({}, () => {
-        this.subscription = this.connection!.subscribe('/topic/'+theme, message => fun(JSON.parse(message.body)));
+        return this.connection!.subscribe('/topic/' + theme, (message) => {
+          fun(JSON.parse(message.body));
+        });
       });
     }
+    return undefined;
   }
+
 
   ngOnDestroy(): void {
     if (this.subscription) {

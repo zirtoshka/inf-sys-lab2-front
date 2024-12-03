@@ -29,7 +29,7 @@ export class CaveService {
     offset: number = 0,
     limit: number = 5,
     sort?: string | undefined,
-    id?: number,
+    id?: number|undefined,
     canEdit?: undefined | boolean,
     userId?: number,
     numberOfTreasures?: number
