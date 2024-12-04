@@ -43,7 +43,7 @@ import {NzIconDirective} from 'ng-zorro-antd/icon';
     NzIconDirective,
     NgClass
   ],
-  providers: [NzModalService],
+  providers: [NzModalService, WebSocketService],
   templateUrl: './dragon-table.component.html',
   standalone: true,
   styleUrl: './dragon-table.component.css'

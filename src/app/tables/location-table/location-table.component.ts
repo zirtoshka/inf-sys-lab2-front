@@ -33,7 +33,7 @@ import {NzIconDirective} from 'ng-zorro-antd/icon';
     NzIconDirective,
     NgClass
   ],
-  providers: [NzModalService],
+  providers: [NzModalService, WebSocketService],
   templateUrl: './location-table.component.html',
   standalone: true,
   styleUrl: './location-table.component.css'

@@ -38,7 +38,7 @@ import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
     NgClass,
     NzPaginationComponent
   ],
-  providers: [NzModalService],
+  providers: [NzModalService, WebSocketService],
   templateUrl: './person-table.component.html',
   standalone: true,
   styleUrl: './person-table.component.css'

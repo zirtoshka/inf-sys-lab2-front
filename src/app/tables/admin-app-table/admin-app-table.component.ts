@@ -37,6 +37,7 @@ import {BaseTableComponent} from '../base-table-component';
     NzDropDownDirective,
     NzDropdownMenuComponent
   ],
+  providers: [WebSocketService],
   templateUrl: './admin-app-table.component.html',
   styleUrl: './admin-app-table.component.css'
 })
