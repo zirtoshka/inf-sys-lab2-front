@@ -1,51 +1,56 @@
 <nz-layout class="home">
   <nz-header>
     <ul nz-menu nzTheme="dark" nzMode="horizontal" class="pink-menu">
-      <li nz-menu-item (click)="isDragonChoose()">dragons</li>
-      <li nz-menu-item (click)="isCoordinatesChoose()"> coordinates</li>
-      <li nz-menu-item (click)="isCaveChoose()">dragon cave</li>
-      <li nz-menu-item (click)="isHeadChoose()">dragon head</li>
-      <li nz-menu-item (click)="isLocationChoose()">location</li>
-      <li nz-menu-item (click)="isPersonChoose()">person</li>
-      <li nz-menu-item (click)="isAdminFormChoose()">admin form</li>
-      <li nz-menu-item (click)="isAdminPageChoose()">admin page</li>
+      <li nz-menu-item (click)="changeState(FormState.Dragon)">dragons</li>
+      <li nz-menu-item (click)="changeState(FormState.Coordinates)"> coordinates</li>
+      <li nz-menu-item (click)="changeState(FormState.Cave)">dragon cave</li>
+      <li nz-menu-item (click)="changeState(FormState.Head)">dragon head</li>
+      <li nz-menu-item (click)="changeState(FormState.Location)">location</li>
+      <li nz-menu-item (click)="changeState(FormState.Person)">person</li>
+      <li nz-menu-item (click)="changeState(FormState.AdminForm)">admin form</li>
+      <li nz-menu-item (click)="changeState(FormState.AdminPage)">admin page</li>
+      <li nz-menu-item (click)="changeState(FormState.Visik)"> VISIK</li>
     </ul>
   </nz-header>
   <nz-content>
 
     <img class="nusha" ngSrc="assets/nusha.png" alt="nusha" aria-hidden="true" width="608" height="462"/>
     <hr class="custom-hr">
-    <div *ngIf="this.currentState === 'dragon'">
+    <div *ngIf="this.currentState === FormState.Dragon">
       <app-dragon-form></app-dragon-form>
       <app-dragon-table></app-dragon-table>
     </div>
-    <div *ngIf="this.currentState === 'coordinates'">
+    <div *ngIf="this.currentState === FormState.Coordinates">
       <app-coordinates-form></app-coordinates-form>
       <app-coordinates-table></app-coordinates-table>
     </div>
 
-    <div *ngIf="this.currentState === 'location'">
+    <div *ngIf="this.currentState === FormState.Location">
       <app-location-form></app-location-form>
       <app-location-table></app-location-table>
     </div>
-    <div *ngIf="this.currentState === 'person'">
+    <div *ngIf="this.currentState === FormState.Person">
       <app-person-form></app-person-form>
       <app-person-table></app-person-table>
     </div>
-    <div *ngIf="this.currentState === 'cave'">
+    <div *ngIf="this.currentState === FormState.Cave">
       <app-dragoncave-form></app-dragoncave-form>
       <app-dragoncave-table></app-dragoncave-table>
     </div>
-    <div *ngIf="this.currentState === 'head'">
+    <div *ngIf="this.currentState === FormState.Head">
       <app-dragonhead-form></app-dragonhead-form>
       <app-dragonhead-table></app-dragonhead-table>
     </div>
 
-    <div *ngIf="this.currentState === 'adminForm'">
+    <div *ngIf="this.currentState === FormState.AdminForm">
       <app-admin-form></app-admin-form>
     </div>
-    <div *ngIf="this.currentState === 'adminPage'">
+    <div *ngIf="this.currentState === FormState.AdminPage">
       <app-admin-app-table></app-admin-app-table>
+    </div>
+
+    <div *ngIf="this.currentState === FormState.Visik">
+      <app-visik></app-visik>
     </div>
 
   </nz-content>

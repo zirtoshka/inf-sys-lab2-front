@@ -18,7 +18,7 @@ export class AuthService {
   private readonly baseUrl = 'http://localhost:8080/dragon/auth'; //todo change
   private httpClient = inject(HttpClient);
   private router = inject(Router);
-  private notificationService = inject(NzNotificationService); // Use NzNotificationService directly
+  private notificationService = inject(NzNotificationService);
 
 
   // constructor(private messageService: NotificationComponent) {}

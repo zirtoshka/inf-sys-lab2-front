@@ -25,6 +25,7 @@
     "glob": "^11.0.0",
     "inflight": "^1.0.6",
     "jwt-decode": "^4.0.0",
+    "konva": "^9.3.16",
     "ng-zorro-antd": "^18.1.1",
     "rimraf": "^6.0.1",
     "rxjs": "~7.8.0",

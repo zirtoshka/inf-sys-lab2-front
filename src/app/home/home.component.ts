@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, inject, ViewChild} from '@angular/core';
 import {NzContentComponent, NzFooterComponent, NzHeaderComponent, NzLayoutComponent} from 'ng-zorro-antd/layout';
 import {NzBreadCrumbComponent, NzBreadCrumbItemComponent} from 'ng-zorro-antd/breadcrumb';
 import {NzMenuDirective, NzMenuItemComponent} from 'ng-zorro-antd/menu';
@@ -21,6 +21,8 @@ import {DragonheadTableComponent} from '../tables/dragonhead-table/dragonhead-ta
 import {AdminFormComponent} from '../forms/admin-form/admin-form.component';
 import {AdminAppTableComponent} from '../tables/admin-app-table/admin-app-table.component';
 import {AuthService} from '../auth-tools/auth.service';
+import {VisikComponent} from '../visik/visik.component';
+import {NzNotificationService} from 'ng-zorro-antd/notification';
 
 
 @Component({
@@ -53,6 +55,7 @@ import {AuthService} from '../auth-tools/auth.service';
     DragonheadTableComponent,
     AdminFormComponent,
     AdminAppTableComponent,
+    VisikComponent,
   ],
   standalone: true,
   styleUrls: ['./home.component.css']
@@ -60,43 +63,34 @@ import {AuthService} from '../auth-tools/auth.service';
 
 
 export class HomeComponent {
+  private notificationService = inject(NzNotificationService);
+
   constructor(private authService: AuthService) {
   }
 
   currentState: FormState = FormState.Dragon;
 
-  isAdminPageChoose() {
-    //todo check admin/user
-    if (this.authService.isAdmin()) {
-      this.currentState = FormState.AdminPage;
+  changeState(state: FormState) {
+    if (state === FormState.AdminPage) {
+      if (!this.authService.isAdmin()) {
+        this.notificationService.warning(
+          'Oops',
+          "You're not an admin, so you cannot use this page."
+        );
+        return;
+      }
     }
+    if (state === FormState.AdminForm) {
+      if (this.authService.isAdmin()) {
+        this.notificationService.warning(
+          'Bey',
+          "You're an admin already, please go away."
+        );
+        return;
+      }
+    }
+    this.currentState = state;
   }
 
-  isDragonChoose() {
-    this.currentState = FormState.Dragon;
-  }
-
-  isAdminFormChoose() {
-    this.currentState = FormState.AdminForm;
-  }
-
-  isCoordinatesChoose() {
-    this.currentState = FormState.Coordinates;
-  }
-
-  isLocationChoose() {
-    this.currentState = FormState.Location;
-  }
-
-  isPersonChoose() {
-    this.currentState = FormState.Person;
-  }
-
-  isCaveChoose() {
-    this.currentState = FormState.Cave;
-  }
-
-  isHeadChoose() {
-    this.currentState = FormState.Head;
-  }
+  protected readonly FormState = FormState;
 }
