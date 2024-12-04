@@ -1,4 +1,17 @@
 <p>visik works!</p>
+<nz-modal [(nzVisible)]="isModalVisible"
+          nzTitle="Детали дракона"
+          (nzOnCancel)="closeModal()"
+          [nzFooter]="null"
+          [nzContent]="dragonDetails">
+  <ng-template #dragonDetails>
+    <p>Имя: {{ selectedDragon?.name }}</p>
+    <p>Координаты: ({{ selectedDragon?.x }}, {{ selectedDragon?.y }})</p>
+  </ng-template>
+</nz-modal>
 
-<div #stageContainer></div>
+<div #stageContainer>
+
+</div>
+
 <br>
