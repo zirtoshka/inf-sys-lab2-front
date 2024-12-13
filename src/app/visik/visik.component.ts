@@ -20,11 +20,14 @@ import {NzButtonComponent} from 'ng-zorro-antd/button';
 export class VisikComponent implements AfterViewInit {
   @ViewChild('stageContainer', {static: true}) stageContainer!: ElementRef;
 
+  readonly pink: string = '#f810c2';
+  readonly violet: string = '#570BA0';
+  readonly areaBack:string = 'rgba(252,122,223,0.19)';
 
   stage!: Konva.Stage;
   objectLayer!: Konva.Layer;
 
-  viewport = {x: 10, y: 10, width: 500, height: 500};
+  viewport = {x: 0, y: 0, width: 1400, height: 500};
   dragons: { x: number; y: number, name: string }[] = [];
 
 
@@ -43,7 +46,7 @@ export class VisikComponent implements AfterViewInit {
     {x: -40, y: 40, name: "Zhora"},
     {x: 50, y: -50, name: "Zhora"},
     {x: -60, y: 60, name: "Zhora"},
-    {x: 70, y: 800, name: "Zhora"},
+    {x: 70, y: 100, name: "Zhora"},
   ];
 
   // constructor(private dragonService: DragonService) {}
@@ -68,9 +71,9 @@ export class VisikComponent implements AfterViewInit {
     const backgroundRect = new Konva.Rect({
       x: -1000,
       y: -1000,
-      width: 2000,
+      width: 3000,
       height: 2000,
-      fill: '#ff69b4',
+      fill: this.areaBack,
     });
 
     this.objectLayer.add(backgroundRect);
@@ -128,11 +131,11 @@ export class VisikComponent implements AfterViewInit {
         x: dragon.x,
         y: dragon.y,
         radius: 5,
-        fill: '#ffffff'
+        fill: this.pink
       });
 
       circle.on('mouseover', () => {
-        circle.fill('blue');
+        circle.fill(this.violet);
         this.objectLayer.draw();
         circle.to({
           scaleX: 1.5,
@@ -142,7 +145,7 @@ export class VisikComponent implements AfterViewInit {
       });
 
       circle.on('mouseout', () => {
-        circle.fill('#ffffff');
+        circle.fill(this.pink);
         this.objectLayer.draw();
         circle.to({
           scaleX: 1,
@@ -154,7 +157,6 @@ export class VisikComponent implements AfterViewInit {
       circle.on('click', () => {
         this.selectedDragon = dragon;
         this.isModalVisible = true;
-        // alert(`Вы кликнули на дракона с координатами (${dragon.x}, ${dragon.y})`);
       });
 
 

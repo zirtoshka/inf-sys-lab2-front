@@ -6,20 +6,25 @@ import {HomeComponent} from './home/home.component';
 import {inject} from '@angular/core';
 import {AuthService} from './auth-tools/auth.service';
 import {deleteCookie} from './auth-tools/cookie-utils';
+import {AuthGuard} from './auth-tools/authGuard';
 
-const authGuard: CanActivateFn = (route, state) => {
-  if (inject(AuthService).isLoggedIn) {
-    return true;
-  }
-  deleteCookie("token");
-  inject(Router).navigate(['']);
-  return false;
-}
 
 export const routes: Routes = [
   {path: '', component: WelcomeComponent, pathMatch: 'full'},
   {path: 'login', component: LoginComponent},
   {path: 'registration', component: RegistrationComponent},
-  {path: 'home', component: HomeComponent, canActivate: [authGuard]},
+  {path: 'home', component: HomeComponent},
+    // , canActivate: [AuthGuard]},
   {path: '**', redirectTo: ''},
 ];
+
+
+
+// const authGuard: CanActivateFn = (route, state) => {
+//   if (inject(AuthService).isLoggedIn) {
+//     return true;
+//   }
+//   deleteCookie("token");
+//   inject(Router).navigate(['']);
+//   return false;
+// }

@@ -7,6 +7,7 @@ import {AuthService} from '../auth-tools/auth.service';
 import {NotificationComponent} from '../notification/notification.component';
 import {RouterLink} from '@angular/router';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -26,7 +27,7 @@ import {NzIconDirective} from 'ng-zorro-antd/icon';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  private userService = inject(AuthService)
+  protected userService = inject(AuthService)
   passwordVisible = false;
 
 
@@ -45,16 +46,20 @@ export class LoginComponent {
   submitForm(): void {
     const {userName, password} = this.validateForm.value;
     if (userName && password) {
-      this.userService.login(userName, password)
-    }else{
+      this.userService.loginOld(userName, password)
+    } else {
       console.log("kkokok")
       // this.userService.makeToast("daad");
     }
     console.log('submit', this.validateForm.value);
   }
+
   togglePasswordVisibility(): void {
     this.passwordVisible = !this.passwordVisible;
   }
+
+  private httpClient = inject(HttpClient);
+
 
 
 }

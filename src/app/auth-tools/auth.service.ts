@@ -15,7 +15,7 @@ const TOKEN_PATH = 'token';
 })
 
 export class AuthService {
-  private readonly baseUrl = 'http://localhost:8080/dragon/auth'; //todo change
+  private readonly baseUrl = 'http://localhost:8081/dragon/auth'; //todo change
   private httpClient = inject(HttpClient);
   private router = inject(Router);
   private notificationService = inject(NzNotificationService);
@@ -86,7 +86,7 @@ export class AuthService {
     this.username = name;
     let headers = new HttpHeaders();
     headers = headers.set('Authorization', `Bearer ${token}`);
-    lastValueFrom(this.httpClient.get(`http://localhost:8080/dragon/dragon/hello`, {headers})) //todo change
+    lastValueFrom(this.httpClient.get(`http://localhost:8081/dragon/dragon/hello`, {headers})) //todo change
       .then(data => {
         this.router.navigate(['home']).then(() => {
         }).catch(err => {
@@ -106,7 +106,7 @@ export class AuthService {
       });
   }
 
-  login(username: string, password: string) {
+  loginOld(username: string, password: string) {
     return this.postData(username, password, "authenticate");
   }
 
@@ -130,5 +130,27 @@ export class AuthService {
 
     console.error('An error occurred:', error.message);
     return throwError(() => new Error('Something went wrong, please try again later.'));
+  }
+
+  private authenticated = false;
+  async isAuthenticated(): Promise<boolean> {
+    alert("isAuthenticated")
+    try {
+      const response = await lastValueFrom(
+        this.httpClient.get('http://localhost:8081/dragon/am/status', { withCredentials: true })
+      );
+      alert('User is authenticated: '.concat( response.toString()));  // Выводит "Authenticated" при успешной аутентификации
+      return true;
+    } catch (error) {
+      // @ts-ignore
+      alert('User is not authenticated: ' + error.message);
+      return false;  // Возвращает false, если запрос неуспешен (например, 401 Unauthorized)
+    }
+  }
+
+
+  login(): void {
+    // Перенаправление пользователя на страницу входа OpenAM
+    window.location.href = `http://localhost:8081/protected-openam`;
   }
 }
