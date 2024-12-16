@@ -18,4 +18,8 @@ import {NgIf, NgOptimizedImage} from '@angular/common';
 })
 export class WelcomeComponent {
     protected userService = inject(AuthService);
+
+	constructor() {
+		this.userService.fetchStatus();
+	}
 }
