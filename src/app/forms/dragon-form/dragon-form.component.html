@@ -48,15 +48,15 @@
   </nz-form-item>
 
   <!--  killer-->
-  <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24">killer</nz-form-label>
-    <nz-form-control [nzSm]="14" [nzXs]="24">
-      <nz-select [ngModel]="setKiller()" formControlName="killer" [nzPlaceHolder]="'select killer'">
-        <nz-option *ngFor="let person of existingPerson" [nzValue]="person" [nzLabel]="person.name"></nz-option>
-      </nz-select>
-      <button nz-button nzType="default" (click)="this.isKillerModalVisible=true">create new person</button>
-    </nz-form-control>
-  </nz-form-item>
+<!--  <nz-form-item>-->
+<!--    <nz-form-label [nzSm]="6" [nzXs]="24">killer</nz-form-label>-->
+<!--    <nz-form-control [nzSm]="14" [nzXs]="24">-->
+<!--      <nz-select [ngModel]="setKiller()" formControlName="killer" [nzPlaceHolder]="'select killer'">-->
+<!--        <nz-option *ngFor="let person of existingPerson" [nzValue]="person" [nzLabel]="person.name"></nz-option>-->
+<!--      </nz-select>-->
+<!--      <button nz-button nzType="default" (click)="this.isKillerModalVisible=true">create new person</button>-->
+<!--    </nz-form-control>-->
+<!--  </nz-form-item>-->
 
   <!--age-->
   <nz-form-item>

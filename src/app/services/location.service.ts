@@ -19,11 +19,11 @@ export class LocationService {
   }
 
   deleteLocation(formData: any) {
-    return this.baseService.delete(formData, "loc/delete");
+    return this.baseService.delete(formData, "loc/delete/");
   }
 
   public getLocations(
-    offset: number = 0,
+    offset: number = 1,
     limit: number = 5,
     sort?: string | undefined,
     id?: number | undefined,

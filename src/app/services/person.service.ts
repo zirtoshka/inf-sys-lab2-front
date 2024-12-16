@@ -17,14 +17,14 @@ export class PersonService {
     return this.baseService.add(formData, "person/add");
   }
   deletePerson(formData: any) {
-    return this.baseService.add(formData, "person/delete");
+    return this.baseService.delete(formData, "person/delete/");
   }
   updatePerson(formData: any) {
-    return this.baseService.add(formData, "person/update");
+    return this.baseService.update(formData, "person/update");
   }
 
 
-  public getCaves(
+  public getPersons(
     offset: number = 0,
     limit: number = 5,
     sort?: string | undefined,

@@ -131,6 +131,10 @@ export class DragonTableComponent extends DtoTable<Dragon> {
         console.log(res);
       })
   }
+  handleOk() {
+    this.formComponent.updateDragon();
+    this.isEditModalVisible = false;
+  }
 
 
   getId(item: Dragon): any {

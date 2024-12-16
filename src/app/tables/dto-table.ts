@@ -26,12 +26,14 @@ export abstract class DtoTable<T> extends BaseTableComponent<T> {
 
   abstract deleteRow(id: number): void;
 
+  abstract handleOk():void;
+
+  // handleOk() {
+  //   this.formComponent.updateCave();
+  //   this.isEditModalVisible = false;
+  // }
 
 
-  handleOk() {
-    this.formComponent.updateCave();
-    this.isEditModalVisible = false;
-  }
 
   openEditModal(data: T): void {
     this.isEditModalVisible = true;

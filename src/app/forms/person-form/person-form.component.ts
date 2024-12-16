@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, inject, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {
   FormGroup,
   FormsModule,
@@ -24,6 +24,7 @@ import {PersonService} from '../../services/person.service';
 import {Person} from '../../dragondto/person';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {Coordinates} from '../../dragondto/coordinates';
+import {LocationService} from '../../services/location.service';
 
 @Component({
   selector: 'app-person-form',
@@ -55,7 +56,7 @@ import {Coordinates} from '../../dragondto/coordinates';
   standalone: true,
   styleUrl: './person-form.component.css'
 })
-export class PersonFormComponent {
+export class PersonFormComponent implements OnInit {
   @ViewChild(LocationFormComponent) locationFormComponent!: LocationFormComponent;
   private personService = inject(PersonService);
   showAddButton = true;
@@ -66,9 +67,6 @@ export class PersonFormComponent {
   isLocationModalVisible = false;
   colors = Object.values(Color);
   countries = Object.values(Country);
-  existingLocations: (Location)[] = [
-    {id: 1, name: 'Location 1', x: 0, y: 0, z: 0, canEdit: true},
-    {id: 2, name: 'Location 2', x: 1, y: 1, z: 1, canEdit: true}];
 
   constructor(private fb: NonNullableFormBuilder, private cd: ChangeDetectorRef) {
     this.validateForm = this.fb.group({
@@ -97,20 +95,10 @@ export class PersonFormComponent {
   }
 
 
-  handleCancel(): void {
+  handleCancelLoc(): void {
     this.isLocationModalVisible = false;
   }
 
-  handleOk(): void {
-    // this.locationFormComponent.showAddButtonFn();
-    // const newLocation = get new location todo
-    //   this.existingLocations.push(newLocation);
-    //   this.selectedLocation = newLocation;
-    //   this.isLocationModalVisible = false; !!!!
-
-    // this.locationFormComponent.showAddButtonFn();
-
-  }
 
   addPerson(): void {
     if (this.validateForm.valid) {
@@ -123,17 +111,22 @@ export class PersonFormComponent {
   }
 
   updatePerson() {
-    console.log(this.validateForm.valid);
-    console.log(this.validateForm.value);
     if (this.validateForm.valid && this.defaultData) {
-      const coordinates: Coordinates = { //todo ->person
+      const locId = this.validateForm.value.location?.id ?
+        this.validateForm.value.location.id : this.defaultData.locationId;
+      const person = {
         id: this.defaultData.id,
-        x: this.validateForm.value.xValue,
-        y: this.validateForm.value.yValue,
+        name: this.validateForm.value.name,
+        eyeColor: <Color>this.validateForm.value.eyeColor,
+        hairColor: <Color>this.validateForm.value.hairColor,
+        location: locId ? {id: locId} : locId,
+        height: this.validateForm.value.height,
+        passportID: this.validateForm.value.passportID,
+        nationality: <Country>this.validateForm.value.nationality,
         canEdit: this.validateForm.value.canEdit
       };
       this.personService.updatePerson(
-        coordinates
+        person
       ).subscribe((data: Person) => {
         console.log(data);
       })
@@ -145,10 +138,6 @@ export class PersonFormComponent {
   }
 
 
-  setDefaultData(data: Person) {
-    this.defaultData = data;
-  }
-
   setCanEdit() {
     if (this.defaultData) {
       return this.defaultData.canEdit;
@@ -156,11 +145,101 @@ export class PersonFormComponent {
     return false;
   }
 
+  setDefaultData(data: Person) {
+    this.defaultData = data;
+  }
+
+  loc: Location = {
+    id: 1,
+    x: 2, y: 3, z: 4, name: "fffofodsdlkfdsfdkkf", canEdit: true
+
+  }
+
   setLocation() {
     if (this.defaultData) {
-      return this.existingLocations.find(location => location.id === this.defaultData?.location.id);
+      return <Location>this.defaultData.location;
     }
-    return null
+    return this.loc;
   }
+
+  handleOkLoc() {
+    this.locationFormComponent.addLocation();
+    this.isLocationModalVisible = false;
+  }
+
+
+  selectedLocation: Location | null = null;
+  locations: Location[] = [];
+  loading = false;
+  searchValue = "";
+  offset = 0;
+  limit = 2;
+  totalElements = 0;
+  allLoaded = false;
+
+  ngOnInit()
+    :
+    void {
+    this.loadLocations();
+  }
+
+
+  private locationService = inject(LocationService);
+
+  loadLocations(loadMore = false)
+    :
+    void {
+    if (this.allLoaded
+    ) {
+      return;
+    }
+
+    this.loading = true;
+
+    if (!loadMore) {
+      this.offset = 0;
+      this.locations = [];
+      this.allLoaded = false;
+    }
+
+    this.locationService.getLocations(
+      this.offset + 1,
+      this.limit + 10, undefined, undefined, undefined, undefined,
+      this.searchValue?.trim() ? this.searchValue : undefined
+    ).subscribe({
+      next: (response) => {
+        if (response.content.length < this.limit) {
+          this.allLoaded = true;
+        }
+        this.locations = [...this.locations, ...response.content];
+        this.offset += this.limit;
+        this.loading = false;
+      },
+      error: () => {
+        this.loading = false;
+      },
+    });
+  }
+
+  onSearch(value
+             :
+             string
+  ):
+    void {
+    this.searchValue = value.trim();
+    this.allLoaded = false;
+    this.loadLocations();
+  }
+
+  onScrollToBottom()
+    :
+    void {
+    if (!
+      this.loading
+    ) {
+      this.loadLocations(true);
+    }
+  }
+
 
 }

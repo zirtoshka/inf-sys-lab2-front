@@ -80,7 +80,14 @@
     <td>{{ person.eyeColor }}</td>
     <td>{{ person.hairColor }}</td>
     <td>
-      <a (click)="openLocationModal(person.location)">{{ person.location.name }}</a>
+      <a *ngIf="person.locationId != null; else noLocation" (click)="openLocationModal(person.locationId)">
+        {{ person.locationId }}
+      </a>
+      <ng-template #noLocation>
+        no location
+        {{ person.location?.id }}
+        {{ person.locationId }}
+      </ng-template>
     </td>
     <td>{{ person.height || 'not specified' }}</td>
     <td>{{ person.passportID }}</td>
@@ -132,7 +139,7 @@
   (nzOnCancel)="handleCancel()"
 >
   <ng-template #locationInfo>
-    <ng-container *ngIf="selectedLocation!=null">
+    <ng-container *ngIf="selectedLocation!=undefined">
       <p><strong>ID:</strong> {{ selectedLocation.id }}</p>
       <p><strong>name:</strong> {{ selectedLocation.name }}</p>
       <p><strong>x:</strong> {{ selectedLocation.x }}</p>

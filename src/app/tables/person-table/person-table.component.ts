@@ -1,7 +1,6 @@
 import {ChangeDetectorRef, Component, inject, ViewChild} from '@angular/core';
 import {Person} from '../../dragondto/person';
 import {Color} from '../../dragondto/color';
-import {Country} from '../../dragondto/country';
 import {NzTableComponent, NzThAddOnComponent} from 'ng-zorro-antd/table';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgClass, NgForOf, NgIf} from '@angular/common';
@@ -14,10 +13,11 @@ import {PersonService} from '../../services/person.service';
 import {Location} from '../../dragondto/location';
 import {DtoTable} from '../dto-table';
 import {WebSocketService} from '../../websocket.service';
-import {DragonCave} from '../../dragondto/dragoncave';
 import {NzRadioComponent} from 'ng-zorro-antd/radio';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
+import {Country} from '../../dragondto/country';
+import {LocationService} from '../../services/location.service';
 
 @Component({
   selector: 'app-person-table',
@@ -45,6 +45,8 @@ import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
 })
 export class PersonTableComponent extends DtoTable<Person> {
   private personService = inject(PersonService);
+  private locationService = inject(LocationService);
+
   @ViewChild(PersonFormComponent) declare formComponent: PersonFormComponent;
 
 
@@ -81,22 +83,32 @@ export class PersonTableComponent extends DtoTable<Person> {
         console.log(res);
       })
   }
+  handleOk() {
+    this.formComponent.updatePerson();
+    this.isEditModalVisible = false;
+  }
 
   loadData(page: number, size: number, sort?: string, filters?: Record<string, any>): void {
-    this.personService.getCaves(page, size, sort,
-      filters?.['id'], filters?.['canEdit'], undefined,
-      filters?.['treasures']
+    this.personService.getPersons(page, size, sort,
+      filters?.['id'], filters?.['canEdit'], filters?.['userId'], filters?.['name'],
+      filters?.['eyeColor'],
+      filters?.['hairColor'],
+      filters?.['locationId'],
+      filters?.['height'],
+      filters?.['passportID'],
+      filters?.['nationality']
     ).subscribe({
       next: (response) => {
         this.listOfData = response.content.map(person => ({
           id: person.id,
           name: person.name,
-          eyeColor: person.eyeColor,
-          hairColor: person.hairColor,
-          location: person.location,
+          eyeColor: <Color> person.eyeColor,
+          hairColor:  <Color> person.hairColor,
+          locationId: person.locationId,
+          location:null,
           height: person.height,
           passportID: person.passportID,
-          nationality: person.nationality,
+          nationality:  <Country> person.nationality,
           canEdit: person.canEdit
         }));
         this.currPage = response.number + 1;
@@ -120,13 +132,25 @@ export class PersonTableComponent extends DtoTable<Person> {
   }
 
 
-
   //location info
   isLocationModalVisible = false;
-  selectedLocation: Location | null = null;
+  selectedLocation: Location | undefined = undefined;
 
-  openLocationModal(location: Location): void {
-    this.selectedLocation = location;
+  openLocationModal(locationId: number): void {
+    this.locationService.getLocations(
+      undefined,undefined, undefined, locationId).subscribe({
+      next: (response) => {
+        const loc = response.content[0];
+        if (loc) {
+          this.selectedLocation =loc;
+        } else {
+          this.selectedLocation = undefined;
+        }
+      },
+      error: (err) => {
+        console.error('Ошибка загрузки:', err); //todo
+      },
+    });
     this.isLocationModalVisible = true;
     // this.cd.detectChanges();
 

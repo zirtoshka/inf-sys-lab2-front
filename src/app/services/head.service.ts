@@ -20,7 +20,7 @@ export class HeadService {
 
 
   deleteHead(formData: any) {
-    return this.baseService.delete(formData, "head/delete");
+    return this.baseService.delete(formData, "head/delete/");
   }
 
   public getHeads(

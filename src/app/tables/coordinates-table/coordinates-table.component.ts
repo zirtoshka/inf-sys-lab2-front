@@ -42,7 +42,7 @@ import {NzIconDirective} from 'ng-zorro-antd/icon';
 export class CoordinatesTableComponent extends DtoTable<Coordinates> {
   private coordinatesService = inject(CoordinatesService);
   @ViewChild(CoordinatesFormComponent) declare formComponent: CoordinatesFormComponent;
-  
+
   constructor(cd: ChangeDetectorRef) {
     super(cd, inject(WebSocketService));
     this.sortOrder = {
@@ -87,6 +87,11 @@ export class CoordinatesTableComponent extends DtoTable<Coordinates> {
       .subscribe((res) => {
         console.log(res);
       })
+  }
+
+  handleOk() {
+    this.formComponent.updateCoordinates();
+    this.isEditModalVisible = false;
   }
 
   getId(item: Coordinates): any {

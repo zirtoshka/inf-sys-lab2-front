@@ -7,7 +7,8 @@ export interface Person {
   name: string;
   eyeColor: Color;
   hairColor: Color;
-  location: Location;
+  location: Location | null;
+  locationId: number | undefined;
   height: number | null;
   passportID: string;
   nationality: Country

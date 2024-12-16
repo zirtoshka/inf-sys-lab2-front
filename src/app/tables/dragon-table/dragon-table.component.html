@@ -208,7 +208,7 @@
       <p><strong>hair:</strong> {{ selectedKiller.hairColor }}</p>
 
       <p><strong>location:</strong></p>
-      <ul>
+      <ul *ngIf ="selectedKiller.location; else noLocation">
         <li><strong>ID:</strong> {{ selectedKiller.location.id }}</li>
         <li><strong>Name:</strong> {{ selectedKiller.location.name }}</li>
         <li><strong>X:</strong> {{ selectedKiller.location.x }}</li>
@@ -216,7 +216,9 @@
         <li><strong>Z:</strong> {{ selectedKiller.location.z }}</li>
         <li><strong>Can Edit:</strong> {{ selectedKiller.location.canEdit }}</li>
       </ul>
-
+      <ng-template #noLocation>
+        no location
+      </ng-template>
       <p><strong>height:</strong> {{ selectedKiller.height }}</p>
       <p><strong>passportID:</strong> {{ selectedKiller.passportID }}</p>
       <p><strong>nationality:</strong> {{ selectedKiller.nationality }}</p>

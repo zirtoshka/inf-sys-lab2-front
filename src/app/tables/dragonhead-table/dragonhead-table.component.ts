@@ -87,6 +87,10 @@ export class DragonheadTableComponent extends DtoTable<DragonHead> {
         console.log(res);
       })
   }
+  handleOk() {
+    this.formComponent.updateHead();
+    this.isEditModalVisible = false;
+  }
 
 
   getId(item: DragonHead): any {

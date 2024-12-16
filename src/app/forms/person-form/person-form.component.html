@@ -22,7 +22,7 @@
 
   <!--eye color-->
   <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24">eye color</nz-form-label>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="eyeColor">eye color</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzValidateStatus="eyeColor" nzHasFeedback>
       <nz-select [ngModel]="defaultData?.eyeColor" formControlName="eyeColor" [nzPlaceHolder]="'Select eye color'">
         <nz-option *ngFor="let color of colors" [nzValue]="color" [nzLabel]="color"></nz-option>
@@ -31,7 +31,7 @@
   </nz-form-item>
   <!--  hair color-->
   <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24">hair color</nz-form-label>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="hairColor">hair color</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzValidateStatus="haiColor" nzHasFeedback>
       <nz-select [ngModel]="defaultData?.hairColor" formControlName="hairColor" [nzPlaceHolder]="'Select hair color'">
         <nz-option *ngFor="let color of colors" [nzValue]="color" [nzLabel]="color"></nz-option>
@@ -40,13 +40,24 @@
   </nz-form-item>
   <!--  location-->
   <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24">location</nz-form-label>
-    <nz-form-control [nzSm]="14" [nzXs]="24">
-      <nz-select formControlName="location"
-                 [ngModel]="setLocation()"
-                 [nzPlaceHolder]="'select location'">
-        <nz-option *ngFor="let location of existingLocations" [nzValue]="location"
-                   [nzLabel]="location.name"></nz-option>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="location">location</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzValidateStatus="location" nzHasFeedback>
+      <nz-select [ngModel]="setLocation()" class="location" formControlName="location"
+                 [nzPlaceHolder]="'Select location'"
+                 nzShowSearch
+                 nzServerSearch
+                 [nzLoading]="loading"
+                 [nzAllowClear]="true"
+                 (nzOnSearch)="onSearch($event)"
+                 (nzScrollToBottom)="onScrollToBottom()"
+                 style="width: 100%;"
+      >
+        <nz-option
+          *ngFor="let location of locations"
+          [nzValue]="location"
+          [nzLabel]="location.name"
+        >
+        </nz-option>
       </nz-select>
       <button nz-button nzType="default" (click)="openLocationModal()">create new location</button>
     </nz-form-control>
@@ -68,8 +79,9 @@
       </nz-input-group>
     </nz-form-control>
   </nz-form-item>
+
   <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24">nationality</nz-form-label>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="nationality">nationality</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzValidateStatus="nationality" nzHasFeedback>
       <nz-select [ngModel]="defaultData?.nationality" formControlName="nationality"
                  [nzPlaceHolder]="'Select nationality'">
@@ -89,13 +101,13 @@
 <nz-modal [(nzVisible)]="isLocationModalVisible"
           nzTitle="Create New Location"
           [nzContent]="locationForma"
-          (nzOnCancel)="handleCancel()"
+          (nzOnCancel)="handleCancelLoc()"
           [nzFooter]="modalFooter">
   <ng-template #locationForma>
     <app-location-form></app-location-form>
   </ng-template>
   <ng-template #modalFooter>
-    <button nz-button nzType="default" (click)="handleCancel()">cancel</button>
-    <button nz-button nzType="primary" (click)="handleOk()">Custom Submit</button>
+    <button nz-button nzType="default" (click)="handleCancelLoc()">cancel</button>
+    <button nz-button nzType="primary" (click)="handleOkLoc()">Custom Submit</button>
   </ng-template>
 </nz-modal>

@@ -21,7 +21,7 @@ export class CoordinatesService {
 
 
   deleteCoordinates(formData: any) {
-    return this.baseService.delete(formData, "coord/delete");
+    return this.baseService.delete(formData, "coord/delete/");
   }
 
   public getCoordinates(

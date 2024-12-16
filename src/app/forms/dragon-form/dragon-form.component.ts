@@ -103,20 +103,7 @@ export class DragonFormComponent {
     {id: 2, x: 1, y: 1, z: 1, name: 'Los Angeles', canEdit: true},
     {id: 3, x: 1, y: 1, z: 1, name: 'Chicago', canEdit: true}
   ];
-  existingPerson: Person[] = [
-    {
-      id: 1, name: "Zhora", eyeColor: Color.BLUE, hairColor: Color.WHITE,
-      location: this.existingLocations[0], height: 3,
-      passportID: "123456lolik", nationality: Country.USA,
-      canEdit: true
-    },
-    {
-      id: 2, name: "Tolik", eyeColor: Color.BLUE, hairColor: Color.WHITE,
-      location: this.existingLocations[1], height: 3,
-      passportID: "123456lolik", nationality: Country.USA,
-      canEdit: true
-    }
-  ];
+
 
 
   colors = Object.values(Color);
@@ -227,12 +214,7 @@ export class DragonFormComponent {
     return null
   }
 
-  setKiller() {
-    if (this.defaultData) {
-      return this.existingPerson.find(data => data.id === this.defaultData?.killer?.id);
-    }
-    return null
-  }
+
 
   setHeads(): DragonHead[] {
     if (this.defaultData && this.defaultData.heads) {

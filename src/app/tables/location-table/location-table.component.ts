@@ -94,6 +94,10 @@ export class LocationTableComponent extends DtoTable<Location> {
         console.log(res);
       })
   }
+  handleOk() {
+    this.formComponent.updateLocation();
+    this.isEditModalVisible = false;
+  }
 
   getId(item: Location): any {
     return item.id;

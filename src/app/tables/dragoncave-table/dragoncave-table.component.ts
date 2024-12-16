@@ -96,7 +96,10 @@ export class DragoncaveTableComponent extends DtoTable<DragonCave> {
         console.log(res);
       })
   }
-
+  handleOk() {
+    this.formComponent.updateCave();
+    this.isEditModalVisible = false;
+  }
 
   getId(item: DragonCave): any {
     return item.id;
