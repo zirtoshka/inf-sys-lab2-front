@@ -7,7 +7,7 @@ import {Observable} from 'rxjs';
   {providedIn: 'root'}
 )
 export class BaseService {
-  private readonly baseUrl: string = 'http://localhost:8080/dragon/';
+  private readonly baseUrl: string = 'http://localhost:8081/dragon/';
   private httpClient = inject(HttpClient);
   private authService = inject(AuthService);
 
@@ -16,47 +16,42 @@ export class BaseService {
   }
 
   add(formData: any, action: string) {
-    const jwtToken = this.authService.authToken;
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`);
+    const headers = new HttpHeaders()
+      .set('Content-Type', 'application/json');
     return this.httpClient
-      .post<any>(this.baseUrl + action, formData, {headers});
+      .post<any>(this.baseUrl + action, formData, {headers, withCredentials: true});
 
   }
 
 
   update(formData: any, action: string) {
-    const jwtToken = this.authService.authToken;
     const headers = new HttpHeaders()
-      .set('Authorization', `Bearer ${jwtToken}`)
       .set('Content-Type', 'application/json');
     return this.httpClient
-      .post<any>(this.baseUrl + action, formData, {headers});
+      .post<any>(this.baseUrl + action, formData, {headers, withCredentials: true});
   }
 
 
   delete(formData: any, action: string) {
     const jwtToken = this.authService.authToken;
     const headers = new HttpHeaders()
-      .set('Authorization', `Bearer ${jwtToken}`)
       .set('Content-Type', 'application/json');
     return this.httpClient
-      .delete<any>(this.baseUrl + action + formData.id, {headers});
+      .delete<any>(this.baseUrl + action + formData.id, {headers, withCredentials: true});
   }
 
   public get<T>(
     endpoint: string,
     params: { [key: string]: any } = {}
   ): Observable<T> {
-    const jwtToken = this.authService.authToken;
-    let headers = new HttpHeaders().set('Authorization', `Bearer ${jwtToken}`);
+    const headers = new HttpHeaders()
+      .set('Content-Type', 'application/json');
     let httpParams = new HttpParams();
     Object.keys(params).forEach(key => {
       if (params[key] !== undefined && params[key] !== null) {
         httpParams = httpParams.set(key, params[key]);
       }
     });
-    return this.httpClient.get<T>(`${this.baseUrl}${endpoint}`, {headers, params: httpParams});
+    return this.httpClient.get<T>(`${this.baseUrl}${endpoint}`, {headers, params: httpParams, withCredentials: true});
   }
-
-
 }
