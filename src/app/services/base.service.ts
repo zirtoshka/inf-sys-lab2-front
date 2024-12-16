@@ -7,7 +7,7 @@ import {Observable} from 'rxjs';
   {providedIn: 'root'}
 )
 export class BaseService {
-  private readonly baseUrl: string = 'http://localhost:8081/dragon/';
+  private readonly baseUrl: string = 'http://openam.example.org:8081/dragon/';
   private httpClient = inject(HttpClient);
   private authService = inject(AuthService);
 
