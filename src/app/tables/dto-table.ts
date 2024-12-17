@@ -1,10 +1,11 @@
 import {BaseTableComponent} from './base-table-component';
-import {Directive, ViewChild} from '@angular/core';
+import {AfterViewChecked, AfterViewInit, Directive, OnInit, ViewChild} from '@angular/core';
+import {FormEditable} from '../forms/form';
 
 @Directive()
-export abstract class DtoTable<T> extends BaseTableComponent<T> {
+export abstract class DtoTable<T> extends BaseTableComponent<T>  implements AfterViewChecked {
   isEditModalVisible = false;
-  @ViewChild('formComponent') formComponent!: any;
+  @ViewChild('formComponent') formComponent!: FormEditable<T>;
   dataEdit: T | undefined;
 
 
@@ -26,13 +27,7 @@ export abstract class DtoTable<T> extends BaseTableComponent<T> {
 
   abstract deleteRow(id: number): void;
 
-  abstract handleOk():void;
-
-  // handleOk() {
-  //   this.formComponent.updateCave();
-  //   this.isEditModalVisible = false;
-  // }
-
+  abstract handleOk(): void;
 
 
   openEditModal(data: T): void {

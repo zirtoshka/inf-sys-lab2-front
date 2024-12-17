@@ -99,6 +99,16 @@ export class LocationTableComponent extends DtoTable<Location> {
     this.isEditModalVisible = false;
   }
 
+  override openEditModal(data: Location): void {
+    this.isEditModalVisible = true;
+    this.dataEdit = data;
+    if (this.formComponent) {
+      this.formComponent.setDefaultData(this.dataEdit);
+    } else {
+      console.error('formComponent не инициализирован');
+    }
+  }
+
   getId(item: Location): any {
     return item.id;
   }

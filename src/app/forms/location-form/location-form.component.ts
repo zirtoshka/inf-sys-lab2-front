@@ -16,6 +16,7 @@ import {Location} from '../../dragondto/location';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {NzSwitchComponent} from 'ng-zorro-antd/switch';
 import {Coordinates} from '../../dragondto/coordinates';
+import {FormEditable} from '../form';
 
 @Component({
   selector: 'app-location-form',
@@ -38,7 +39,7 @@ import {Coordinates} from '../../dragondto/coordinates';
   standalone: true,
   styleUrl: './location-form.component.css'
 })
-export class LocationFormComponent {
+export class LocationFormComponent extends FormEditable<Location> {
   private locationService = inject(LocationService);
   showAddButton = true;
   defaultData: Location | undefined;
@@ -47,6 +48,7 @@ export class LocationFormComponent {
   validateForm: FormGroup;
 
   constructor(private fb: NonNullableFormBuilder) {
+    super();
     this.validateForm = this.fb.group({
       x: ['', [
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
@@ -94,14 +96,20 @@ export class LocationFormComponent {
   }
 
 
-  setDefaultData(data: Location) {
+
+  setDefaultData(data: Location|undefined) {
     this.defaultData = data;
+    this.validateForm.patchValue({
+      x: data?.x,
+      y: data?.y,
+      z: data?.z,
+      name: data?.name,
+      canEdit: data?.canEdit
+    });
   }
 
-  setCanEdit() {
-    if (this.defaultData) {
-      return this.defaultData.canEdit;
-    }
-    return false;
+  setCanEdit(): boolean {
+    return this.defaultData?.canEdit || false;
   }
+
 }

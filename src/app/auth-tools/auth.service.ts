@@ -3,7 +3,6 @@ import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {deleteCookie, getCookie} from './cookie-utils';
 import {catchError, lastValueFrom, throwError} from 'rxjs';
-import {Token} from '../dtos/token';
 import {NzNotificationService} from 'ng-zorro-antd/notification';
 
 
@@ -66,11 +65,15 @@ export class AuthService {
     return this.roles.includes("ROLE_ADMIN");
   }
 
-  logout() {
-    deleteCookie(TOKEN_PATH);
-    this.username = null;
-    this.authToken = null;
-    this.roles = [];
+  async logout() {
+    try {
+      await lastValueFrom(this.httpClient.post('http://openam.example.org:8081/dragon/am/logout', {withCredentials: true}));
+      this.username = null;
+      this.authToken = null;
+      this.roles = [];
+    } catch (error) {
+      alert(error);
+    }
   }
 
   async fetchStatus(): Promise<void> {

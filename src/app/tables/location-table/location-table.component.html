@@ -89,7 +89,8 @@
           [nzFooter]="locationFooter">
   <ng-template #locationForma>
     <app-location-form>
-
+      *ngIf="isEditModalVisible"
+      #formComponent
     </app-location-form>
   </ng-template>
   <ng-template #locationFooter>

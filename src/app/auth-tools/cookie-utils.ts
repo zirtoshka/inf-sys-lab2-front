@@ -16,7 +16,7 @@ export function getCookie(name: string) {
 
 
 export function deleteCookie(name: string) {
-  alert(name + " deletingdddddd")
-  document.cookie = `${name}=; path=/; max-age=0;`;
-
+  const date = new Date();
+  date.setTime(date.getTime() + (-1 * 24 * 60 * 60 * 1000));
+  document.cookie = name + "=; expires=" + date.toUTCString() + "; path=/";
 }
