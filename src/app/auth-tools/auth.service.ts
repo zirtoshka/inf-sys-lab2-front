@@ -1,7 +1,7 @@
-import {inject, Injectable} from '@angular/core';
+import {ChangeDetectorRef, inject, Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {Router} from '@angular/router';
-import {deleteCookie, getCookie, setCookie} from './cookie-utils';
+import {deleteCookie, getCookie} from './cookie-utils';
 import {catchError, lastValueFrom, throwError} from 'rxjs';
 import {Token} from '../dtos/token';
 import {NzNotificationService} from 'ng-zorro-antd/notification';
@@ -22,6 +22,11 @@ export class AuthService {
   private httpClient = inject(HttpClient);
   private router = inject(Router);
   private notificationService = inject(NzNotificationService);
+  private authToken: string | null = null;
+
+  getAuthToken() {
+    return this.authToken;
+  }
 
   get username(): string | null {
     return sessionStorage.getItem("username");
@@ -49,24 +54,12 @@ export class AuthService {
     if (!Array.isArray(value)) {
       value = [];
     }
-
     sessionStorage.setItem("roles", JSON.stringify(value));
   }
 
-  get authToken(): string | null {
-    return getCookie(TOKEN_PATH);
-  }
-
-  set authToken(value: string | null | undefined) {
-    if (value == null) {
-      deleteCookie(TOKEN_PATH);
-    } else {
-      setCookie(TOKEN_PATH, value);
-    }
-  }
 
   get isLoggedIn(): boolean {
-    return this.authToken != null;
+    return this.authToken !== null;
   }
 
   isAdmin(): boolean {
@@ -74,48 +67,25 @@ export class AuthService {
   }
 
   logout() {
-    this.authToken = null;
+    deleteCookie(TOKEN_PATH);
     this.username = null;
-    // deleteCookie(TOKEN_PATH)
+    this.authToken = null;
     this.roles = [];
-    this.logoutFromOpenAM()
   }
-
-  logoutFromOpenAM(): void {
-    fetch('http://openam.example.org:8080/openam/json/sessions', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Accept': 'application/json, text/javascript, */*; q=0.01',
-        'Accept-API-Version': 'protocol=1.0,resource=2.0',
-        'Content-Type': 'application/json'
-      }
-    }).then(response => {
-      if (response.ok) {
-        console.log('Logout успешен');
-        localStorage.clear();
-        sessionStorage.clear();
-      } else {
-        console.error('Ошибка при logout', response.status, response.statusText);
-      }
-    }).catch(error => {
-      console.error('Ошибка соединения с OpenAM', error);
-    });
-  }
-
 
   async fetchStatus(): Promise<void> {
     try {
       const req = await lastValueFrom(this.httpClient.get<AuthStatusResponse>('http://openam.example.org:8081/dragon/am/status', {withCredentials: true}));
       this.username = req.username;
       this.roles = req.roles;
+      this.authToken = getCookie(TOKEN_PATH);
     } catch (error) {
       this.authToken = null;
+      deleteCookie(TOKEN_PATH);
     }
   }
 
   login(): void {
-    // Перенаправление пользователя на страницу входа OpenAM
     const curPage = window.location.href;
     window.location.href = `http://openam.example.org:8080/openam/XUI/?goto=${encodeURIComponent(curPage)}#login`;
   }

@@ -33,7 +33,7 @@ export class BaseService {
 
 
   delete(formData: any, action: string) {
-    const jwtToken = this.authService.authToken;
+    const jwtToken = this.authService.getAuthToken();
     const headers = new HttpHeaders()
       .set('Content-Type', 'application/json');
     return this.httpClient

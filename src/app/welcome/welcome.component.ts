@@ -3,6 +3,7 @@ import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {RouterLink} from '@angular/router';
 import { AuthService } from '../auth-tools/auth.service';
 import {NgIf, NgOptimizedImage} from '@angular/common';
+import {WebSocketService} from '../websocket.service';
 
 @Component({
   selector: 'app-welcome',
@@ -14,12 +15,13 @@ import {NgIf, NgOptimizedImage} from '@angular/common';
   ],
   templateUrl: './welcome.component.html',
   standalone: true,
-  styleUrl: './welcome.component.css'
+  styleUrl: './welcome.component.css',
 })
 export class WelcomeComponent {
     protected userService = inject(AuthService);
 
 	constructor() {
-		this.userService.fetchStatus();
+		this.userService.fetchStatus().then();
 	}
+
 }

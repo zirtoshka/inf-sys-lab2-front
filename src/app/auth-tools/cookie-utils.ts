@@ -14,6 +14,9 @@ export function getCookie(name: string) {
   return null;
 }
 
-export function deleteCookie(cookieName: string): void {
-  document.cookie = ``;
+
+export function deleteCookie(name: string) {
+  alert(name + " deletingdddddd")
+  document.cookie = `${name}=; path=/; max-age=0;`;
+
 }
