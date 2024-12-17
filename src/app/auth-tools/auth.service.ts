@@ -67,11 +67,12 @@ export class AuthService {
 
   async logout() {
     try {
-      await lastValueFrom(this.httpClient.post('http://openam.example.org:8081/dragon/am/logout', {withCredentials: true}));
+      await lastValueFrom(this.httpClient.get<string>('http://openam.example.org:8081/dragon/am/logout', {withCredentials: true}));
       this.username = null;
       this.authToken = null;
       this.roles = [];
     } catch (error) {
+      console.error(error)
       alert(error);
     }
   }
