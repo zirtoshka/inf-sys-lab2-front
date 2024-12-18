@@ -1,5 +1,10 @@
-import {ChangeDetectorRef, Component, inject, ViewChild} from '@angular/core';
-import {NgClass, NgForOf} from '@angular/common';
+import {
+  ChangeDetectorRef,
+  Component,
+  inject,
+  ViewChild
+} from '@angular/core';
+import {NgClass, NgForOf, NgIf, NgTemplateOutlet} from '@angular/common';
 import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
 import {NzTableComponent, NzThAddOnComponent} from 'ng-zorro-antd/table';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -31,7 +36,9 @@ import {NzIconDirective} from 'ng-zorro-antd/icon';
     LocationFormComponent,
     NzRadioComponent,
     NzIconDirective,
-    NgClass
+    NgClass,
+    NgIf,
+    NgTemplateOutlet
   ],
   providers: [NzModalService, WebSocketService],
   templateUrl: './location-table.component.html',
@@ -39,8 +46,10 @@ import {NzIconDirective} from 'ng-zorro-antd/icon';
   styleUrl: './location-table.component.css'
 })
 export class LocationTableComponent extends DtoTable<Location> {
+
   private locationService = inject(LocationService);
   @ViewChild(LocationFormComponent) declare formComponent: LocationFormComponent;
+
 
   constructor(cd: ChangeDetectorRef) {
     super(cd, inject(WebSocketService));
@@ -94,20 +103,15 @@ export class LocationTableComponent extends DtoTable<Location> {
         console.log(res);
       })
   }
+
   handleOk() {
+    if (!this.formComponent) {
+      return;
+    }
     this.formComponent.updateLocation();
     this.isEditModalVisible = false;
   }
 
-  override openEditModal(data: Location): void {
-    this.isEditModalVisible = true;
-    this.dataEdit = data;
-    if (this.formComponent) {
-      this.formComponent.setDefaultData(this.dataEdit);
-    } else {
-      console.error('formComponent не инициализирован');
-    }
-  }
 
   getId(item: Location): any {
     return item.id;

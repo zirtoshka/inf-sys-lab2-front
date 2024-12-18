@@ -49,6 +49,9 @@ export class LocationFormComponent extends FormEditable<Location> {
 
   constructor(private fb: NonNullableFormBuilder) {
     super();
+    this.defaultData = {
+      id: 0, x: 0, y: 0, z: 0, name: "", canEdit: false
+    }
     this.validateForm = this.fb.group({
       x: ['', [
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
@@ -86,7 +89,7 @@ export class LocationFormComponent extends FormEditable<Location> {
       ).subscribe((data: Location) => {
         console.log(data);
       })
-    }else{
+    } else {
       console.log("sfsdfsfsdfs") //todo
     }
   }
@@ -96,8 +99,7 @@ export class LocationFormComponent extends FormEditable<Location> {
   }
 
 
-
-  setDefaultData(data: Location|undefined) {
+  setDefaultData(data: Location | undefined) {
     this.defaultData = data;
     this.validateForm.patchValue({
       x: data?.x,

@@ -5,4 +5,5 @@ import {Directive} from '@angular/core';
 export abstract class FormEditable<T> {
   abstract setDefaultData(data: T | undefined): void ;
   abstract hideAddButtonFn():void;
+
 }

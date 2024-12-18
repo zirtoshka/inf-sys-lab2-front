@@ -1,11 +1,17 @@
 import {BaseTableComponent} from './base-table-component';
-import {AfterViewChecked, AfterViewInit, Directive, OnInit, ViewChild} from '@angular/core';
+import {
+  AfterViewChecked,
+  Directive,
+  ViewChild
+} from '@angular/core';
 import {FormEditable} from '../forms/form';
+import {Location} from '../dragondto/location';
 
 @Directive()
-export abstract class DtoTable<T> extends BaseTableComponent<T>  implements AfterViewChecked {
+export abstract class DtoTable<T> extends BaseTableComponent<T> implements AfterViewChecked {
   isEditModalVisible = false;
   @ViewChild('formComponent') formComponent!: FormEditable<T>;
+
   dataEdit: T | undefined;
 
 
@@ -29,8 +35,14 @@ export abstract class DtoTable<T> extends BaseTableComponent<T>  implements Afte
 
   abstract handleOk(): void;
 
-
   openEditModal(data: T): void {
+    this.showEditModal(data);
+    setTimeout(() => {
+      this.formComponent.setDefaultData(this.dataEdit);
+    }, 1);
+  }
+
+  showEditModal(data: T) {
     this.isEditModalVisible = true;
     this.dataEdit = data;
   }
@@ -38,9 +50,6 @@ export abstract class DtoTable<T> extends BaseTableComponent<T>  implements Afte
 
   ngAfterViewChecked(): void {
     if (this.formComponent) {
-      if (this.dataEdit) {
-        this.formComponent.setDefaultData(this.dataEdit);
-      }
       this.formComponent.hideAddButtonFn();
     }
     this.cd.detectChanges();
