@@ -17,7 +17,7 @@ export class BaseService {
 
   add(formData: any, action: string) {
     const headers = new HttpHeaders()
-      .set('Content-Type', 'application/json');
+        .set('Content-Type', 'application/json');
     return this.httpClient
       .post<any>(this.baseUrl + action, formData, {headers, withCredentials: true});
 

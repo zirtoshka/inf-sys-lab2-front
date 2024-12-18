@@ -15,6 +15,7 @@ import {HeadService} from '../../services/head.service';
 import {DragonHead} from '../../dragondto/dragonhead';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {NzSwitchComponent} from 'ng-zorro-antd/switch';
+import {NzNotificationService} from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-dragonhead-form',
@@ -38,6 +39,8 @@ import {NzSwitchComponent} from 'ng-zorro-antd/switch';
   styleUrl: './dragon-head-form.component.css'
 })
 export class DragonHeadFormComponent {
+  private notificationService = inject(NzNotificationService);
+
   private headService = inject(HeadService);
   showAddButton = true;
   validateForm: FormGroup;
@@ -54,9 +57,20 @@ export class DragonHeadFormComponent {
   addHead() {
     if (this.validateForm.valid) {
       this.headService.addHead(this.validateForm.value)
-        .subscribe((head: DragonHead) => {
-          console.log(head);
-        })
+        .subscribe({
+          next: (response) => {
+            this.notificationService.success(
+              'Success',
+              "adding is ok"
+            );
+          },
+          error: (error) => {
+            this.notificationService.error(
+              'Oops',
+              "adding failed"
+            );
+          }
+        });
     }
   }
 
@@ -69,9 +83,20 @@ export class DragonHeadFormComponent {
       };
       this.headService.updateHead(
         head
-      ).subscribe((data: DragonHead) => {
-        console.log(data);
-      })
+      ).subscribe({
+        next: (response) => {
+          this.notificationService.success(
+            'Success',
+            "updating is ok"
+          );
+        },
+        error: (error) => {
+          this.notificationService.error(
+            'Oops',
+            "updating failed"
+          );
+        }
+      });
     }
   }
 

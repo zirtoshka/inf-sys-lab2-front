@@ -15,6 +15,7 @@ import {CaveService} from '../../services/cave.service';
 import {DragonCave} from '../../dragondto/dragoncave';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {NzSwitchComponent} from 'ng-zorro-antd/switch';
+import {NzNotificationService} from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-dragoncave-form',
@@ -38,6 +39,7 @@ import {NzSwitchComponent} from 'ng-zorro-antd/switch';
   styleUrl: './dragoncave-form.component.css'
 })
 export class DragonCaveFormComponent {
+  private notificationService = inject(NzNotificationService);
   private caveService = inject(CaveService);
   showAddButton = true;
   validateForm: FormGroup;
@@ -55,9 +57,20 @@ export class DragonCaveFormComponent {
     if (this.validateForm.valid) {
       this.caveService.addCave(
         this.validateForm.value
-      ).subscribe((cave: DragonCave) => {
-        console.log(cave)
-      })
+      ).subscribe({
+        next: (response) => {
+          this.notificationService.success(
+            'Success',
+            "adding is ok"
+          );
+        },
+        error: (error) => {
+          this.notificationService.error(
+            'Oops',
+            "adding failed"
+          );
+        }
+      });
     }
   }
 
@@ -69,8 +82,19 @@ export class DragonCaveFormComponent {
         canEdit: this.validateForm.value.canEdit
       };
       this.caveService.updateCave(cave)
-        .subscribe((cave: DragonCave) => {
-          console.log(cave)
+        .subscribe({
+          next: (response) => {
+            this.notificationService.success(
+              'Success',
+              "updating is ok"
+            );
+          },
+          error: (error) => {
+            this.notificationService.error(
+              'Oops',
+              "updating failed"
+            );
+          }
         });
     }
   }

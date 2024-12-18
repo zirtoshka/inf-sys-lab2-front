@@ -17,6 +17,7 @@ import {CoordinatesService} from '../../services/coordinates.service';
 import {Coordinates} from '../../dragondto/coordinates';
 import {NzSwitchComponent} from 'ng-zorro-antd/switch';
 import {NzModalComponent} from "ng-zorro-antd/modal";
+import {NzNotificationService} from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-coordinates-form',
@@ -42,6 +43,8 @@ import {NzModalComponent} from "ng-zorro-antd/modal";
   styleUrl: './coordinates-form.component.css'
 })
 export class CoordinatesFormComponent {
+  private notificationService = inject(NzNotificationService);
+
   private coordinatesService = inject(CoordinatesService);
   showAddButton = true;
   validateForm: FormGroup;
@@ -65,8 +68,19 @@ export class CoordinatesFormComponent {
       const formData = this.validateForm.value;
       this.coordinatesService.addCoordinates(
         formData
-      ).subscribe((coord: Coordinates) => {
-        console.log(coord);
+      ).subscribe({
+        next: (response) => {
+          this.notificationService.success(
+            'Success',
+            "adding is ok"
+          );
+        },
+        error: (error) => {
+          this.notificationService.error(
+            'Oops',
+            "adding failed"
+          );
+        }
       });
     }
   }
@@ -82,9 +96,20 @@ export class CoordinatesFormComponent {
       };
       this.coordinatesService.updateCoordinates(
         coordinates
-      ).subscribe((coord: Coordinates) => {
-        console.log(coord);
-      })
+      ).subscribe({
+        next: (response) => {
+          this.notificationService.success(
+            'Success',
+            "updating is ok"
+          );
+        },
+        error: (error) => {
+          this.notificationService.error(
+            'Oops',
+            "updating failed"
+          );
+        }
+      });
     }
   }
 

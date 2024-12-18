@@ -17,6 +17,7 @@ import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {NzSwitchComponent} from 'ng-zorro-antd/switch';
 import {Coordinates} from '../../dragondto/coordinates';
 import {FormEditable} from '../form';
+import {NzNotificationService} from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-location-form',
@@ -43,6 +44,7 @@ export class LocationFormComponent extends FormEditable<Location> {
   private locationService = inject(LocationService);
   showAddButton = true;
   defaultData: Location | undefined;
+  private notificationService = inject(NzNotificationService);
 
 
   validateForm: FormGroup;
@@ -68,9 +70,20 @@ export class LocationFormComponent extends FormEditable<Location> {
   addLocation() {
     if (this.validateForm.valid) {
       this.locationService.addLocation(this.validateForm.value)
-        .subscribe((loc: Location) => {
-          console.log(loc);
-        })
+        .subscribe({
+          next: (response) => {
+            this.notificationService.success(
+              'Success',
+              "adding is ok"
+            );
+          },
+          error: (error) => {
+            this.notificationService.error(
+              'Oops',
+              "adding failed"
+            );
+          }
+        });
     }
   }
 
@@ -86,11 +99,25 @@ export class LocationFormComponent extends FormEditable<Location> {
       };
       this.locationService.updateLocation(
         location
-      ).subscribe((data: Location) => {
-        console.log(data);
-      })
+      ).subscribe({
+        next: (response) => {
+          this.notificationService.success(
+            'Success',
+            "updating is ok"
+          );
+        },
+        error: (error) => {
+          this.notificationService.error(
+            'Oops',
+            "updating failed"
+          );
+        }
+      });
     } else {
-      console.log("sfsdfsfsdfs") //todo
+      this.notificationService.error(
+        'Oops',
+        "updating failed"
+      );
     }
   }
 

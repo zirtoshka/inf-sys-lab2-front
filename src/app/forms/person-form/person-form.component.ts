@@ -113,9 +113,20 @@ export class PersonFormComponent extends FormEditable<Person> {
     if (this.validateForm.valid) {
       const personData = this.validateForm.value;
       this.personService.addPerson(personData)
-        .subscribe((person: Person) => {
-          console.log(person);
-        })
+        .subscribe({
+          next: (response) => {
+            this.notificationService.success(
+              'Success',
+              "adding is ok"
+            );
+          },
+          error: (error) => {
+            this.notificationService.error(
+              'Oops',
+              "adding failed"
+            );
+          }
+        });
     }
   }
 
@@ -136,9 +147,20 @@ export class PersonFormComponent extends FormEditable<Person> {
       };
       this.personService.updatePerson(
         person
-      ).subscribe((data: Person) => {
-        console.log(data);
-      })
+      ).subscribe({
+        next: (response) => {
+          this.notificationService.success(
+            'Success',
+            "updating is ok"
+          );
+        },
+        error: (error) => {
+          this.notificationService.error(
+            'Oops',
+            "updating failed"
+          );
+        }
+      });
     }
   }
 
