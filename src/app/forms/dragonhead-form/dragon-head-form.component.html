@@ -2,7 +2,6 @@
   <nz-form-item>
     <nz-form-label [nzSm]="20" [nzXs]="24" nzFor="canEdit">can edit</nz-form-label>
     <nz-switch
-      [ngModel]="setCanEdit()"
       formControlName="canEdit"
       [nzCheckedChildren]="checkedTemplate"
       [nzUnCheckedChildren]="unCheckedTemplate"
@@ -14,7 +13,7 @@
     <nz-form-label [nzSm]="10" [nzXs]="24" nzRequired nzFor="eyesCount">eyes count</nz-form-label>
     <nz-form-control nzErrorTip="eyes count is a number">
       <nz-input-group>
-        <input formControlName="eyesCount" nz-input placeholder="eyes count" [ngModel]="defaultData?.eyesCount"/>
+        <input formControlName="eyesCount" nz-input placeholder="eyes count"/>
       </nz-input-group>
     </nz-form-control>
   </nz-form-item>

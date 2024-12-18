@@ -16,6 +16,8 @@ import {DragonCave} from '../../dragondto/dragoncave';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {NzSwitchComponent} from 'ng-zorro-antd/switch';
 import {NzNotificationService} from 'ng-zorro-antd/notification';
+import {FormEditable} from '../form';
+import {Coordinates} from '../../dragondto/coordinates';
 
 @Component({
   selector: 'app-dragoncave-form',
@@ -38,18 +40,18 @@ import {NzNotificationService} from 'ng-zorro-antd/notification';
   standalone: true,
   styleUrl: './dragoncave-form.component.css'
 })
-export class DragonCaveFormComponent {
-  private notificationService = inject(NzNotificationService);
+export class DragonCaveFormComponent extends FormEditable<DragonCave>{
   private caveService = inject(CaveService);
   showAddButton = true;
   validateForm: FormGroup;
   defaultData: DragonCave | undefined;
 
   constructor(private fb: NonNullableFormBuilder) {
+    super();
     this.validateForm = this.fb.group({
       numberOfTreasures: ['', [Validators.required,
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
-      canEdit: ["", Validators.required],
+      canEdit: [false, Validators.required],
     });
   }
 
@@ -100,18 +102,17 @@ export class DragonCaveFormComponent {
   }
 
 
-  setDefaultData(data: DragonCave) {
+  setDefaultData(data: DragonCave|undefined) {
     this.defaultData = data;
+    this.validateForm.patchValue({
+      canEdit: data?.canEdit,
+      numberOfTreasures: data?.numberOfTreasures,
+    })
   }
 
   hideAddButtonFn() {
     this.showAddButton = false;
   }
 
-  setCanEdit() {
-    if (this.defaultData) {
-      return this.defaultData.canEdit;
-    }
-    return false;
-  }
+
 }

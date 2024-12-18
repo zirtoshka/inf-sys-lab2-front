@@ -23,6 +23,7 @@ import {Person} from '../../dragondto/person';
 import {Color} from '../../dragondto/color';
 import {Country} from '../../dragondto/country';
 import {DragonCharacter} from '../../dragondto/dragoncharacter';
+import {FormEditable} from '../form';
 
 @Component({
   selector: 'app-dragon-edit-form',
@@ -51,7 +52,7 @@ import {DragonCharacter} from '../../dragondto/dragoncharacter';
   standalone: true,
   styleUrl: './dragon-edit-form.component.css'
 })
-export class DragonEditFormComponent {
+export class DragonEditFormComponent extends FormEditable<Dragon>{
   private dragonService = inject(DragonService);
 
   showAddButton = true;
@@ -95,6 +96,7 @@ export class DragonEditFormComponent {
 
 
   constructor(private fb: NonNullableFormBuilder, private cd: ChangeDetectorRef) {
+    super();
     this.validateForm = this.fb.group({
       name: ['', [Validators.required]],
       coordinates: [null, [Validators.required]],
@@ -159,10 +161,9 @@ export class DragonEditFormComponent {
     return false;
   }
 
-  setDefaultData(data: Dragon) {
+  override setDefaultData(data: Dragon) {
     this.defaultData = data;
     this.selectedHeads = data.heads;
-
   }
 
   setCoordinates() {

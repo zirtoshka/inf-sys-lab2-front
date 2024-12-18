@@ -44,7 +44,6 @@ export class LocationFormComponent extends FormEditable<Location> {
   private locationService = inject(LocationService);
   showAddButton = true;
   defaultData: Location | undefined;
-  private notificationService = inject(NzNotificationService);
 
 
   validateForm: FormGroup;

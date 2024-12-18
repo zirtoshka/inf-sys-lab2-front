@@ -5,8 +5,6 @@
 </div>
 <div *ngIf="userService.isLoggedIn; else notLoggedIn">
   <h1>Hello, {{ userService.username }}!</h1>
-  <p>Hello, {{ userService.getAuthToken() }}!</p>
-
   <a [routerLink]="['/home']" title="Click to go home page">
     <img class="nusha" ngSrc="assets/nusha.png" alt="nusha" aria-hidden="true" width="608" height="462"/>
   </a>

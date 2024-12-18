@@ -18,6 +18,8 @@ import {Coordinates} from '../../dragondto/coordinates';
 import {NzSwitchComponent} from 'ng-zorro-antd/switch';
 import {NzModalComponent} from "ng-zorro-antd/modal";
 import {NzNotificationService} from 'ng-zorro-antd/notification';
+import {FormEditable} from '../form';
+import {Location} from '../../dragondto/location';
 
 @Component({
   selector: 'app-coordinates-form',
@@ -42,8 +44,7 @@ import {NzNotificationService} from 'ng-zorro-antd/notification';
   standalone: true,
   styleUrl: './coordinates-form.component.css'
 })
-export class CoordinatesFormComponent {
-  private notificationService = inject(NzNotificationService);
+export class CoordinatesFormComponent extends FormEditable<Coordinates>{
 
   private coordinatesService = inject(CoordinatesService);
   showAddButton = true;
@@ -52,14 +53,14 @@ export class CoordinatesFormComponent {
 
 
   constructor(private fb: NonNullableFormBuilder) {
-
+    super();
     this.validateForm = this.fb.group({
       x: ['', [Validators.required,
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
       y: ['', [Validators.required,
         Validators.min(-182),
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
-      canEdit: ['', [Validators.required,]]
+      canEdit: [false, [Validators.required,]]
     });
   }
 
@@ -118,14 +119,13 @@ export class CoordinatesFormComponent {
   }
 
 
-  setDefaultData(data: Coordinates) {
+  setDefaultData(data: Coordinates|undefined) {
     this.defaultData = data;
+    this.validateForm.patchValue({
+      x:data?.x,
+      y:data?.y,
+      canEdit:data?.canEdit
+    })
   }
 
-  setCanEdit() {
-    if (this.defaultData) {
-      return this.defaultData.canEdit;
-    }
-    return false;
-  }
 }

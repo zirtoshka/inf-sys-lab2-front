@@ -16,6 +16,8 @@ import {DragonHead} from '../../dragondto/dragonhead';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {NzSwitchComponent} from 'ng-zorro-antd/switch';
 import {NzNotificationService} from 'ng-zorro-antd/notification';
+import {FormEditable} from '../form';
+import {Coordinates} from '../../dragondto/coordinates';
 
 @Component({
   selector: 'app-dragonhead-form',
@@ -38,8 +40,7 @@ import {NzNotificationService} from 'ng-zorro-antd/notification';
   standalone: true,
   styleUrl: './dragon-head-form.component.css'
 })
-export class DragonHeadFormComponent {
-  private notificationService = inject(NzNotificationService);
+export class DragonHeadFormComponent extends FormEditable<DragonHead> {
 
   private headService = inject(HeadService);
   showAddButton = true;
@@ -47,6 +48,7 @@ export class DragonHeadFormComponent {
   defaultData: DragonHead | undefined;
 
   constructor(private fb: NonNullableFormBuilder) {
+    super();
     this.validateForm = this.fb.group({
       eyesCount: ['', [Validators.required,
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
@@ -104,14 +106,13 @@ export class DragonHeadFormComponent {
     this.showAddButton = false;
   }
 
-  setCanEdit() {
-    if (this.defaultData) {
-      return this.defaultData.canEdit;
-    }
-    return false;
-  }
 
-  setDefaultData(data: DragonHead) {
+
+  setDefaultData(data: DragonHead|undefined) {
     this.defaultData = data;
+    this.validateForm.patchValue({
+      canEdit:data?.canEdit,
+      eyesCount:data?.eyesCount,
+    })
   }
 }
