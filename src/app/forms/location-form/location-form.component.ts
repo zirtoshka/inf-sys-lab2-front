@@ -110,8 +110,5 @@ export class LocationFormComponent extends FormEditable<Location> {
     });
   }
 
-  setCanEdit(): boolean {
-    return this.defaultData?.canEdit || false;
-  }
 
 }

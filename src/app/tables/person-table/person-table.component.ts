@@ -18,6 +18,7 @@ import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
 import {Country} from '../../dragondto/country';
 import {LocationService} from '../../services/location.service';
+import {LocationFormComponent} from '../../forms/location-form/location-form.component';
 
 @Component({
   selector: 'app-person-table',

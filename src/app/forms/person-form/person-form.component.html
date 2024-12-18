@@ -4,7 +4,6 @@
     <nz-form-label [nzSm]="20" [nzXs]="24" nzFor="canEdit">can edit</nz-form-label>
     <nz-switch
       formControlName="canEdit"
-      [ngModel]="setCanEdit()"
       [nzCheckedChildren]="checkedTemplate"
       [nzUnCheckedChildren]="unCheckedTemplate"
     ></nz-switch>
@@ -24,7 +23,7 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="eyeColor">eye color</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzValidateStatus="eyeColor" nzHasFeedback>
-      <nz-select [ngModel]="defaultData?.eyeColor" formControlName="eyeColor" [nzPlaceHolder]="'Select eye color'">
+      <nz-select  formControlName="eyeColor" [nzPlaceHolder]="'Select eye color'">
         <nz-option *ngFor="let color of colors" [nzValue]="color" [nzLabel]="color"></nz-option>
       </nz-select>
     </nz-form-control>
@@ -33,7 +32,7 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="hairColor">hair color</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzValidateStatus="haiColor" nzHasFeedback>
-      <nz-select [ngModel]="defaultData?.hairColor" formControlName="hairColor" [nzPlaceHolder]="'Select hair color'">
+      <nz-select  formControlName="hairColor" [nzPlaceHolder]="'Select hair color'">
         <nz-option *ngFor="let color of colors" [nzValue]="color" [nzLabel]="color"></nz-option>
       </nz-select>
     </nz-form-control>
@@ -42,7 +41,7 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="location">location</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzValidateStatus="location" nzHasFeedback>
-      <nz-select [ngModel]="setLocation()" class="location" formControlName="location"
+      <nz-select class="location" formControlName="location"
                  [nzPlaceHolder]="'Select location'"
                  nzShowSearch
                  nzServerSearch
@@ -83,7 +82,7 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="nationality">nationality</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzValidateStatus="nationality" nzHasFeedback>
-      <nz-select [ngModel]="defaultData?.nationality" formControlName="nationality"
+      <nz-select  formControlName="nationality"
                  [nzPlaceHolder]="'Select nationality'">
         <nz-option *ngFor="let country of countries" [nzValue]="country" [nzLabel]="country"></nz-option>
       </nz-select>

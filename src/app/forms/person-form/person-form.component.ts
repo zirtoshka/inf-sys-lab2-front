@@ -1,4 +1,11 @@
-import {ChangeDetectorRef, Component, inject, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {
+  AfterViewChecked,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnInit,
+  ViewChild
+} from '@angular/core';
 import {
   FormGroup,
   FormsModule,
@@ -23,8 +30,9 @@ import {LocationFormComponent} from '../location-form/location-form.component';
 import {PersonService} from '../../services/person.service';
 import {Person} from '../../dragondto/person';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
-import {Coordinates} from '../../dragondto/coordinates';
 import {LocationService} from '../../services/location.service';
+import {FormEditable} from '../form';
+import {ko_KR} from 'ng-zorro-antd/i18n';
 
 @Component({
   selector: 'app-person-form',
@@ -56,7 +64,7 @@ import {LocationService} from '../../services/location.service';
   standalone: true,
   styleUrl: './person-form.component.css'
 })
-export class PersonFormComponent implements OnInit {
+export class PersonFormComponent extends FormEditable<Person> {
   @ViewChild(LocationFormComponent) locationFormComponent!: LocationFormComponent;
   private personService = inject(PersonService);
   showAddButton = true;
@@ -69,6 +77,7 @@ export class PersonFormComponent implements OnInit {
   countries = Object.values(Country);
 
   constructor(private fb: NonNullableFormBuilder, private cd: ChangeDetectorRef) {
+    super();
     this.validateForm = this.fb.group({
       name: ['', [Validators.required]],
       eyeColor: [null, [Validators.required]],
@@ -79,7 +88,7 @@ export class PersonFormComponent implements OnInit {
         Validators.min(0),
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
       passportID: [null],
-      canEdit: [null, [Validators.required]],
+      canEdit: [false, [Validators.required]],
     });
   }
 
@@ -138,30 +147,6 @@ export class PersonFormComponent implements OnInit {
   }
 
 
-  setCanEdit() {
-    if (this.defaultData) {
-      return this.defaultData.canEdit;
-    }
-    return false;
-  }
-
-  setDefaultData(data: Person) {
-    this.defaultData = data;
-  }
-
-  loc: Location = {
-    id: 1,
-    x: 2, y: 3, z: 4, name: "fffofodsdlkfdsfdkkf", canEdit: true
-
-  }
-
-  setLocation() {
-    if (this.defaultData) {
-      return <Location>this.defaultData.location;
-    }
-    return this.loc;
-  }
-
   handleOkLoc() {
     this.locationFormComponent.addLocation();
     this.isLocationModalVisible = false;
@@ -169,6 +154,14 @@ export class PersonFormComponent implements OnInit {
 
 
   selectedLocation: Location | null = null;
+  kokikiii = <Location>{
+    id: 10,
+    name: "rowData[0].name,",
+    x: 1000,
+    y: 1000,
+    z: 1000,
+    canEdit: true
+  }
   locations: Location[] = [];
   loading = false;
   searchValue = "";
@@ -241,5 +234,50 @@ export class PersonFormComponent implements OnInit {
     }
   }
 
+  setDefaultData(data: Person | undefined) {
+
+    this.defaultData = data;
+    let locFromData: Location | null = null;
+    if (data?.locationId) {
+      this.locationService.getLocations(
+        undefined,
+        undefined, undefined, data?.locationId
+      ).subscribe({
+        next: (response) => {
+          const rowData: Location[] = [...response.content]
+          if (rowData) {
+            locFromData = {
+              id: rowData[0].id,
+              name: rowData[0].name,
+              x: rowData[0].x,
+              y: rowData[0].y,
+              z: rowData[0].z,
+              canEdit: rowData[0].canEdit
+            }
+            this.locations = [locFromData]
+            this.setDataInForm(data, locFromData);
+          }
+        }
+
+      });
+    } else {
+      this.setDataInForm(data, locFromData);
+    }
+
+  }
+
+  setDataInForm(data: Person | undefined, location: Location | null) {
+    this.validateForm.patchValue({
+      name: data?.name,
+      canEdit: data?.canEdit,
+      eyeColor: data?.eyeColor,
+      hairColor: data?.hairColor,
+      location: location,
+      height: data?.height,
+      passportID: data?.passportID,
+      nationality: data?.nationality,
+
+    });
+  }
 
 }
