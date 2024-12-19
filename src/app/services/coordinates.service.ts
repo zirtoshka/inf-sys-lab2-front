@@ -28,21 +28,21 @@ export class CoordinatesService {
     offset: number = 0,
     limit: number = 5,
     sort?: string | undefined,
-    id?: number|undefined,
+    id?: string | undefined,
     canEdit?: undefined | boolean,
     userId?: number,
-    x?:number,
-    y?:number,
+    x?: number,
+    y?: number,
   ): Observable<Page<Coordinates>> {
     const params = {
-      offset: offset-1,
+      offset: offset - 1,
       limit: limit.toString(),
       sort,
       id: id?.toString(),
       canEdit: canEdit?.toString(),
       userId: userId?.toString(),
-      x:x?.toString(),
-      y:y?.toString(),
+      x: x?.toString(),
+      y: y?.toString(),
     };
 
     return this.baseService.get<Page<Coordinates>>('coord/get', params);

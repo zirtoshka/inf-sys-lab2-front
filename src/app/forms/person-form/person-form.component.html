@@ -49,6 +49,7 @@
                  [nzAllowClear]="true"
                  (nzOnSearch)="onSearch($event)"
                  (nzScrollToBottom)="onScrollToBottom()"
+                 [nzOptionOverflowSize]="3"
                  style="width: 100%;"
       >
         <nz-option
@@ -106,7 +107,6 @@
     <app-location-form></app-location-form>
   </ng-template>
   <ng-template #modalFooter>
-    <button nz-button nzType="default" (click)="handleCancelLoc()">cancel</button>
-    <button nz-button nzType="primary" (click)="handleOkLoc()">Custom Submit</button>
+    <button nz-button nzType="primary" (click)="handleOkLoc()" [disabled]="!isLocationFormValid()">add new</button>
   </ng-template>
 </nz-modal>

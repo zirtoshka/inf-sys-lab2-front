@@ -5,7 +5,6 @@
     <nz-form-label [nzSm]="20" [nzXs]="24" nzFor="canEdit">can edit</nz-form-label>
     <nz-switch
       formControlName="canEdit"
-      [ngModel]="setCanEdit()"
       [nzCheckedChildren]="checkedTemplate"
       [nzUnCheckedChildren]="unCheckedTemplate"
     ></nz-switch>
@@ -18,18 +17,27 @@
     <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">name</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="name is required">
       <nz-input-group>
-        <input formControlName="name" nz-input placeholder="name" [ngModel]="defaultData?.name"/>
+        <input formControlName="name" nz-input placeholder="name"/>
       </nz-input-group>
     </nz-form-control>
   </nz-form-item>
 
   <!--  coordinates-->
   <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24">coordinates</nz-form-label>
-    <nz-form-control [nzSm]="14" [nzXs]="24">
-      <nz-select [ngModel]="setCoordinates()" formControlName="coordinates" [nzPlaceHolder]="'select coordinates'">
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="coordinates">coordinates</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzValidateStatus="coordinates" nzHasFeedback>
+      <nz-select class="coor"  formControlName="coordinates"
+                 [nzPlaceHolder]="'select coordinates'"
+                 nzShowSearch
+                 nzServerSearch
+                 [nzLoading]="loadingState['coord']"
+                 [nzAllowClear]="true"
+                 (nzOnSearch)="onSearch($event, 'coord')"
+                 (nzScrollToBottom)="onScrollToBottom('coord')"
+                 style="width: 100%;"
+      >
         <nz-option *ngFor="let coordinates of existingCoordinates" [nzValue]="coordinates"
-                   [nzLabel]="coordinates.x +' '+coordinates.y "></nz-option>
+                   [nzLabel]="'id:'+coordinates.id+', '+coordinates.x +' '+coordinates.y "></nz-option>
       </nz-select>
       <button nz-button nzType="default" (click)="this.isCoordinatesModalVisible=true">create new coordinates</button>
     </nz-form-control>
@@ -37,11 +45,20 @@
 
   <!--  cave-->
   <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24">cave</nz-form-label>
-    <nz-form-control [nzSm]="14" [nzXs]="24">
-      <nz-select [ngModel]="setCave()" formControlName="cave" [nzPlaceHolder]="'select cave'">
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="cave">cave</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24"
+                     nzValidateStatus="cave" nzHasFeedback>
+      <nz-select  formControlName="cave" [nzPlaceHolder]="'select cave'"
+                  nzShowSearch
+                  nzServerSearch
+                  [nzLoading]="loadingState['cave']"
+                  [nzAllowClear]="true"
+                  (nzOnSearch)="onSearch($event, 'cave')"
+                  (nzScrollToBottom)="onScrollToBottom('cave')"
+                  style="width: 100%;"
+      >
         <nz-option *ngFor="let cave of existingCave" [nzValue]="cave"
-                   [nzLabel]="cave.id +' '+cave.numberOfTreasures "></nz-option>
+                   [nzLabel]="'id:'+cave.id +', '+cave.numberOfTreasures "></nz-option>
       </nz-select>
       <button nz-button nzType="default" (click)="this.isCaveModalVisible=true">create new cave</button>
     </nz-form-control>
@@ -51,7 +68,7 @@
 <!--  <nz-form-item>-->
 <!--    <nz-form-label [nzSm]="6" [nzXs]="24">killer</nz-form-label>-->
 <!--    <nz-form-control [nzSm]="14" [nzXs]="24">-->
-<!--      <nz-select [ngModel]="setKiller()" formControlName="killer" [nzPlaceHolder]="'select killer'">-->
+<!--      <nz-select formControlName="killer" [nzPlaceHolder]="'select killer'">-->
 <!--        <nz-option *ngFor="let person of existingPerson" [nzValue]="person" [nzLabel]="person.name"></nz-option>-->
 <!--      </nz-select>-->
 <!--      <button nz-button nzType="default" (click)="this.isKillerModalVisible=true">create new person</button>-->
@@ -63,7 +80,7 @@
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="age">age</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="age is a number greater than 0">
       <nz-input-group>
-        <input formControlName="age" nz-input placeholder="age" [ngModel]="defaultData?.age"/>
+        <input formControlName="age" nz-input placeholder="age" />
       </nz-input-group>
     </nz-form-control>
   </nz-form-item>
@@ -72,7 +89,7 @@
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="wingspan">wingspan</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="wingspan is a number greater than 0">
       <nz-input-group>
-        <input formControlName="wingspan" nz-input placeholder="wingspan" [ngModel]="defaultData?.wingspan"/>
+        <input formControlName="wingspan" nz-input placeholder="wingspan" />
       </nz-input-group>
     </nz-form-control>
   </nz-form-item>
@@ -80,7 +97,7 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24"> color</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzValidateStatus="color" nzHasFeedback>
-      <nz-select formControlName="color" [ngModel]="defaultData?.color" [nzPlaceHolder]="'select color'">
+      <nz-select formControlName="color" [nzPlaceHolder]="'select color'">
         <nz-option *ngFor="let color of colors" [nzValue]="color" [nzLabel]="color"></nz-option>
       </nz-select>
     </nz-form-control>
@@ -89,7 +106,7 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24"> character</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzValidateStatus="character" nzHasFeedback>
-      <nz-select [ngModel]="defaultData?.character" formControlName="character" [nzPlaceHolder]="'select character'">
+      <nz-select formControlName="character" [nzPlaceHolder]="'select character'">
         <nz-option *ngFor="let character of characters" [nzValue]="character" [nzLabel]="character"></nz-option>
       </nz-select>
     </nz-form-control>
@@ -110,7 +127,7 @@
 
 
 
-  <nz-form-item>
+  <nz-form-item *ngIf="showAddButton">
     <nz-form-control>
       <button nz-button nzType="primary" [disabled]="!validateForm.valid">add</button>
     </nz-form-control>
@@ -136,13 +153,13 @@
 <nz-modal [(nzVisible)]="isCoordinatesModalVisible"
           nzTitle="create new coordinates"
           [nzContent]="coordinatesForma"
-          (nzOnCancel)="this.isCoordinatesModalVisible = false;"
+          (nzOnCancel)="handleCancelCoord()"
           [nzFooter]="coordFooter">
   <ng-template #coordinatesForma>
     <app-coordinates-form></app-coordinates-form>
   </ng-template>
   <ng-template #coordFooter>
-    <button nz-button nzType="default" (click)="this.isCoordinatesModalVisible = false;">cancel</button>
+    <button nz-button nzType="default" (click)="handleCancelCoord()">cancel</button>
     <button nz-button nzType="primary" (click)="handleOkCoordinates()">add</button>
   </ng-template>
 </nz-modal>

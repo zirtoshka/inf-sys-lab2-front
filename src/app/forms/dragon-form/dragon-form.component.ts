@@ -1,6 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewChild} from '@angular/core';
 import {
-  FormControl,
   FormGroup,
   FormsModule,
   NonNullableFormBuilder,
@@ -9,10 +8,8 @@ import {
 } from '@angular/forms';
 import {Color} from '../../dragondto/color';
 import {Location} from '../../dragondto/location';
-import {Country} from '../../dragondto/country';
 import {Coordinates} from '../../dragondto/coordinates';
 import {DragonCave} from '../../dragondto/dragoncave';
-import {Person} from '../../dragondto/person';
 import {DragonCharacter} from '../../dragondto/dragoncharacter';
 import {DragonHead} from '../../dragondto/dragonhead';
 import {NzFormControlComponent, NzFormDirective, NzFormItemComponent, NzFormLabelComponent} from 'ng-zorro-antd/form';
@@ -28,10 +25,12 @@ import {PersonFormComponent} from '../person-form/person-form.component';
 import {CoordinatesFormComponent} from '../coordinates-form/coordinates-form.component';
 import {DragonCaveFormComponent} from '../dragoncave-form/dragoncave-form.component';
 import {DragonHeadFormComponent} from '../dragonhead-form/dragon-head-form.component';
-import {Head} from 'rxjs';
 import {DragonService} from '../../services/dragon.service';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {Dragon} from '../../dragondto/dragon';
+import {FormEditable} from '../form';
+import {CoordinatesService} from '../../services/coordinates.service';
+import {CaveService} from '../../services/cave.service';
 
 
 @Component({
@@ -66,7 +65,7 @@ import {Dragon} from '../../dragondto/dragon';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DragonFormComponent {
+export class DragonFormComponent extends FormEditable<Dragon> {
   @ViewChild(PersonFormComponent) personFormComponent!: PersonFormComponent;
   @ViewChild(CoordinatesFormComponent) coordinatesFormComponent!: CoordinatesFormComponent;
   @ViewChild(DragonCaveFormComponent) caveFormComponent!: DragonCaveFormComponent;
@@ -85,43 +84,34 @@ export class DragonFormComponent {
   validateForm: FormGroup;
 
 
-  existingCoordinates: Coordinates[] = [
-    {id: 1, x: 1, y: 1, canEdit: true},
-    {id: 2, x: 2, y: 2, canEdit: true}
-  ];
+  existingCoordinates: Coordinates[] = [];
 
-  existingCave: DragonCave[] = [
-    {id: 1, numberOfTreasures: 1, canEdit: true},
-    {id: 2, numberOfTreasures: 2, canEdit: true},
-  ]
-  existingDragonHeads: DragonHead[] = [
-    {id: 1, eyesCount: 1, canEdit: true},
-    {id: 2, eyesCount: 2, canEdit: true},
-  ]
+  existingCave: DragonCave[] = [];
+
+  existingDragonHeads: DragonHead[] = []
   existingLocations: Location[] = [
     {id: 1, x: 1, y: 1, z: 1, name: 'New York', canEdit: true},
     {id: 2, x: 1, y: 1, z: 1, name: 'Los Angeles', canEdit: true},
     {id: 3, x: 1, y: 1, z: 1, name: 'Chicago', canEdit: true}
   ];
 
-
+  loadingState = {
+    coord: false,
+    cave: false
+  };
 
   colors = Object.values(Color);
 
   characters = Object.values(DragonCharacter);
 
-  selectedKiller: any = null;
-  selectedCoordinates: any = null;
-  selectedCave: any = null;
-  selectedHeads: any = null;
-
 
   constructor(private fb: NonNullableFormBuilder, private cd: ChangeDetectorRef) {
+    super();
     this.validateForm = this.fb.group({
       name: ['', [Validators.required]],
       coordinates: [null, [Validators.required]],
       cave: [null, [Validators.required]],
-      killer: [null, [Validators.required]],
+      killer: [null],
       age: ['', [Validators.min(0),
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
       wingspan: ['', [Validators.min(0),
@@ -129,7 +119,7 @@ export class DragonFormComponent {
       color: [null, [Validators.required]],
       character: [null, [Validators.required]],
       heads: [[], [Validators.required]],
-      canEdit: [null, [Validators.required]],
+      canEdit: [false, [Validators.required]],
     })
   }
 
@@ -185,62 +175,136 @@ export class DragonFormComponent {
   }
 
 
-  hideAddButtonFn() {
-    this.showAddButton = false;
-  }
-
-  setCanEdit() {
-    if (this.defaultData) {
-      return this.defaultData.canEdit;
-    }
-    return false;
-  }
-
-  setDefaultData(data: Dragon) {
-    this.defaultData = data;
-  }
-
-  setCoordinates() {
-    if (this.defaultData) {
-      return this.existingCoordinates.find(data => data.id === this.defaultData?.coordinates.id);
-    }
-    return null
-  }
-
-  setCave() {
-    if (this.defaultData) {
-      return this.existingCave.find(data => data.id === this.defaultData?.cave.id);
-    }
-    return null
-  }
-
-
-
-  setHeads(): DragonHead[] {
-    if (this.defaultData && this.defaultData.heads) {
-      return this.defaultData.heads.map((head) =>
-        this.existingDragonHeads.find((existingHead) => existingHead.id === head.id)
-      ).filter((head): head is DragonHead => !!head);
-    }
-    return [];
-  }
-
-
-
   handleOkPerson() {
     // this.personFormComponent.showAddButtonFn();
   }
 
   handleOkCoordinates() {
-    // this.coordinatesFormComponent.hideAddButtonFn();
+    this.coordinatesFormComponent.addCoordinates();
+    this.handleCancelCoord();
   }
 
   handleOkCave() {
-    // this.caveFormComponent.hideAddButtonFn();
+    this.caveFormComponent.addCave();
+    this.handleCancelCave();
+  }
+
+  handleCancelCave(): void {
+    this.isCaveModalVisible = false;
   }
 
   handleOkHead() {
     // this.headFormComponent.showAddButtonFn();
+  }
+
+
+  setDefaultData(data: Dragon) {
+    this.defaultData = data;
+  }
+
+  hideAddButtonFn() {
+    this.personFormComponent.hideAddButtonFn();
+    this.coordinatesFormComponent.hideAddButtonFn();
+    this.caveFormComponent.hideAddButtonFn();
+    this.headFormComponent.hideAddButtonFn();
+  }
+
+
+  searchValue = "";
+  allLoaded = false;
+
+  offset = 0;
+  limit = 2;
+  private coordService = inject(CoordinatesService);
+  private caveService = inject(CaveService);
+
+
+  loadCoord(loadMore = false): void {
+    if (this.allLoaded) {
+      return;
+    }
+    this.loadingState['coord'] = true;
+    if (!loadMore) {
+      this.offset = 0;
+      this.existingCoordinates = [];
+      this.allLoaded = false;
+    }
+
+    this.coordService.getCoordinates(
+      this.offset + 1,
+      this.limit + 10, undefined, this.searchValue?.trim() ? this.searchValue : undefined
+    ).subscribe({
+      next: (response) => {
+        if (response.content.length < this.limit) {
+          this.allLoaded = true;
+        }
+        this.existingCoordinates = [...this.existingCoordinates, ...response.content];
+        this.offset += this.limit;
+        this.loadingState['coord'] = false;
+      },
+      error: () => {
+        this.loadingState['coord'] = false;
+      },
+    });
+  }
+
+  handleCancelCoord(): void {
+    this.isCoordinatesModalVisible = false;
+  }
+
+
+
+  loadCave(loadMore = false): void {
+    if (this.allLoaded) {
+      return;
+    }
+    this.loadingState['cave'] = true;
+    if (!loadMore) {
+      this.offset = 0;
+      this.existingCave = [];
+      this.allLoaded = false;
+    }
+
+    this.caveService.getCaves(
+      this.offset + 1,
+      this.limit + 10, undefined, this.searchValue?.trim() ? this.searchValue : undefined
+    ).subscribe({
+      next: (response) => {
+        if (response.content.length < this.limit) {
+          this.allLoaded = true;
+        }
+        this.existingCave = [...this.existingCave, ...response.content];
+        this.offset += this.limit;
+        this.loadingState['cave'] = false;
+      },
+      error: () => {
+        this.loadingState['cave'] = false;
+      },
+    });
+  }
+
+
+  onScrollToBottom(type: 'coord' | 'cave'): void {
+    if (!this.loadingState[type]) {
+      this.loadingState[type] = true;
+
+      if (type === 'coord') {
+        this.loadCoord(true);
+      } else if (type === 'cave') {
+        this.loadCave(true);
+      }
+    }
+  }
+
+
+  onSearch(value: string, type: 'coord' | 'cave'): void {
+    this.searchValue = value.trim();
+    this.allLoaded = false;
+    if (type === 'coord') {
+      this.loadCoord(true);
+    } else if (type === 'cave') {
+      this.loadCave(true);
+    }
   }
 
 }

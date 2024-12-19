@@ -52,7 +52,7 @@ export class DragonHeadFormComponent extends FormEditable<DragonHead> {
     this.validateForm = this.fb.group({
       eyesCount: ['', [Validators.required,
         Validators.pattern('-?\\d+(\\.\\d+)?')]],
-      canEdit: ['', [Validators.required,]]
+      canEdit: [false, [Validators.required,]]
     });
   }
 

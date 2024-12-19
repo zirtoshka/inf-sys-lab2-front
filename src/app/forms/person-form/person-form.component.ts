@@ -3,7 +3,6 @@ import {
   ChangeDetectorRef,
   Component,
   inject,
-  OnInit,
   ViewChild
 } from '@angular/core';
 import {
@@ -32,7 +31,6 @@ import {Person} from '../../dragondto/person';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {LocationService} from '../../services/location.service';
 import {FormEditable} from '../form';
-import {ko_KR} from 'ng-zorro-antd/i18n';
 
 @Component({
   selector: 'app-person-form',
@@ -64,7 +62,7 @@ import {ko_KR} from 'ng-zorro-antd/i18n';
   standalone: true,
   styleUrl: './person-form.component.css'
 })
-export class PersonFormComponent extends FormEditable<Person> {
+export class PersonFormComponent extends FormEditable<Person> implements AfterViewChecked {
   @ViewChild(LocationFormComponent) locationFormComponent!: LocationFormComponent;
   private personService = inject(PersonService);
   showAddButton = true;
@@ -105,6 +103,7 @@ export class PersonFormComponent extends FormEditable<Person> {
 
 
   handleCancelLoc(): void {
+    this.allLoaded = false
     this.isLocationModalVisible = false;
   }
 
@@ -174,16 +173,13 @@ export class PersonFormComponent extends FormEditable<Person> {
     this.isLocationModalVisible = false;
   }
 
-
-  selectedLocation: Location | null = null;
-  kokikiii = <Location>{
-    id: 10,
-    name: "rowData[0].name,",
-    x: 1000,
-    y: 1000,
-    z: 1000,
-    canEdit: true
+  isLocationFormValid() {
+    if (this.locationFormComponent) {
+      return this.locationFormComponent.validateForm.valid;
+    }
+    return false;
   }
+
   locations: Location[] = [];
   loading = false;
   searchValue = "";
@@ -192,25 +188,13 @@ export class PersonFormComponent extends FormEditable<Person> {
   totalElements = 0;
   allLoaded = false;
 
-  ngOnInit()
-    :
-    void {
-    this.loadLocations();
-  }
-
-
   private locationService = inject(LocationService);
 
-  loadLocations(loadMore = false)
-    :
-    void {
-    if (this.allLoaded
-    ) {
+  loadLocations(loadMore = false): void {
+    if (this.allLoaded) {
       return;
     }
-
     this.loading = true;
-
     if (!loadMore) {
       this.offset = 0;
       this.locations = [];
@@ -236,22 +220,14 @@ export class PersonFormComponent extends FormEditable<Person> {
     });
   }
 
-  onSearch(value
-             :
-             string
-  ):
-    void {
+  onSearch(value: string): void {
     this.searchValue = value.trim();
     this.allLoaded = false;
     this.loadLocations();
   }
 
-  onScrollToBottom()
-    :
-    void {
-    if (!
-      this.loading
-    ) {
+  onScrollToBottom(): void {
+    if (!this.loading) {
       this.loadLocations(true);
     }
   }
