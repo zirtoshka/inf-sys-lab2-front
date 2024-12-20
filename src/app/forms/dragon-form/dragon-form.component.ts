@@ -235,29 +235,40 @@ export class DragonFormComponent extends FormEditable<Dragon> implements AfterVi
 
   }
 
-  // updateDragon() {
-  //   if (this.validateForm.valid && this.defaultData) {
-  //     const head: Dragon = {
-  //       age: this.defaultData.age,
-  //       cave: this.defaultData.cave,
-  //       character: this.defaultData.character,
-  //       color: this.defaultData.color,
-  //       coordinates: this.defaultData.coordinates,
-  //       creationDate: this.defaultData.creationDate,
-  //       heads: this.defaultData.heads,
-  //       killer: this.defaultData.killer,
-  //       wingspan: this.defaultData.wingspan,
-  //       id: this.defaultData.id,
-  //       name: this.validateForm.value.eyes,
-  //       canEdit: this.validateForm.value.canEdit
-  //     };
-  //     this.dragonService.updateDragon(
-  //       head
-  //     ).subscribe((data: Dragon) => {
-  //       console.log(data);
-  //     })
-  //   }
-  // }
+  updateDragon() {
+    if (this.validateForm.valid && this.defaultData) {
+      const coordinatesId = this.validateForm.value.coordinates?.id ?
+        this.validateForm.value.coordinates.id : this.defaultData.coordinatesId;
+      const caveId = this.validateForm.value.cave?.id ?
+        this.validateForm.value.cave.id : this.defaultData.caveId;
+      const killerId = this.validateForm.value.killer?.id ?
+        this.validateForm.value.killer.id : this.defaultData.killer;
+
+      const heads = this.validateForm.value.heads?.length
+        ? this.validateForm.value.heads.map((head: { id: number }) => ({ id: head.id }))
+        : this.defaultData.heads || [];
+
+      const dragon = {
+        age: this.validateForm.value.age,
+        cave: caveId ? {id: caveId} : caveId,
+        character: this.validateForm.value.character,
+        color: this.validateForm.value.color,
+        coordinates: coordinatesId ? {id: coordinatesId} : coordinatesId,
+        creationDate: this.defaultData.creationDate,
+        heads: heads,
+        killer: killerId ? {id: killerId} : killerId ,
+        wingspan: this.validateForm.value.wingspan,
+        id: this.defaultData.id,
+        name: this.validateForm.value.name,
+        canEdit: this.validateForm.value.canEdit
+      };
+      this.dragonService.updateDragon(
+        dragon
+      ).subscribe((data: Dragon) => {
+        console.log(data);
+      })
+    }
+  }
 
 
   handleInternalCancel(type: DataType): void {

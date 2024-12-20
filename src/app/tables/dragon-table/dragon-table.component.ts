@@ -172,7 +172,7 @@ export class DragonTableComponent extends DtoTable<Dragon> {
   }
 
   handleOk() {
-    // this.formComponent.updateDragon();
+    this.formComponent.updateDragon();
     this.isEditModalVisible = false;
   }
 

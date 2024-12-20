@@ -4,8 +4,17 @@
           [nzFooter]="null"
           [nzContent]="dragonDetails">
   <ng-template #dragonDetails>
-    <p>Имя: {{ selectedDragon?.name }}</p>
-    <p>Координаты: ({{ selectedDragon?.x }}, {{ selectedDragon?.y }})</p>
+    <p>Name: {{ selectedDragon?.name }}</p>
+    <p>Coordinates id: {{ selectedDragon?.coordinatesId }}</p>
+    <p>creation date: {{selectedDragon?.creationDate}}</p>
+    <p>cave id: {{selectedDragon?.caveId}}</p>
+    <p>killer id: {{selectedDragon?.killerId}}</p>
+    <p>age: {{selectedDragon?.age}}</p>
+    <p>wingspan: {{selectedDragon?.wingspan}}</p>
+    <p>color: {{selectedDragon?.color}}</p>
+    <p>character: {{selectedDragon?.character}}</p>
+    <p>heads id: {{selectedDragon?.headIds}}</p>
+    <p>can edit: {{selectedDragon?.canEdit}}</p>
   </ng-template>
 </nz-modal>
 

@@ -64,5 +64,19 @@ export class DragonService {
     return this.baseService.get<Page<Dragon>>('dragon/get', params);
   }
 
+  public getDragonsInArea(
+    minX:number, maxX:number, minY:number, maxY:number
+  ): Observable<Page<Dragon>> {
+    const params = {
+      limit: 100,
+      minX: minX,
+      maxX: maxX,
+      minY: minY,
+      maxY: maxY,
+    };
+
+    return this.baseService.get<Page<Dragon>>('dragon/get', params);
+  }
+
 
 }

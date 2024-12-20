@@ -3,6 +3,8 @@ import Konva from 'konva';
 import {NgIf} from '@angular/common';
 import {NzModalComponent, NzModalService} from 'ng-zorro-antd/modal';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
+import {DragonService} from '../services/dragon.service';
+import {Dragon} from '../dragondto/dragon';
 
 @Component({
   selector: 'app-visik',
@@ -28,12 +30,13 @@ export class VisikComponent implements AfterViewInit {
   objectLayer!: Konva.Layer;
 
   viewport = {x: 0, y: 0, width: 1400, height: 500};
-  dragons: { x: number; y: number, name: string }[] = [];
+  // dragons: { x: number; y: number, name: string }[] = [];
+  dragons:Dragon[]=[];
 
 
   isModalVisible = false;
-  selectedDragon: { x: number; y: number; name: string } | null = null;
-
+  // selectedDragon: { x: number; y: number; name: string } | null = null;
+  selectedDragon:Dragon|null = null;
 
   baseDragons: { x: number; y: number, name: string }[] = [
     {x: -10, y: -10, name: "Zhora"},
@@ -49,7 +52,7 @@ export class VisikComponent implements AfterViewInit {
     {x: 70, y: 100, name: "Zhora"},
   ];
 
-  // constructor(private dragonService: DragonService) {}
+  constructor(private dragonService: DragonService) {}
 
   ngAfterViewInit(): void {
     this.initStage();
@@ -100,14 +103,14 @@ export class VisikComponent implements AfterViewInit {
     const minY = y;
     const maxY = y + height;
 
-    // this.dragonService
-    //   .getDragonsInArea(minX, maxX, minY, maxY)
-    //   .subscribe((data) => {
-    //     this.dragons = data;
-    //     this.updateDragons();
-    //   });
-    this.dragons = this.getInArea(minX, maxX, minY, maxY);
-    this.updateDragons();
+    this.dragonService
+      .getDragonsInArea(minX, maxX, minY, maxY)
+      .subscribe((data) => {
+        this.dragons = data.content;
+        this.updateDragons();
+      });
+    // this.dragons = this.getInArea(minX, maxX, minY, maxY);
+    // this.updateDragons();
   }
 
   getInArea(minX: number, maxX: number, minY: number, maxY: number) {
@@ -128,8 +131,8 @@ export class VisikComponent implements AfterViewInit {
 
     this.dragons.forEach((dragon) => {
       const circle = new Konva.Circle({
-        x: dragon.x,
-        y: dragon.y,
+        x: dragon.coordinates?.x,
+        y: dragon.coordinates?.y,
         radius: 5,
         fill: this.pink
       });
