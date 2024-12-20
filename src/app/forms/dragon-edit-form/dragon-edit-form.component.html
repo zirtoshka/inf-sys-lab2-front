@@ -39,7 +39,7 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24">cave</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24">
-      <nz-select [ngModel]="setCave()" formControlName="cave" [nzPlaceHolder]="'select cave'">
+      <nz-select  formControlName="cave" [nzPlaceHolder]="'select cave'">
         <nz-option *ngFor="let cave of existingCave" [nzValue]="cave"
                    [nzLabel]="cave.id +' '+cave.numberOfTreasures "></nz-option>
       </nz-select>

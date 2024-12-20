@@ -25,7 +25,7 @@ export class CoordinatesService {
   }
 
   public getCoordinates(
-    offset: number = 0,
+    offset: number = 1,
     limit: number = 5,
     sort?: string | undefined,
     id?: string | undefined,
@@ -44,7 +44,6 @@ export class CoordinatesService {
       x: x?.toString(),
       y: y?.toString(),
     };
-
     return this.baseService.get<Page<Coordinates>>('coord/get', params);
   }
 }

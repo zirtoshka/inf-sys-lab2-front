@@ -25,7 +25,7 @@ export class PersonService {
 
 
   public getPersons(
-    offset: number = 0,
+    offset: number = 1,
     limit: number = 5,
     sort?: string | undefined,
     id?: string|undefined,

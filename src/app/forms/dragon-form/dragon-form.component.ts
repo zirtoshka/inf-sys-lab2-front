@@ -235,29 +235,29 @@ export class DragonFormComponent extends FormEditable<Dragon> implements AfterVi
 
   }
 
-  updateDragon() {
-    if (this.validateForm.valid && this.defaultData) {
-      const head: Dragon = {
-        age: this.defaultData.age,
-        cave: this.defaultData.cave,
-        character: this.defaultData.character,
-        color: this.defaultData.color,
-        coordinates: this.defaultData.coordinates,
-        creationDate: this.defaultData.creationDate,
-        heads: this.defaultData.heads,
-        killer: this.defaultData.killer,
-        wingspan: this.defaultData.wingspan,
-        id: this.defaultData.id,
-        name: this.validateForm.value.eyes,
-        canEdit: this.validateForm.value.canEdit
-      };
-      this.dragonService.updateDragon(
-        head
-      ).subscribe((data: Dragon) => {
-        console.log(data);
-      })
-    }
-  }
+  // updateDragon() {
+  //   if (this.validateForm.valid && this.defaultData) {
+  //     const head: Dragon = {
+  //       age: this.defaultData.age,
+  //       cave: this.defaultData.cave,
+  //       character: this.defaultData.character,
+  //       color: this.defaultData.color,
+  //       coordinates: this.defaultData.coordinates,
+  //       creationDate: this.defaultData.creationDate,
+  //       heads: this.defaultData.heads,
+  //       killer: this.defaultData.killer,
+  //       wingspan: this.defaultData.wingspan,
+  //       id: this.defaultData.id,
+  //       name: this.validateForm.value.eyes,
+  //       canEdit: this.validateForm.value.canEdit
+  //     };
+  //     this.dragonService.updateDragon(
+  //       head
+  //     ).subscribe((data: Dragon) => {
+  //       console.log(data);
+  //     })
+  //   }
+  // }
 
 
   handleInternalCancel(type: DataType): void {
@@ -306,7 +306,7 @@ export class DragonFormComponent extends FormEditable<Dragon> implements AfterVi
         formComponent = this.caveFormComponent;
         break;
       case DataType.HEADS:
-        formComponent = this.caveFormComponent;
+        formComponent = this.headFormComponent;
         break;
       default:
         throw new Error('Unknown type');

@@ -41,6 +41,7 @@
       <i nz-icon nzTheme="outline" [nzType]="getSortIcon('name')"
          [ngClass]="{'sorted-asc': sortOrder['name'] === 'NAME_ASC', 'sorted-desc': sortOrder['name'] === 'NAME_DESC'}"></i>
     </th>
+
     <th (click)="sort('coord')">
       coordinates
       <i nz-icon nzTheme="outline" [nzType]="getSortIcon('coord')"
@@ -52,6 +53,7 @@
       <i nz-icon nzTheme="outline" [nzType]="getSortIcon('date')"
          [ngClass]="{'sorted-asc': sortOrder['date'] === 'DATE_ASC', 'sorted-desc': sortOrder['date'] === 'DATE_DESC'}"></i>
     </th>
+
     <th (click)="sort('cave')">
       cave
       <i nz-icon nzTheme="outline" [nzType]="getSortIcon('cave')"
@@ -90,34 +92,59 @@
     </th>
     <th>can edit</th>
     <th>actions</th>
-  </tr>
   </thead>
   <tbody>
   <tr *ngFor="let dragon of listOfData">
     <td>{{ dragon.id }}</td>
+
     <td>{{ dragon.name }}</td>
+
     <td>
-      <a (click)="openCoordinatesModal(dragon.coordinates)">{{ dragon.coordinates.x }}, {{ dragon.coordinates.y }}
-        , {{ dragon.coordinates.id }}</a>
+      <a *ngIf="dragon.coordinatesId != undefined; else noCoord"
+         (click)="openInternalDataModal(DataType.COORD, dragon.coordinatesId)">
+        {{ dragon.coordinatesId }}
+      </a>
+      <ng-template #noCoord>
+        no coordinates
+      </ng-template>
     </td>
+
     <td>{{ dragon.creationDate }}</td>
 
     <td>
-      <a (click)="openCaveModal(dragon.cave)">{{ dragon.cave.numberOfTreasures }}</a>
+      <a *ngIf="dragon.caveId != undefined; else noCave"
+         (click)="openInternalDataModal(DataType.CAVE,dragon.caveId)">
+        {{ dragon.caveId }}
+      </a>
+      <ng-template #noCave>
+        no cave
+      </ng-template>
     </td>
-
 
     <td>
-      <a (click)="openKillerModal(dragon.killer)">{{ dragon.killer ? dragon.killer.name : 'null' }}</a>
+      <a *ngIf="dragon.killerId != undefined; else noKiller"
+         (click)="openInternalDataModal(DataType.KILLER,dragon.killerId)">
+        {{ dragon.killerId }}
+      </a>
+      <ng-template #noKiller>
+        no cave
+      </ng-template>
     </td>
+
+
     <td>{{ dragon.age || 'null' }}</td>
     <td>{{ dragon.wingspan || 'null' }}</td>
     <td>{{ dragon.color }}</td>
     <td>{{ dragon.character }}</td>
+
     <td>
-      <a (click)="openHeadsModal(dragon.heads)">
-        number of heads: {{ dragon.heads.length }}
+      <a *ngIf="dragon.headIds != undefined; else noHeads"
+         (click)="openHeadsModal(DataType.HEADS,dragon.headIds)">
+        number of heads: {{ dragon.headIds.length }}
       </a>
+      <ng-template #noHeads>
+        no heads
+      </ng-template>
     </td>
     <td>{{ dragon.canEdit ? 'Yes' : 'No' }}</td>
 
@@ -128,6 +155,7 @@
         Delete
       </a>
     </td>
+
   </tr>
   </tbody>
 </nz-table>
@@ -160,11 +188,11 @@
 
 
 <nz-modal
-  [(nzVisible)]="isCoordinatesModalVisible"
+  [(nzVisible)]="isInternalModalVisible[DataType.COORD]"
   [nzTitle]="'Coordinates Details'"
   [nzFooter]="null"
   [nzContent]="coordinatesInfo"
-  (nzOnCancel)="handleCoordinatesCancel()"
+  (nzOnCancel)="handleInternalCancel(DataType.COORD)"
 >
   <ng-template #coordinatesInfo>
     <ng-container *ngIf="selectedCoordinates!=null">
@@ -178,67 +206,67 @@
 
 
 <nz-modal
-  [(nzVisible)]="isCaveModalVisible"
+  [(nzVisible)]="isInternalModalVisible[DataType.CAVE]"
   [nzTitle]="'Cave Details'"
   [nzFooter]="null"
   [nzContent]="caveInfo"
-  (nzOnCancel)="handleCaveCancel()"
+  (nzOnCancel)="handleInternalCancel(DataType.CAVE)"
 >
   <ng-template #caveInfo>
-    <ng-container *ngIf="selectedCave!=null">
-      <p><strong>ID:</strong> {{ selectedCave.id }}</p>
-      <p><strong>treasure:</strong> {{ selectedCave.numberOfTreasures }}</p>
-      <p><strong>can edit:</strong> {{ selectedCave.canEdit ? 'Yes' : 'No' }}</p>
+    <ng-container *ngIf="selectedInternalData[DataType.CAVE]!=null">
+      <p><strong>ID:</strong> {{ selectedInternalData[DataType.CAVE]?.id }}</p>
+      <p><strong>treasure:</strong> {{ selectedInternalData[DataType.CAVE]?.numberOfTreasures }}</p>
+      <p><strong>can edit:</strong> {{ selectedInternalData[DataType.CAVE]?.canEdit ? 'Yes' : 'No' }}</p>
     </ng-container>
   </ng-template>
 </nz-modal>
 
 <nz-modal
-  [(nzVisible)]="isKillerModalVisible"
+  [(nzVisible)]="isInternalModalVisible[DataType.KILLER]"
   [nzTitle]="'killer Details'"
   [nzFooter]="null"
   [nzContent]="killerInfo"
-  (nzOnCancel)="handleKillerCancel()"
+  (nzOnCancel)="handleInternalCancel(DataType.KILLER)"
 >
   <ng-template #killerInfo>
-    <ng-container *ngIf="selectedKiller!=null">
-      <p><strong>ID:</strong> {{ selectedKiller.id }}</p>
-      <p><strong>name:</strong> {{ selectedKiller.name }}</p>
-      <p><strong>eye:</strong> {{ selectedKiller.eyeColor }}</p>
-      <p><strong>hair:</strong> {{ selectedKiller.hairColor }}</p>
+    <ng-container *ngIf="selectedInternalData[DataType.KILLER]!=null">
+      <p><strong>ID:</strong> {{ selectedInternalData[DataType.KILLER]?.id }}</p>
+      <p><strong>name:</strong> {{ selectedInternalData[DataType.KILLER]?.name }}</p>
+      <p><strong>eye:</strong> {{ selectedInternalData[DataType.KILLER]?.eyeColor }}</p>
+      <p><strong>hair:</strong> {{ selectedInternalData[DataType.KILLER]?.hairColor }}</p>
 
       <p><strong>location:</strong></p>
-      <ul *ngIf ="selectedKiller.location; else noLocation">
-        <li><strong>ID:</strong> {{ selectedKiller.location.id }}</li>
-        <li><strong>Name:</strong> {{ selectedKiller.location.name }}</li>
-        <li><strong>X:</strong> {{ selectedKiller.location.x }}</li>
-        <li><strong>Y:</strong> {{ selectedKiller.location.y }}</li>
-        <li><strong>Z:</strong> {{ selectedKiller.location.z }}</li>
-        <li><strong>Can Edit:</strong> {{ selectedKiller.location.canEdit }}</li>
+      <ul *ngIf="selectedInternalData[DataType.KILLER]?.location; else noLocation">
+        <li><strong>ID:</strong> {{ selectedInternalData[DataType.KILLER]?.location?.id }}</li>
+        <li><strong>Name:</strong> {{ selectedInternalData[DataType.KILLER]?.location?.name }}</li>
+        <li><strong>X:</strong> {{ selectedInternalData[DataType.KILLER]?.location?.x }}</li>
+        <li><strong>Y:</strong> {{ selectedInternalData[DataType.KILLER]?.location?.y }}</li>
+        <li><strong>Z:</strong> {{ selectedInternalData[DataType.KILLER]?.location?.z }}</li>
+        <li><strong>Can Edit:</strong> {{ selectedInternalData[DataType.KILLER]?.location?.canEdit }}</li>
       </ul>
       <ng-template #noLocation>
         no location
       </ng-template>
-      <p><strong>height:</strong> {{ selectedKiller.height }}</p>
-      <p><strong>passportID:</strong> {{ selectedKiller.passportID }}</p>
-      <p><strong>nationality:</strong> {{ selectedKiller.nationality }}</p>
-      <p><strong>can edit:</strong> {{ selectedKiller.canEdit ? 'Yes' : 'No' }}</p>
+      <p><strong>height:</strong> {{ selectedInternalData[DataType.KILLER]?.height }}</p>
+      <p><strong>passportID:</strong> {{ selectedInternalData[DataType.KILLER]?.passportID }}</p>
+      <p><strong>nationality:</strong> {{ selectedInternalData[DataType.KILLER]?.nationality }}</p>
+      <p><strong>can edit:</strong> {{ selectedInternalData[DataType.KILLER]?.canEdit ? 'Yes' : 'No' }}</p>
     </ng-container>
   </ng-template>
 </nz-modal>
 
 
 <nz-modal
-  [(nzVisible)]="isHeadsModalVisible"
+  [(nzVisible)]="isInternalModalVisible[DataType.HEADS]"
   [nzTitle]="'heads Details'"
   [nzFooter]="null"
   [nzContent]="headsInfo"
-  (nzOnCancel)="handleHeadCancel()"
+  (nzOnCancel)="handleInternalCancel(DataType.HEADS)"
 >
   <ng-template #headsInfo>
-    <ng-container *ngIf="selectedHeads!=null; else noHeads">
+    <ng-container *ngIf="selectedInternalData[DataType.HEADS]!=null; else noHeads">
       <ul>
-        <li *ngFor="let head of selectedHeads">
+        <li *ngFor="let head of selectedInternalData[DataType.HEADS]">
           <p><strong>ID:</strong> {{ head.id }}</p>
           <p><strong>Eyes Count:</strong> {{ head.eyesCount ?? 'N/A' }}</p>
           <p><strong>can edit:</strong> {{ head.canEdit ? 'Yes' : 'No' }}</p>

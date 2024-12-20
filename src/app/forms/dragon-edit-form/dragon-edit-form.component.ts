@@ -125,29 +125,29 @@ export class DragonEditFormComponent extends FormEditable<Dragon>{
 
   }
 
-  updateDragon() {
-    if (this.validateForm.valid && this.defaultData) {
-      const head: Dragon = {
-        age: this.defaultData.age,
-        cave: this.defaultData.cave,
-        character: this.defaultData.character,
-        color: this.defaultData.color,
-        coordinates: this.defaultData.coordinates,
-        creationDate: this.defaultData.creationDate,
-        heads: this.defaultData.heads,
-        killer: this.defaultData.killer,
-        wingspan: this.defaultData.wingspan,
-        id: this.defaultData.id,
-        name: this.validateForm.value.eyes,
-        canEdit: this.validateForm.value.canEdit
-      };
-      this.dragonService.updateDragon(
-        head
-      ).subscribe((data: Dragon) => {
-        console.log(data);
-      })
-    }
-  }
+  // updateDragon() {
+  //   if (this.validateForm.valid && this.defaultData) {
+  //     const head: Dragon = {
+  //       age: this.defaultData.age,
+  //       cave: this.defaultData.cave,
+  //       character: this.defaultData.character,
+  //       color: this.defaultData.color,
+  //       coordinates: this.defaultData.coordinates,
+  //       creationDate: this.defaultData.creationDate,
+  //       heads: this.defaultData.heads,
+  //       killer: this.defaultData.killer,
+  //       wingspan: this.defaultData.wingspan,
+  //       id: this.defaultData.id,
+  //       name: this.validateForm.value.eyes,
+  //       canEdit: this.validateForm.value.canEdit
+  //     };
+  //     this.dragonService.updateDragon(
+  //       head
+  //     ).subscribe((data: Dragon) => {
+  //       console.log(data);
+  //     })
+  //   }
+  // }
 
 
   hideAddButtonFn() {
@@ -163,22 +163,22 @@ export class DragonEditFormComponent extends FormEditable<Dragon>{
 
   override setDefaultData(data: Dragon) {
     this.defaultData = data;
-    this.selectedHeads = data.heads;
+    // this.selectedHeads = data.heads;
   }
 
   setCoordinates() {
     if (this.defaultData) {
-      return this.existingCoordinates.find(data => data.id === this.defaultData?.coordinates.id);
+      return this.existingCoordinates.find(data => data.id === this.defaultData?.coordinates?.id);
     }
     return null
   }
 
-  setCave() {
-    if (this.defaultData) {
-      return this.existingCave.find(data => data.id === this.defaultData?.cave.id);
-    }
-    return null
-  }
+  // setCave() {
+  //   if (this.defaultData) {
+  //     return this.existingCave.find(data => data.id === this.defaultData?.cave.id);
+  //   }
+  //   return null
+  // }
 
   setKiller() {
     if (this.defaultData) {
@@ -188,13 +188,13 @@ export class DragonEditFormComponent extends FormEditable<Dragon>{
     return null
   }
 
-  setHeads(): DragonHead[] {
-    if (this.defaultData) {
-      return this.defaultData.heads.map((head) =>
-        this.existingDragonHeads.find((existingHead) => existingHead.id === head.id)
-      ).filter((head): head is DragonHead => !!head);
-    }
-    return [];
-  }
+  // setHeads(): DragonHead[] {
+  //   if (this.defaultData) {
+  //     return this.defaultData.heads.map((head) =>
+  //       this.existingDragonHeads.find((existingHead) => existingHead.id === head.id)
+  //     ).filter((head): head is DragonHead => !!head);
+  //   }
+  //   return [];
+  // }
 
 }

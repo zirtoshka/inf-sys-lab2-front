@@ -21,7 +21,7 @@ export class DragonService {
   }
 
   deleteDragon(formData: any) {
-    return this.baseService.delete(formData, "dragon/delete");
+    return this.baseService.delete(formData, "dragon/delete/");
   }
 
   public getDragons(
