@@ -17,7 +17,7 @@ interface AuthStatusResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly baseUrl = 'http://openam.example.org:8081/dragon/auth'; //todo change
+  private readonly baseUrl = 'http://openam.example.org:8081/dragon/auth';
   private httpClient = inject(HttpClient);
   private router = inject(Router);
   private notificationService = inject(NzNotificationService);

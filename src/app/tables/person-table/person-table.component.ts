@@ -118,7 +118,10 @@ export class PersonTableComponent extends DtoTable<Person> {
         this.cd.detectChanges();
       },
       error: (err) => {
-        console.error('Ошибка загрузки:', err); //todo
+        this.notificationService.error(
+          "oops", 'Ошибка загрузки(('
+        )
+        console.error('Ошибка загрузки:', err);
       },
     });
   }
@@ -149,7 +152,10 @@ export class PersonTableComponent extends DtoTable<Person> {
         }
       },
       error: (err) => {
-        console.error('Ошибка загрузки:', err); //todo
+        this.notificationService.error(
+          "oops", 'Ошибка загрузки(('
+        )
+        console.error('Ошибка загрузки:', err);
       },
     });
     this.isLocationModalVisible = true;

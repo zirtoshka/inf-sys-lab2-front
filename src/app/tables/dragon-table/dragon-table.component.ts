@@ -94,7 +94,7 @@ export class DragonTableComponent extends DtoTable<Dragon> {
       wingspan: undefined,
       color: undefined,
       character: undefined,
-      heads: undefined, //todo no ideas
+      heads: undefined,
     };
     this.filters = {
       id: undefined,
@@ -108,7 +108,7 @@ export class DragonTableComponent extends DtoTable<Dragon> {
       wingspan: undefined,
       color: undefined,
       character: undefined,
-      headCount: undefined, //todo no ideas
+      headCount: undefined,
     }
   }
 
@@ -152,7 +152,10 @@ export class DragonTableComponent extends DtoTable<Dragon> {
         this.cd.detectChanges();
       },
       error: (err) => {
-        console.error('Ошибка загрузки:', err); //todo
+        this.notificationService.error(
+          "oops", 'Ошибка загрузки(('
+        )
+        console.error('Ошибка загрузки:', err);
       },
     });
     console.log("end loading")
@@ -203,7 +206,10 @@ export class DragonTableComponent extends DtoTable<Dragon> {
         }
       },
       error: (err: any) => {
-        console.error('Ошибка загрузки:', err); //todo
+        this.notificationService.error(
+          "oops", 'Ошибка загрузки(('
+        )
+        console.error('Ошибка загрузки:', err);
       },
     });
     this.isInternalModalVisible[type] = true;
@@ -229,7 +235,10 @@ export class DragonTableComponent extends DtoTable<Dragon> {
           }
         },
         error: (err: any) => {
-          console.error('Ошибка загрузки:', err); //todo
+          this.notificationService.error(
+            "oops", 'Ошибка загрузки(('
+          )
+          console.error('Ошибка загрузки:', err);
         },
       });
     }

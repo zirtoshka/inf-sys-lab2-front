@@ -1,9 +1,12 @@
-import {ChangeDetectorRef, Directive, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Directive, inject, OnDestroy, OnInit} from '@angular/core';
 import {filter, Subscription} from 'rxjs';
 import {WebSocketService} from '../websocket.service';
+import {NzNotificationService} from 'ng-zorro-antd/notification';
 
 @Directive()
 export abstract class BaseTableComponent<T> implements OnInit, OnDestroy {
+  protected notificationService = inject(NzNotificationService);
+
   listOfData: T[] = [];
   currPage: number = 1;
   pageSize: number = 3;

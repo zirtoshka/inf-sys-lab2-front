@@ -76,7 +76,10 @@ export class CoordinatesTableComponent extends DtoTable<Coordinates> {
         this.cd.detectChanges();
       },
       error: (err) => {
-        console.error('Ошибка загрузки:', err); //todo
+        this.notificationService.error(
+          "oops", 'Ошибка загрузки(('
+        )
+        console.error('Ошибка загрузки:', err);
       },
     });
   }

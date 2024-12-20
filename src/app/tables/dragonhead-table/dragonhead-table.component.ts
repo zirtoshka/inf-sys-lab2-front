@@ -75,7 +75,10 @@ export class DragonheadTableComponent extends DtoTable<DragonHead> {
         this.cd.detectChanges();
       },
       error: (err) => {
-        console.error('Ошибка загрузки:', err); //todo
+        this.notificationService.error(
+          "oops", 'Ошибка загрузки(('
+        )
+        console.error('Ошибка загрузки:', err);
       },
     });
   }

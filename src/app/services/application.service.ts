@@ -12,7 +12,7 @@ export class ApplicationService {
   private baseService = inject(BaseService);
 
   addApplication() {
-    return this.baseService.add(undefined,"app/add"); //todo check undefined
+    return this.baseService.add(undefined,"app/add");
   }
 
   updateApp(formData: any) {
