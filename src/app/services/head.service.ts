@@ -27,7 +27,7 @@ export class HeadService {
     offset: number = 0,
     limit: number = 5,
     sort?: string | undefined,
-    id?: number|undefined,
+    id?: string|undefined,
     canEdit?: undefined | boolean,
     userId?: number,
     eyesCount?: number

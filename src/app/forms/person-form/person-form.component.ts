@@ -103,7 +103,6 @@ export class PersonFormComponent extends FormEditable<Person> implements AfterVi
 
 
   handleCancelLoc(): void {
-    this.allLoaded = false
     this.isLocationModalVisible = false;
   }
 
@@ -169,6 +168,7 @@ export class PersonFormComponent extends FormEditable<Person> implements AfterVi
 
 
   handleOkLoc() {
+    this.allLoaded = false
     this.locationFormComponent.addLocation();
     this.isLocationModalVisible = false;
   }
@@ -211,7 +211,7 @@ export class PersonFormComponent extends FormEditable<Person> implements AfterVi
           this.allLoaded = true;
         }
         this.locations = [...this.locations, ...response.content];
-        this.offset += this.limit;
+        this.offset +=1;
         this.loading = false;
       },
       error: () => {

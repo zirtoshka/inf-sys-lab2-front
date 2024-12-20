@@ -28,7 +28,7 @@ export class PersonService {
     offset: number = 0,
     limit: number = 5,
     sort?: string | undefined,
-    id?: number|undefined,
+    id?: string|undefined,
     canEdit?: undefined | boolean,
     userId?: number,
     name?: string,
@@ -39,6 +39,8 @@ export class PersonService {
     passportID?:string,
     nationality?:Country,
   ): Observable<Page<Person>> {
+    console.log("sdksldl")
+    // console.log(this.baseService)
     const params = {
       offset: offset-1,
       limit: limit.toString(),

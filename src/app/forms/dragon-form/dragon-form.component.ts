@@ -1,4 +1,11 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, inject, ViewChild} from '@angular/core';
+import {
+  AfterViewChecked,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  ViewChild
+} from '@angular/core';
 import {
   FormGroup,
   FormsModule,
@@ -31,7 +38,17 @@ import {Dragon} from '../../dragondto/dragon';
 import {FormEditable} from '../form';
 import {CoordinatesService} from '../../services/coordinates.service';
 import {CaveService} from '../../services/cave.service';
+import {Person} from '../../dragondto/person';
+import {HeadService} from '../../services/head.service';
+import {BaseService} from '../../services/base.service';
+import {PersonService} from '../../services/person.service';
 
+export enum DataType {
+  COORD = 'coord',
+  CAVE = 'cave',
+  KILLER = 'killer',
+  HEADS = 'heads'
+}
 
 @Component({
   selector: 'app-dragon-form',
@@ -65,7 +82,8 @@ import {CaveService} from '../../services/cave.service';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DragonFormComponent extends FormEditable<Dragon> {
+
+export class DragonFormComponent extends FormEditable<Dragon> implements AfterViewChecked {
   @ViewChild(PersonFormComponent) personFormComponent!: PersonFormComponent;
   @ViewChild(CoordinatesFormComponent) coordinatesFormComponent!: CoordinatesFormComponent;
   @ViewChild(DragonCaveFormComponent) caveFormComponent!: DragonCaveFormComponent;
@@ -76,34 +94,101 @@ export class DragonFormComponent extends FormEditable<Dragon> {
   showAddButton = true;
   defaultData: Dragon | undefined;
 
-  isKillerModalVisible = false;
-  isCoordinatesModalVisible = false;
-  isCaveModalVisible = false;
-  isHeadModalVisible = false;
+
+  isInternalModalVisible = {
+    [DataType.COORD]: false,
+    [DataType.CAVE]: false,
+    [DataType.KILLER]: false,
+    [DataType.HEADS]: false,
+  }
 
   validateForm: FormGroup;
 
-
   existingCoordinates: Coordinates[] = [];
+  existingCaves: DragonCave[] = [];
+  existingHeads: DragonHead[] = []
+  existingPersons: Person[] = []
 
-  existingCave: DragonCave[] = [];
+  // existingInternalData = {
+  //   [DataType.COORD]: this.existingCoordinates,
+  //   [DataType.CAVE]: this.existingCaves,
+  //   [DataType.KILLER]:this.existingPersons,
+  //   [DataType.HEADS]: this.existingHeads,
+  // }
 
-  existingDragonHeads: DragonHead[] = []
-  existingLocations: Location[] = [
-    {id: 1, x: 1, y: 1, z: 1, name: 'New York', canEdit: true},
-    {id: 2, x: 1, y: 1, z: 1, name: 'Los Angeles', canEdit: true},
-    {id: 3, x: 1, y: 1, z: 1, name: 'Chicago', canEdit: true}
-  ];
+  upgradeExistingInternalData(type: DataType, updated:any) {
+    if(type === DataType.COORD) {
+      this.existingCoordinates = [...this.existingCoordinates, ...updated]
+    }else if (type === DataType.CAVE) {
+      this.existingCaves = [...this.existingCaves, ...updated]
+    }else if (type === DataType.KILLER) {
+      this.existingPersons = [...this.existingPersons, ...updated]
+    }else if (type === DataType.HEADS) {
+      this.existingHeads = [...this.existingHeads, ...updated]
+    }
+  }
+
+  resetExistingInternalData(type:DataType) {
+    if(type === DataType.COORD) {
+      this.existingCoordinates = []
+    }else if (type === DataType.CAVE) {
+      this.existingCaves = []
+    }else if (type === DataType.KILLER) {
+      this.existingPersons = []
+    }else if (type === DataType.HEADS) {
+      this.existingHeads = []
+    }
+  }
+
+
+
 
   loadingState = {
-    coord: false,
-    cave: false
+    [DataType.COORD]: false,
+    [DataType.CAVE]: false,
+    [DataType.KILLER]: false,
+    [DataType.HEADS]: false,
+
+  };
+  allLoaded = {
+    [DataType.COORD]: false,
+    [DataType.CAVE]: false,
+    [DataType.KILLER]: false,
+    [DataType.HEADS]: false,
+  }
+  searchValue = {
+    [DataType.COORD]: '',
+    [DataType.CAVE]: '',
+    [DataType.KILLER]: '',
+    [DataType.HEADS]: '',
   };
 
+  offset = {
+    [DataType.COORD]: 0,
+    [DataType.CAVE]: 0,
+    [DataType.KILLER]: 0,
+    [DataType.HEADS]: 0,
+  };
+  limit = {
+    [DataType.COORD]: 2,
+    [DataType.CAVE]: 2,
+    [DataType.KILLER]: 2,
+    [DataType.HEADS]: 2,
+  };
   colors = Object.values(Color);
 
   characters = Object.values(DragonCharacter);
 
+  private coordService = inject(CoordinatesService);
+  private caveService = inject(CaveService);
+  private headsService = inject(HeadService);
+  private personService = inject(PersonService);
+  serviceGetFnMap = {
+    [DataType.COORD]: this.coordService.getCoordinates.bind(this.coordService),
+    [DataType.CAVE]: this.caveService.getCaves.bind(this.caveService),
+    [DataType.HEADS]: this.headsService.getHeads.bind(this.headsService),
+    [DataType.KILLER]: this.personService.getPersons.bind(this.personService),
+  };
 
   constructor(private fb: NonNullableFormBuilder, private cd: ChangeDetectorRef) {
     super();
@@ -175,31 +260,59 @@ export class DragonFormComponent extends FormEditable<Dragon> {
   }
 
 
-  handleOkPerson() {
-    // this.personFormComponent.showAddButtonFn();
-  }
-
-  handleOkCoordinates() {
-    this.coordinatesFormComponent.addCoordinates();
-    this.handleCancelCoord();
-  }
-
-  handleOkCave() {
-    this.caveFormComponent.addCave();
-    this.handleCancelCave();
-  }
-
-  handleCancelCave(): void {
-    this.isCaveModalVisible = false;
-  }
-
-  handleOkHead() {
-    // this.headFormComponent.showAddButtonFn();
+  handleInternalCancel(type: DataType): void {
+    this.isInternalModalVisible[type] = false;
   }
 
 
   setDefaultData(data: Dragon) {
     this.defaultData = data;
+    // todo
+  }
+
+  handleInternalDataOk(type: DataType): void {
+    this.allLoaded[type] = false;
+
+    switch (type) {
+      case DataType.KILLER:
+        this.personFormComponent.addPerson();
+        break;
+      case DataType.COORD:
+        this.coordinatesFormComponent.addCoordinates();
+        break;
+      case DataType.CAVE:
+        this.caveFormComponent.addCave();
+        break;
+      case DataType.HEADS:
+        this.headFormComponent.addHead();
+        break;
+      default:
+        throw new Error('Unknown type');
+    }
+    this.handleInternalCancel(type);
+  }
+
+
+  isInternalFormValid(type: DataType) {
+    let formComponent;
+    switch (type) {
+      case DataType.KILLER:
+        formComponent = this.personFormComponent;
+        break;
+      case DataType.COORD:
+        formComponent = this.coordinatesFormComponent;
+        break;
+      case DataType.CAVE:
+        formComponent = this.caveFormComponent;
+        break;
+      case DataType.HEADS:
+        formComponent = this.caveFormComponent;
+        break;
+      default:
+        throw new Error('Unknown type');
+    }
+
+    return formComponent ? formComponent.validateForm.valid : false;
   }
 
   hideAddButtonFn() {
@@ -210,101 +323,150 @@ export class DragonFormComponent extends FormEditable<Dragon> {
   }
 
 
-  searchValue = "";
-  allLoaded = false;
-
-  offset = 0;
-  limit = 2;
-  private coordService = inject(CoordinatesService);
-  private caveService = inject(CaveService);
-
-
-  loadCoord(loadMore = false): void {
-    if (this.allLoaded) {
+  loadInternalData(dataType: DataType, loadMore = false): void {
+    if (this.allLoaded[dataType]) {
       return;
     }
-    this.loadingState['coord'] = true;
+
+    this.loadingState[dataType] = true;
+
     if (!loadMore) {
-      this.offset = 0;
-      this.existingCoordinates = [];
-      this.allLoaded = false;
+      this.offset[dataType] = 0;
+      this.resetExistingInternalData(dataType);
+      this.allLoaded[dataType] = false;
     }
+    const getFn: any = this.serviceGetFnMap[dataType];
 
-    this.coordService.getCoordinates(
-      this.offset + 1,
-      this.limit + 10, undefined, this.searchValue?.trim() ? this.searchValue : undefined
-    ).subscribe({
-      next: (response) => {
-        if (response.content.length < this.limit) {
-          this.allLoaded = true;
-        }
-        this.existingCoordinates = [...this.existingCoordinates, ...response.content];
-        this.offset += this.limit;
-        this.loadingState['coord'] = false;
-      },
-      error: () => {
-        this.loadingState['coord'] = false;
-      },
-    });
+    if (getFn) {
+      getFn(
+        this.offset[dataType] + 1,
+        this.limit[dataType] + 10,
+        undefined,
+        this.searchValue[dataType]?.trim() ? this.searchValue[dataType] : undefined
+      ).subscribe({
+        next: (response: any) => {
+          if (response.content.length < this.limit[dataType]) {
+            this.allLoaded[dataType] = true;
+          }
+          this.upgradeExistingInternalData(dataType, response.content);
+          this.offset[dataType] += 1;
+          this.loadingState[dataType] = false;
+        },
+        error: () => {
+          console.log("zzz");
+          this.loadingState[dataType] = false;
+        },
+      });
+    } else {
+      console.error(`Service for ${dataType} not found`);
+      this.loadingState[dataType] = false;
+    }
   }
 
-  handleCancelCoord(): void {
-    this.isCoordinatesModalVisible = false;
-  }
+  // loadCoord(loadMore = false): void {
+  //   if (this.allLoaded[DataType.COORD]) {
+  //     return;
+  //   }
+  //   this.loadingState[DataType.COORD] = true;
+  //   if (!loadMore) {
+  //     this.offset[DataType.COORD] = 0;
+  //     this.existingCoordinates = [];
+  //     this.allLoaded[DataType.COORD] = false;
+  //   }
+  //
+  //   this.coordService.getCoordinates(
+  //     this.offset[DataType.COORD] + 1,
+  //     this.limit[DataType.COORD] + 10, undefined,
+  //     this.searchValue[DataType.COORD]?.trim() ? this.searchValue[DataType.COORD] : undefined
+  //   ).subscribe({
+  //     next: (response) => {
+  //       if (response.content.length < this.limit[DataType.COORD]) {
+  //         this.allLoaded[DataType.COORD] = true;
+  //       }
+  //       this.existingCoordinates = [...this.existingCoordinates, ...response.content];
+  //       this.offset[DataType.COORD] += 1;
+  //       this.loadingState[DataType.COORD] = false;
+  //     },
+  //     error: () => {
+  //       this.loadingState[DataType.COORD] = false;
+  //     },
+  //   });
+  // }
+  //
 
+  // loadCave(loadMore = false): void {
+  //   if (this.allLoaded[DataType.CAVE]) {
+  //     return;
+  //   }
+  //   this.loadingState[DataType.CAVE] = true;
+  //   if (!loadMore) {
+  //     this.offset[DataType.CAVE] = 0;
+  //     this.existingCaves = [];
+  //     this.allLoaded[DataType.CAVE] = false;
+  //   }
+  //
+  //   this.caveService.getCaves(
+  //     this.offset[DataType.CAVE] + 1,
+  //     this.limit[DataType.CAVE] + 10, undefined,
+  //     this.searchValue[DataType.CAVE]?.trim() ? this.searchValue[DataType.CAVE] : undefined
+  //   ).subscribe({
+  //     next: (response) => {
+  //       if (response.content.length < this.limit[DataType.CAVE]) {
+  //         this.allLoaded[DataType.CAVE] = true;
+  //       }
+  //       this.existingCaves = [...this.existingCaves, ...response.content];
+  //       this.offset[DataType.CAVE] += 1;
+  //       this.loadingState[DataType.CAVE] = false;
+  //     },
+  //     error: () => {
+  //       this.loadingState[DataType.CAVE] = false;
+  //     },
+  //   });
+  // }
+  //
+  // loadHead(loadMore = false): void {
+  //   if (this.allLoaded[DataType.HEADS]) {
+  //     return;
+  //   }
+  //   this.loadingState[DataType.HEADS] = true;
+  //   if (!loadMore) {
+  //     this.offset[DataType.HEADS] = 0;
+  //     this.existingHeads = [];
+  //     this.allLoaded[DataType.HEADS] = false;
+  //   }
+  //
+  //   this.headsService.getHeads(
+  //     this.offset[DataType.HEADS] + 1,
+  //     this.limit[DataType.HEADS] + 10, undefined,
+  //     this.searchValue[DataType.HEADS]?.trim() ? this.searchValue[DataType.HEADS] : undefined
+  //   ).subscribe({
+  //     next: (response) => {
+  //       if (response.content.length < this.limit[DataType.HEADS]) {
+  //         this.allLoaded[DataType.HEADS] = true;
+  //       }
+  //       this.existingHeads = [...this.existingHeads, ...response.content];
+  //       this.offset[DataType.HEADS] += 1;
+  //       this.loadingState[DataType.HEADS] = false;
+  //     },
+  //     error: () => {
+  //       this.loadingState[DataType.HEADS] = false;
+  //     },
+  //   });
+  // }
 
-
-  loadCave(loadMore = false): void {
-    if (this.allLoaded) {
-      return;
-    }
-    this.loadingState['cave'] = true;
-    if (!loadMore) {
-      this.offset = 0;
-      this.existingCave = [];
-      this.allLoaded = false;
-    }
-
-    this.caveService.getCaves(
-      this.offset + 1,
-      this.limit + 10, undefined, this.searchValue?.trim() ? this.searchValue : undefined
-    ).subscribe({
-      next: (response) => {
-        if (response.content.length < this.limit) {
-          this.allLoaded = true;
-        }
-        this.existingCave = [...this.existingCave, ...response.content];
-        this.offset += this.limit;
-        this.loadingState['cave'] = false;
-      },
-      error: () => {
-        this.loadingState['cave'] = false;
-      },
-    });
-  }
-
-
-  onScrollToBottom(type: 'coord' | 'cave'): void {
+  onScrollToBottom(type: DataType): void {
     if (!this.loadingState[type]) {
       this.loadingState[type] = true;
-
-      if (type === 'coord') {
-        this.loadCoord(true);
-      } else if (type === 'cave') {
-        this.loadCave(true);
-      }
+      this.loadInternalData(type, true)
     }
   }
 
 
-  onSearch(value: string, type: 'coord' | 'cave'): void {
-    this.searchValue = value.trim();
-    this.allLoaded = false;
-    if (type === 'coord') {
-      this.loadCoord(true);
-    } else if (type === 'cave') {
-      this.loadCave(true);
-    }
+  onSearch(value: string, type: DataType): void {
+    this.searchValue[type] = value.trim();
+    this.allLoaded[type] = false;
+    this.loadInternalData(type)
   }
 
+  protected readonly DataType = DataType;
 }

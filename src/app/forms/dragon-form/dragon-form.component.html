@@ -26,20 +26,23 @@
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="coordinates">coordinates</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzValidateStatus="coordinates" nzHasFeedback>
-      <nz-select class="coor"  formControlName="coordinates"
+      <nz-select class="select-form" formControlName="coordinates"
                  [nzPlaceHolder]="'select coordinates'"
                  nzShowSearch
                  nzServerSearch
-                 [nzLoading]="loadingState['coord']"
+                 [nzLoading]="loadingState[DataType.COORD]"
                  [nzAllowClear]="true"
-                 (nzOnSearch)="onSearch($event, 'coord')"
-                 (nzScrollToBottom)="onScrollToBottom('coord')"
+                 (nzOnSearch)="onSearch($event, DataType.COORD)"
+                 (nzScrollToBottom)="onScrollToBottom(DataType.COORD)"
+                 [nzOptionOverflowSize]="3"
                  style="width: 100%;"
       >
         <nz-option *ngFor="let coordinates of existingCoordinates" [nzValue]="coordinates"
                    [nzLabel]="'id:'+coordinates.id+', '+coordinates.x +' '+coordinates.y "></nz-option>
       </nz-select>
-      <button nz-button nzType="default" (click)="this.isCoordinatesModalVisible=true">create new coordinates</button>
+      <button nz-button nzType="default" (click)="this.isInternalModalVisible[DataType.COORD]=true">create new
+        coordinates
+      </button>
     </nz-form-control>
   </nz-form-item>
 
@@ -48,39 +51,52 @@
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="cave">cave</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24"
                      nzValidateStatus="cave" nzHasFeedback>
-      <nz-select  formControlName="cave" [nzPlaceHolder]="'select cave'"
-                  nzShowSearch
-                  nzServerSearch
-                  [nzLoading]="loadingState['cave']"
-                  [nzAllowClear]="true"
-                  (nzOnSearch)="onSearch($event, 'cave')"
-                  (nzScrollToBottom)="onScrollToBottom('cave')"
-                  style="width: 100%;"
+      <nz-select class="select-form" formControlName="cave" [nzPlaceHolder]="'select cave'"
+                 nzShowSearch
+                 nzServerSearch
+                 [nzLoading]="loadingState[DataType.CAVE]"
+                 [nzAllowClear]="true"
+                 (nzOnSearch)="onSearch($event, DataType.CAVE )"
+                 (nzScrollToBottom)="onScrollToBottom(DataType.CAVE)"
+                 [nzOptionOverflowSize]="3"
+                 style="width: 100%;"
       >
-        <nz-option *ngFor="let cave of existingCave" [nzValue]="cave"
+        <nz-option *ngFor="let cave of existingCaves" [nzValue]="cave"
                    [nzLabel]="'id:'+cave.id +', '+cave.numberOfTreasures "></nz-option>
       </nz-select>
-      <button nz-button nzType="default" (click)="this.isCaveModalVisible=true">create new cave</button>
+      <button nz-button nzType="default" (click)="this.isInternalModalVisible[DataType.CAVE]=true">create new cave
+      </button>
     </nz-form-control>
   </nz-form-item>
 
   <!--  killer-->
-<!--  <nz-form-item>-->
-<!--    <nz-form-label [nzSm]="6" [nzXs]="24">killer</nz-form-label>-->
-<!--    <nz-form-control [nzSm]="14" [nzXs]="24">-->
-<!--      <nz-select formControlName="killer" [nzPlaceHolder]="'select killer'">-->
-<!--        <nz-option *ngFor="let person of existingPerson" [nzValue]="person" [nzLabel]="person.name"></nz-option>-->
-<!--      </nz-select>-->
-<!--      <button nz-button nzType="default" (click)="this.isKillerModalVisible=true">create new person</button>-->
-<!--    </nz-form-control>-->
-<!--  </nz-form-item>-->
+  <nz-form-item>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="killer">killer</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzValidateStatus="killer" nzHasFeedback>
+      <nz-select class="select-form" formControlName="killer"
+                 [nzPlaceHolder]="'select killer'"
+                 nzShowSearch
+                 nzServerSearch
+                 [nzLoading]="loadingState[DataType.KILLER]"
+                 [nzAllowClear]="true"
+                 (nzOnSearch)="onSearch($event, DataType.KILLER)"
+                 (nzScrollToBottom)="onScrollToBottom(DataType.KILLER)"
+                 [nzOptionOverflowSize]="3"
+                 style="width: 100%;"
+      >
+        <nz-option *ngFor="let person of existingPersons" [nzValue]="person" [nzLabel]="person.name"></nz-option>
+      </nz-select>
+      <button nz-button nzType="default" (click)="this.isInternalModalVisible[DataType.KILLER]=true">create new person
+      </button>
+    </nz-form-control>
+  </nz-form-item>
 
   <!--age-->
   <nz-form-item>
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="age">age</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="age is a number greater than 0">
       <nz-input-group>
-        <input formControlName="age" nz-input placeholder="age" />
+        <input formControlName="age" nz-input placeholder="age"/>
       </nz-input-group>
     </nz-form-control>
   </nz-form-item>
@@ -89,7 +105,7 @@
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="wingspan">wingspan</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="wingspan is a number greater than 0">
       <nz-input-group>
-        <input formControlName="wingspan" nz-input placeholder="wingspan" />
+        <input formControlName="wingspan" nz-input placeholder="wingspan"/>
       </nz-input-group>
     </nz-form-control>
   </nz-form-item>
@@ -114,17 +130,26 @@
 
   <!--  head-->
   <nz-form-item>
-    <nz-form-label [nzSm]="6" [nzXs]="24">Dragon Heads</nz-form-label>
-    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Select at least one head">
-      <nz-select  formControlName="heads" [nzPlaceHolder]="'Select heads'" nzMode="multiple">
-        <nz-option *ngFor="let head of existingDragonHeads" [nzValue]="head"
-                   [nzLabel]="'Eyes: ' + head.eyesCount"></nz-option>
+    <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="heads">Dragon Heads</nz-form-label>
+    <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="Select at least one head"
+                     nzValidateStatus="heads" nzHasFeedback>
+      <nz-select formControlName="heads" [nzPlaceHolder]="'Select heads'" nzMode="multiple"
+                 nzShowSearch
+                 nzServerSearch
+                 [nzLoading]="loadingState[DataType.HEADS]"
+                 [nzAllowClear]="true"
+                 (nzOnSearch)="onSearch($event, DataType.HEADS)"
+                 (nzScrollToBottom)="onScrollToBottom(DataType.HEADS)"
+                 [nzOptionOverflowSize]="3"
+                 style="width: 100%;"
+      >
+        <nz-option *ngFor="let head of existingHeads" [nzValue]="head"
+                   [nzLabel]="'id: '+head.id+' Eyes: ' + head.eyesCount"></nz-option>
       </nz-select>
-      <button nz-button nzType="default" (click)="this.isHeadModalVisible = true">Add new head</button>
+      <button nz-button nzType="default" (click)="this.isInternalModalVisible[DataType.HEADS] = true">Add new head
+      </button>
     </nz-form-control>
   </nz-form-item>
-
-
 
 
   <nz-form-item *ngIf="showAddButton">
@@ -135,64 +160,71 @@
 </form>
 
 
-<nz-modal [(nzVisible)]="isKillerModalVisible"
+<nz-modal [(nzVisible)]="isInternalModalVisible[DataType.KILLER]"
           nzTitle="create new person"
           [nzContent]="personForma"
-          (nzOnCancel)="this.isKillerModalVisible = false;"
+          (nzOnCancel)="handleInternalCancel(DataType.KILLER)"
           [nzFooter]="modalFooterPers">
   <ng-template #personForma>
     <app-person-form></app-person-form>
   </ng-template>
   <ng-template #modalFooterPers>
-    <button nz-button nzType="default" (click)="this.isKillerModalVisible = false;">cancel</button>
-    <button nz-button nzType="primary" (click)="handleOkPerson()">add</button>
+    <button nz-button nzType="default" (click)="handleInternalCancel(DataType.KILLER)">cancel</button>
+    <button nz-button nzType="primary" (click)="handleInternalDataOk(DataType.KILLER)"
+            [disabled]="!isInternalFormValid(DataType.KILLER)">add
+    </button>
   </ng-template>
 </nz-modal>
 
 
-<nz-modal [(nzVisible)]="isCoordinatesModalVisible"
+<nz-modal [(nzVisible)]="isInternalModalVisible[DataType.COORD]"
           nzTitle="create new coordinates"
           [nzContent]="coordinatesForma"
-          (nzOnCancel)="handleCancelCoord()"
+          (nzOnCancel)="handleInternalCancel(DataType.COORD)"
           [nzFooter]="coordFooter">
   <ng-template #coordinatesForma>
     <app-coordinates-form></app-coordinates-form>
   </ng-template>
   <ng-template #coordFooter>
-    <button nz-button nzType="default" (click)="handleCancelCoord()">cancel</button>
-    <button nz-button nzType="primary" (click)="handleOkCoordinates()">add</button>
+    <button nz-button nzType="default" (click)="handleInternalCancel(DataType.COORD)">cancel</button>
+    <button nz-button nzType="primary" (click)="handleInternalDataOk(DataType.COORD)"
+            [disabled]="!isInternalFormValid(DataType.COORD)">
+      add
+    </button>
   </ng-template>
 </nz-modal>
 
 
-<nz-modal [(nzVisible)]="isCaveModalVisible"
+<nz-modal [(nzVisible)]="isInternalModalVisible[DataType.CAVE]"
           nzTitle="create new cave"
           [nzContent]="caveForma"
-          (nzOnCancel)="this.isCaveModalVisible = false;"
+          (nzOnCancel)="handleInternalCancel(DataType.CAVE)"
           [nzFooter]="caveFooter">
   <ng-template #caveForma>
     <app-dragoncave-form></app-dragoncave-form>
   </ng-template>
-
-
-
   <ng-template #caveFooter>
-    <button nz-button nzType="default" (click)="this.isCoordinatesModalVisible = false;">cancel</button>
-    <button nz-button nzType="primary" (click)="handleOkCave()">add</button>
+    <button nz-button nzType="default" (click)="handleInternalCancel(DataType.CAVE)">cancel</button>
+    <button nz-button nzType="primary" (click)="handleInternalDataOk(DataType.CAVE)"
+            [disabled]="!isInternalFormValid(DataType.CAVE)">add
+    </button>
   </ng-template>
 </nz-modal>
 
 
-<nz-modal [(nzVisible)]="isHeadModalVisible"
+<nz-modal [(nzVisible)]="isInternalModalVisible[DataType.HEADS]"
           nzTitle="create new head"
           [nzContent]="headForma"
-          (nzOnCancel)="this.isHeadModalVisible = false;"
+          (nzOnCancel)="handleInternalCancel(DataType.HEADS)"
           [nzFooter]="modalFooterHead">
   <ng-template #headForma>
     <app-dragonhead-form></app-dragonhead-form>
   </ng-template>
   <ng-template #modalFooterHead>
-    <button nz-button nzType="default" (click)="this.isHeadModalVisible = false;">cancel</button>
-    <button nz-button nzType="primary" (click)="handleOkHead()">add</button>
+    <button nz-button nzType="default" (click)="handleInternalCancel(DataType.HEADS)">cancel</button>
+    <button nz-button nzType="primary" (click)="handleInternalDataOk(DataType.HEADS)"
+            [disabled]="!isInternalFormValid(DataType.HEADS)"
+    >add
+    </button>
   </ng-template>
 </nz-modal>
