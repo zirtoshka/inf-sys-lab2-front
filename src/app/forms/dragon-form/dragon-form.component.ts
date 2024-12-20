@@ -42,6 +42,8 @@ import {Person} from '../../dragondto/person';
 import {HeadService} from '../../services/head.service';
 import {BaseService} from '../../services/base.service';
 import {PersonService} from '../../services/person.service';
+import {Country} from '../../dragondto/country';
+import {forkJoin} from 'rxjs';
 
 export enum DataType {
   COORD = 'coord',
@@ -116,31 +118,29 @@ export class DragonFormComponent extends FormEditable<Dragon> implements AfterVi
   //   [DataType.HEADS]: this.existingHeads,
   // }
 
-  upgradeExistingInternalData(type: DataType, updated:any) {
-    if(type === DataType.COORD) {
+  upgradeExistingInternalData(type: DataType, updated: any) {
+    if (type === DataType.COORD) {
       this.existingCoordinates = [...this.existingCoordinates, ...updated]
-    }else if (type === DataType.CAVE) {
+    } else if (type === DataType.CAVE) {
       this.existingCaves = [...this.existingCaves, ...updated]
-    }else if (type === DataType.KILLER) {
+    } else if (type === DataType.KILLER) {
       this.existingPersons = [...this.existingPersons, ...updated]
-    }else if (type === DataType.HEADS) {
+    } else if (type === DataType.HEADS) {
       this.existingHeads = [...this.existingHeads, ...updated]
     }
   }
 
-  resetExistingInternalData(type:DataType) {
-    if(type === DataType.COORD) {
+  resetExistingInternalData(type: DataType) {
+    if (type === DataType.COORD) {
       this.existingCoordinates = []
-    }else if (type === DataType.CAVE) {
+    } else if (type === DataType.CAVE) {
       this.existingCaves = []
-    }else if (type === DataType.KILLER) {
+    } else if (type === DataType.KILLER) {
       this.existingPersons = []
-    }else if (type === DataType.HEADS) {
+    } else if (type === DataType.HEADS) {
       this.existingHeads = []
     }
   }
-
-
 
 
   loadingState = {
@@ -265,9 +265,77 @@ export class DragonFormComponent extends FormEditable<Dragon> implements AfterVi
   }
 
 
-  setDefaultData(data: Dragon) {
+  setDefaultData(data: Dragon | undefined) {
     this.defaultData = data;
-    // todo
+
+    let coordFormData: Coordinates | null = null;
+    let caveFormData: DragonCave | null = null;
+    let killerFormData: Person | null = null;
+    let headsFormData: DragonHead[] = [];
+
+    if (data?.coordinatesId) {
+      this.coordService.getCoordinates(
+        undefined,
+        undefined, undefined, data?.coordinatesId.toString()
+      ).subscribe({
+          next: (response) => {
+            this.upgradeExistingInternalData(DataType.COORD, response.content);
+            coordFormData = this.existingCoordinates[this.existingCoordinates.length - 1]
+            this.setDataInForm(data, coordFormData, caveFormData, killerFormData, headsFormData);
+          }
+        }
+      );
+    }
+
+    if (data?.killerId) {
+      this.personService.getPersons(
+        undefined,
+        undefined, undefined, data?.killerId.toString()
+      ).subscribe({
+          next: (response) => {
+            this.upgradeExistingInternalData(DataType.KILLER, response.content);
+            killerFormData = this.existingPersons[this.existingPersons.length - 1]
+            this.setDataInForm(data, coordFormData, caveFormData, killerFormData, headsFormData);
+
+          }
+        }
+      );
+    }
+
+    if (data?.caveId) {
+      this.caveService.getCaves(
+        undefined,
+        undefined, undefined, data?.caveId.toString()
+      ).subscribe({
+          next: (response) => {
+            this.upgradeExistingInternalData(DataType.CAVE, response.content);
+            caveFormData = this.existingCaves[this.existingCaves.length - 1]
+            this.setDataInForm(data, coordFormData, caveFormData, killerFormData, headsFormData);
+          }
+        }
+      );
+    }
+
+    if (data?.headIds) {
+      const requests = data.headIds.map(id =>
+        this.headsService.getHeads(undefined, undefined, undefined, id.toString())
+      );
+
+      forkJoin(requests).subscribe({
+        next: (responses) => {
+          responses.forEach((response, index) => {
+            this.upgradeExistingInternalData(DataType.HEADS, response.content);
+            const headToAdd = this.existingHeads[this.existingHeads.length - 1];
+            headsFormData.push(headToAdd);
+          });
+          this.setDataInForm(data, coordFormData, caveFormData, killerFormData, headsFormData);
+        },
+        error: (err) => {
+          console.error('Ошибка загрузки голов:', err);
+        }
+      });
+    }
+
   }
 
   handleInternalDataOk(type: DataType): void {
@@ -293,7 +361,10 @@ export class DragonFormComponent extends FormEditable<Dragon> implements AfterVi
   }
 
 
-  isInternalFormValid(type: DataType) {
+  isInternalFormValid(type
+                        :
+                        DataType
+  ) {
     let formComponent;
     switch (type) {
       case DataType.KILLER:
@@ -323,8 +394,13 @@ export class DragonFormComponent extends FormEditable<Dragon> implements AfterVi
   }
 
 
-  loadInternalData(dataType: DataType, loadMore = false): void {
-    if (this.allLoaded[dataType]) {
+  loadInternalData(dataType
+                     :
+                     DataType, loadMore = false
+  ):
+    void {
+    if (this.allLoaded[dataType]
+    ) {
       return;
     }
 
@@ -363,98 +439,9 @@ export class DragonFormComponent extends FormEditable<Dragon> implements AfterVi
     }
   }
 
-  // loadCoord(loadMore = false): void {
-  //   if (this.allLoaded[DataType.COORD]) {
-  //     return;
-  //   }
-  //   this.loadingState[DataType.COORD] = true;
-  //   if (!loadMore) {
-  //     this.offset[DataType.COORD] = 0;
-  //     this.existingCoordinates = [];
-  //     this.allLoaded[DataType.COORD] = false;
-  //   }
-  //
-  //   this.coordService.getCoordinates(
-  //     this.offset[DataType.COORD] + 1,
-  //     this.limit[DataType.COORD] + 10, undefined,
-  //     this.searchValue[DataType.COORD]?.trim() ? this.searchValue[DataType.COORD] : undefined
-  //   ).subscribe({
-  //     next: (response) => {
-  //       if (response.content.length < this.limit[DataType.COORD]) {
-  //         this.allLoaded[DataType.COORD] = true;
-  //       }
-  //       this.existingCoordinates = [...this.existingCoordinates, ...response.content];
-  //       this.offset[DataType.COORD] += 1;
-  //       this.loadingState[DataType.COORD] = false;
-  //     },
-  //     error: () => {
-  //       this.loadingState[DataType.COORD] = false;
-  //     },
-  //   });
-  // }
-  //
 
-  // loadCave(loadMore = false): void {
-  //   if (this.allLoaded[DataType.CAVE]) {
-  //     return;
-  //   }
-  //   this.loadingState[DataType.CAVE] = true;
-  //   if (!loadMore) {
-  //     this.offset[DataType.CAVE] = 0;
-  //     this.existingCaves = [];
-  //     this.allLoaded[DataType.CAVE] = false;
-  //   }
-  //
-  //   this.caveService.getCaves(
-  //     this.offset[DataType.CAVE] + 1,
-  //     this.limit[DataType.CAVE] + 10, undefined,
-  //     this.searchValue[DataType.CAVE]?.trim() ? this.searchValue[DataType.CAVE] : undefined
-  //   ).subscribe({
-  //     next: (response) => {
-  //       if (response.content.length < this.limit[DataType.CAVE]) {
-  //         this.allLoaded[DataType.CAVE] = true;
-  //       }
-  //       this.existingCaves = [...this.existingCaves, ...response.content];
-  //       this.offset[DataType.CAVE] += 1;
-  //       this.loadingState[DataType.CAVE] = false;
-  //     },
-  //     error: () => {
-  //       this.loadingState[DataType.CAVE] = false;
-  //     },
-  //   });
-  // }
-  //
-  // loadHead(loadMore = false): void {
-  //   if (this.allLoaded[DataType.HEADS]) {
-  //     return;
-  //   }
-  //   this.loadingState[DataType.HEADS] = true;
-  //   if (!loadMore) {
-  //     this.offset[DataType.HEADS] = 0;
-  //     this.existingHeads = [];
-  //     this.allLoaded[DataType.HEADS] = false;
-  //   }
-  //
-  //   this.headsService.getHeads(
-  //     this.offset[DataType.HEADS] + 1,
-  //     this.limit[DataType.HEADS] + 10, undefined,
-  //     this.searchValue[DataType.HEADS]?.trim() ? this.searchValue[DataType.HEADS] : undefined
-  //   ).subscribe({
-  //     next: (response) => {
-  //       if (response.content.length < this.limit[DataType.HEADS]) {
-  //         this.allLoaded[DataType.HEADS] = true;
-  //       }
-  //       this.existingHeads = [...this.existingHeads, ...response.content];
-  //       this.offset[DataType.HEADS] += 1;
-  //       this.loadingState[DataType.HEADS] = false;
-  //     },
-  //     error: () => {
-  //       this.loadingState[DataType.HEADS] = false;
-  //     },
-  //   });
-  // }
-
-  onScrollToBottom(type: DataType): void {
+  onScrollToBottom(type: DataType):
+    void {
     if (!this.loadingState[type]) {
       this.loadingState[type] = true;
       this.loadInternalData(type, true)
@@ -467,6 +454,27 @@ export class DragonFormComponent extends FormEditable<Dragon> implements AfterVi
     this.allLoaded[type] = false;
     this.loadInternalData(type)
   }
+
+
+  setDataInForm(data: Dragon | undefined, coord: Coordinates | null,
+                cave: DragonCave | null, killer: Person | null,
+                heads: DragonHead[] | null
+  ) {
+    this.validateForm.patchValue({
+      name: data?.name,
+      coordinates: coord,
+      creationDate: data?.creationDate,
+      cave: cave,
+      killer: killer,
+      age: data?.age,
+      wingspan: data?.wingspan,
+      color: data?.color,
+      character: data?.character,
+      heads:heads,
+      canEdit: data?.canEdit
+    });
+  }
+
 
   protected readonly DataType = DataType;
 }

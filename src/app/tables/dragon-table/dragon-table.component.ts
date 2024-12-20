@@ -13,7 +13,6 @@ import {NzPopconfirmDirective} from 'ng-zorro-antd/popconfirm';
 import {DragonHeadFormComponent} from '../../forms/dragonhead-form/dragon-head-form.component';
 import {DataType, DragonFormComponent} from '../../forms/dragon-form/dragon-form.component';
 import {DragonService} from '../../services/dragon.service';
-import {DragonEditFormComponent} from '../../forms/dragon-edit-form/dragon-edit-form.component';
 import {DtoTable} from '../dto-table';
 import {WebSocketService} from '../../websocket.service';
 import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
@@ -38,7 +37,6 @@ import {PersonService} from '../../services/person.service';
     NzPopconfirmDirective,
     DragonHeadFormComponent,
     DragonFormComponent,
-    DragonEditFormComponent,
     NzPaginationComponent,
     NzRadioComponent,
     NzIconDirective,
@@ -51,7 +49,7 @@ import {PersonService} from '../../services/person.service';
 })
 export class DragonTableComponent extends DtoTable<Dragon> {
   private dragonService: DragonService = inject(DragonService);
-  @ViewChild(DragonEditFormComponent) declare formComponent: DragonEditFormComponent;
+  @ViewChild(DragonFormComponent) declare formComponent: DragonFormComponent;
 
   isInternalModalVisible = {
     [DataType.COORD]: false,

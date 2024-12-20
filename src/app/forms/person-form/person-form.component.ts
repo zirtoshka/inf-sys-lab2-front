@@ -211,7 +211,7 @@ export class PersonFormComponent extends FormEditable<Person> implements AfterVi
           this.allLoaded = true;
         }
         this.locations = [...this.locations, ...response.content];
-        this.offset +=1;
+        this.offset += 1;
         this.loading = false;
       },
       error: () => {
@@ -233,7 +233,6 @@ export class PersonFormComponent extends FormEditable<Person> implements AfterVi
   }
 
   setDefaultData(data: Person | undefined) {
-
     this.defaultData = data;
     let locFromData: Location | null = null;
     if (data?.locationId) {
@@ -256,7 +255,6 @@ export class PersonFormComponent extends FormEditable<Person> implements AfterVi
             this.setDataInForm(data, locFromData);
           }
         }
-
       });
     } else {
       this.setDataInForm(data, locFromData);
@@ -274,7 +272,6 @@ export class PersonFormComponent extends FormEditable<Person> implements AfterVi
       height: data?.height,
       passportID: data?.passportID,
       nationality: data?.nationality,
-
     });
   }
 

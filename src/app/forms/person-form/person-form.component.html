@@ -14,7 +14,7 @@
     <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">name</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="name is required">
       <nz-input-group>
-        <input formControlName="name" nz-input placeholder="name" [ngModel]="defaultData?.name"/>
+        <input formControlName="name" nz-input placeholder="name" />
       </nz-input-group>
     </nz-form-control>
   </nz-form-item>
@@ -67,7 +67,7 @@
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="height">height</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="height is a number that is greater than 0">
       <nz-input-group>
-        <input formControlName="height" nz-input placeholder="height" [ngModel]="defaultData?.height"/>
+        <input formControlName="height" nz-input placeholder="height" />
       </nz-input-group>
     </nz-form-control>
   </nz-form-item>
@@ -75,7 +75,7 @@
     <nz-form-label [nzSm]="6" [nzXs]="24" nzFor="passportID">passportID</nz-form-label>
     <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="passportID is a string">
       <nz-input-group>
-        <input formControlName="passportID" nz-input placeholder="passportID" [ngModel]="defaultData?.passportID"/>
+        <input formControlName="passportID" nz-input placeholder="passportID" />
       </nz-input-group>
     </nz-form-control>
   </nz-form-item>
