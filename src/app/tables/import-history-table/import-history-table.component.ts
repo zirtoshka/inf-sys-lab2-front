@@ -1,6 +1,6 @@
 import {ChangeDetectorRef, Component, inject} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {NgForOf} from '@angular/common';
+import {NgClass, NgForOf} from '@angular/common';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {NzDropDownDirective, NzDropdownMenuComponent} from 'ng-zorro-antd/dropdown';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
@@ -15,7 +15,6 @@ import {Page} from '../../page';
 import {ApplicationService} from '../../services/application.service';
 import {BaseService} from '../../services/base.service';
 import {WebSocketService} from '../../websocket.service';
-import {NzNotificationService} from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-import-history-table',
@@ -31,16 +30,30 @@ import {NzNotificationService} from 'ng-zorro-antd/notification';
     NzMenuItemComponent,
     NzPaginationComponent,
     NzRadioComponent,
-    NzTableComponent
+    NzTableComponent,
+    NgClass
   ],
   templateUrl: './import-history-table.component.html',
   styleUrl: './import-history-table.component.css'
 })
 export class ImportHistoryTableComponent extends BaseTableComponent<ImportHistoryData> {
   private baseService = inject(BaseService);
+  idFilter: number | undefined;
+  userIdFilter: number | undefined;
+  statusFilter: 'ALL' | 'SUCCESS' | 'IN_PROGRESS' | 'FAILED'  = 'ALL';
 
   constructor(cd: ChangeDetectorRef) {
     super(cd, inject(WebSocketService));
+    this.sortOrder={
+      id:undefined,
+      userId:undefined,
+      importedCount:undefined,
+    };
+    this.filters={
+      id:undefined,
+      userId:undefined,
+      status:undefined,
+    }
   }
 
   getId(item: ImportHistoryData): any {
@@ -51,12 +64,30 @@ export class ImportHistoryTableComponent extends BaseTableComponent<ImportHistor
     return "person"; //todo
   }
 
-  loadData(page: number, size: number): void {
+  setStatusFilter(value: 'ALL' | 'SUCCESS' | 'IN_PROGRESS' | 'FAILED'): void {
+    this.statusFilter = value;
+    this.applyStatusFilter();
+  }
+  applyStatusFilter(): void {
+    if (this.statusFilter === 'ALL') {
+      this.filters['status'] = undefined;
+      this.loadData(this.currPage, this.pageSize);
+    } else {
+      this.filters['status'] = this.statusFilter;
+      this.loadData(this.currPage, this.pageSize, undefined, this.filters);
+    }
+  }
+  loadData(page: number, size: number, sort?: string, filters?:Record<string, any>): void {
     const params = {
       offset: page - 1,
       limit: size.toString(),
+      sort: sort,
+      id: filters?.['id'],
+      userId: filters?.['userId'],
+      status: filters?.['status']
     };
 
+    console.log(params)
     this.baseService.get<Page<ImportHistoryData>>('import/history', params).subscribe({
       next: (response) => {
         this.listOfData = response.content.map(app => ({
@@ -79,4 +110,5 @@ export class ImportHistoryTableComponent extends BaseTableComponent<ImportHistor
     });
   }
 
+  protected readonly StatusImport = StatusImport;
 }

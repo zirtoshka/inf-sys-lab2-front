@@ -1,17 +1,37 @@
+<div style="margin-bottom: 16px;">
+  <input [(ngModel)]="this.filters['id']" placeholder="Filter by ID" style="margin-right: 8px;"/>
+  <input [(ngModel)]="this.filters['userId']" placeholder="Filter by user id" style="margin-right: 8px;"/>
+  <button nz-button nzType="primary" (click)="applyFilters()">Apply Filters</button>
+  <button nz-button nzType="default" (click)="resetFilters()">Reset</button>
+</div>
+
+<div style="margin-bottom: 16px;">
+  <label>Filter by status: </label>
+  <label nz-radio-group>
+    <label nz-radio-button nzValue="all" (click)="setStatusFilter('ALL')">All</label>
+    <label nz-radio-button nzValue="SUCCESS" (click)="setStatusFilter('SUCCESS')">SUCCESS</label>
+    <label nz-radio-button nzValue="FAILED" (click)="setStatusFilter('FAILED')">FAILED</label>
+    <label nz-radio-button nzValue="IN_PROGRESS" (click)="setStatusFilter('IN_PROGRESS')">IN_PROGRESS</label>
+  </label>
+
+</div>
 
 <nz-table [nzData]="listOfData" [nzBordered]="true"
           nzShowPagination="false">
   <thead>
   <tr>
-    <th>
+    <th (click)="sort('id')">
       ID
+      <i nz-icon nzTheme="outline" [nzType]="getSortIcon('ID')"
+         [ngClass]="{'sorted-asc': sortOrder['id'] === 'ID_ASC', 'sorted-desc': sortOrder['id'] === 'ID_DESC'}"></i>
     </th>
-
     <th >
       imported count
     </th>
-    <th>
+    <th (click)="sort('user')">
       user id
+      <i nz-icon [nzType]="getSortIcon('user')"
+         [ngClass]="{'sorted-asc': sortOrder['userId'] === 'USER_ASC', 'sorted-desc': sortOrder['userId'] === 'USER_DESC'}"></i>
     </th>
     <th>status</th>
   </tr>

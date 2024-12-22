@@ -101,8 +101,10 @@ export class AdminAppTableComponent extends BaseTableComponent<Application>{
 
   applyStatusFilter(): void {
     if (this.statusFilter === 'ALL') {
+      this.filters['status'] = undefined;
       this.loadData(this.currPage, this.pageSize);
     } else {
+      this.filters['status'] = this.statusFilter;
       this.loadData(this.currPage, this.pageSize, undefined, this.filters);
     }
   }

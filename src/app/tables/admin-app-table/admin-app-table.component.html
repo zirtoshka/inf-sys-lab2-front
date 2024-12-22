@@ -1,7 +1,7 @@
 <br>
 <div style="margin-bottom: 16px;">
-  <input [(ngModel)]="idFilter" placeholder="Filter by ID" style="margin-right: 8px;"/>
-  <input [(ngModel)]="userIdFilter" placeholder="Filter by user id" style="margin-right: 8px;"/>
+  <input  [(ngModel)]="this.filters['id']" placeholder="Filter by ID" style="margin-right: 8px;"/>
+  <input [(ngModel)]="this.filters['userId']" placeholder="Filter by user id" style="margin-right: 8px;"/>
   <button nz-button nzType="primary" (click)="applyFilters()">Apply Filters</button>
   <button nz-button nzType="default" (click)="resetFilters()">Reset</button>
 </div>
