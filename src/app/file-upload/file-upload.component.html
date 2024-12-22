@@ -1,0 +1,6 @@
+<form (submit)="onSubmit($event)" enctype="multipart/form-data">
+  <label for="file">Choose YAML file:</label>
+  <input type="file" id="file" (change)="onFileSelected($event)" />
+  <button type="submit" [disabled]="isLoading">Upload</button>
+  <p *ngIf="isLoading">Uploading...</p>
+</form>

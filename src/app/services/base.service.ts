@@ -23,6 +23,12 @@ export class BaseService {
 
   }
 
+  import(formData: any, action: string) {
+    return this.httpClient
+      .post<any>(this.baseUrl + action, formData, { withCredentials: true});
+
+  }
+
 
   update(formData: any, action: string) {
     const headers = new HttpHeaders()

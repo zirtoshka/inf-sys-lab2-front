@@ -58,6 +58,9 @@ export abstract class BaseTableComponent<T> implements OnInit, OnDestroy {
     } else if (task.action === 'DELETE') {
       this.listOfData = this.listOfData.filter((item) => this.getId(item) !== task.id);
     }
+    if (task.action === 'IMPORT') {
+      this.listOfData = [...this.listOfData, ...task.data]; //todo
+    }
     this.cd.detectChanges();
   }
 

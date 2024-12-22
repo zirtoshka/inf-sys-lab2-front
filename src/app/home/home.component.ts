@@ -23,6 +23,7 @@ import {AdminAppTableComponent} from '../tables/admin-app-table/admin-app-table.
 import {AuthService} from '../auth-tools/auth.service';
 import {VisikComponent} from '../visik/visik.component';
 import {NzNotificationService} from 'ng-zorro-antd/notification';
+import {FileUploadComponent} from '../file-upload/file-upload.component';
 
 
 @Component({
@@ -56,6 +57,7 @@ import {NzNotificationService} from 'ng-zorro-antd/notification';
     AdminFormComponent,
     AdminAppTableComponent,
     VisikComponent,
+    FileUploadComponent,
   ],
   standalone: true,
   styleUrls: ['./home.component.css']

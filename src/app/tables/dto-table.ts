@@ -37,7 +37,6 @@ export abstract class DtoTable<T> extends BaseTableComponent<T> implements After
 
   openEditModal(data: T): void {
     this.showEditModal(data);
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     setTimeout(() => {
       this.formComponent.setDefaultData(this.dataEdit);
     }, 10);
