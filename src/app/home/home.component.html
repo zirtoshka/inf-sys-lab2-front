@@ -7,6 +7,7 @@
       <li nz-menu-item (click)="changeState(FormState.Head)">dragon head</li>
       <li nz-menu-item (click)="changeState(FormState.Location)">location</li>
       <li nz-menu-item (click)="changeState(FormState.Person)">person</li>
+      <li nz-menu-item (click)="changeState(FormState.ImportHistory)">import history</li>
       <li nz-menu-item (click)="changeState(FormState.AdminForm)">admin form</li>
       <li nz-menu-item (click)="changeState(FormState.AdminPage)">admin page</li>
       <li nz-menu-item (click)="changeState(FormState.Visik)"> VISIK</li>
@@ -33,6 +34,9 @@
       <app-file-upload></app-file-upload>
       <app-person-form></app-person-form>
       <app-person-table></app-person-table>
+    </div>
+    <div *ngIf="currentState===FormState.ImportHistory">
+      <app-import-history-table></app-import-history-table>
     </div>
     <div *ngIf="this.currentState === FormState.Cave">
       <app-dragoncave-form></app-dragoncave-form>

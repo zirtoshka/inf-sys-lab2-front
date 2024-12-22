@@ -24,6 +24,7 @@ import {AuthService} from '../auth-tools/auth.service';
 import {VisikComponent} from '../visik/visik.component';
 import {NzNotificationService} from 'ng-zorro-antd/notification';
 import {FileUploadComponent} from '../file-upload/file-upload.component';
+import {ImportHistoryTableComponent} from '../tables/import-history-table/import-history-table.component';
 
 
 @Component({
@@ -58,6 +59,7 @@ import {FileUploadComponent} from '../file-upload/file-upload.component';
     AdminAppTableComponent,
     VisikComponent,
     FileUploadComponent,
+    ImportHistoryTableComponent,
   ],
   standalone: true,
   styleUrls: ['./home.component.css']

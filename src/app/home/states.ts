@@ -7,5 +7,6 @@ export enum FormState {
   Head = 'head',
   AdminForm = 'adminForm',
   AdminPage = 'adminPage',
-  Visik='visik'
+  Visik='visik',
+  ImportHistory = 'importHistory',
 }

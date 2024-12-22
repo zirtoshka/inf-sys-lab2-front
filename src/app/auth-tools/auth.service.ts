@@ -72,8 +72,8 @@ export class AuthService {
       this.authToken = null;
       this.roles = [];
     } catch (error) {
+      this.notificationService.error("oops", "logout failed")
       console.error(error)
-      alert(error);
     }
   }
 

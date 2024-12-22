@@ -1,13 +1,11 @@
-import {HttpClient, HttpRequest, HttpResponse} from '@angular/common/http';
 import {Component, inject} from '@angular/core';
-import {filter} from 'rxjs/operators';
 
-import {NzMessageService} from 'ng-zorro-antd/message';
-import {NzUploadComponent, NzUploadFile} from 'ng-zorro-antd/upload';
+import {NzUploadComponent} from 'ng-zorro-antd/upload';
 import {NzIconDirective} from 'ng-zorro-antd/icon';
 import {NzButtonComponent} from 'ng-zorro-antd/button';
 import {NgIf} from '@angular/common';
 import {BaseService} from '../services/base.service';
+import {NzNotificationService} from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-file-upload',
@@ -23,6 +21,7 @@ import {BaseService} from '../services/base.service';
 })
 export class FileUploadComponent {
   private baseService = inject(BaseService);
+  private notificationService = inject(NzNotificationService);
 
   isLoading = false;
   selectedFile: File | null = null;
@@ -38,7 +37,10 @@ export class FileUploadComponent {
     event.preventDefault();
 
     if (!this.selectedFile) {
-      alert('Please select a file.');
+      this.notificationService.warning(
+        "hey!",
+        "Please select a file."
+      )
       return;
     }
 
@@ -49,14 +51,14 @@ export class FileUploadComponent {
 
     this.baseService.import(formData, "person/import")
       .subscribe({
-        next: (response:any) => {
+        next: (response: any) => {
           this.isLoading = false;
-          alert(response);
+          this.notificationService.success("success", "uploading is ok")
         },
 
         error: (error) => {
           this.isLoading = false;
-          console.log(error);
+          this.notificationService.success("oops", "uploading failed")
         },
       });
   }

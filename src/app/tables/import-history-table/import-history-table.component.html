@@ -1,0 +1,41 @@
+
+<nz-table [nzData]="listOfData" [nzBordered]="true"
+          nzShowPagination="false">
+  <thead>
+  <tr>
+    <th>
+      ID
+    </th>
+
+    <th >
+      imported count
+    </th>
+    <th>
+      user id
+    </th>
+    <th>status</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let data of listOfData" class="hoverable-row">
+    <td>{{ data.id }}</td>
+    <td>{{ data.importedCount }}</td>
+    <td>{{ data.userId }}</td>
+    <td>{{data.status}}</td>
+
+  </tr>
+  </tbody>
+</nz-table>
+
+
+<nz-pagination
+  [(nzPageIndex)]="currPage"
+  [(nzPageSize)]="pageSize"
+  [nzTotal]="totalElements"
+  [nzShowSizeChanger]="true"
+  (nzPageIndexChange)="onPageChange($event)"
+  [nzPageSizeOptions]="[2, 3, 5, 10]"
+  (nzPageSizeChange)="onPageSizeChange($event)"
+  [nzShowQuickJumper]="true">
+</nz-pagination>
+
