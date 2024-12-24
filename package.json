@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --host openam.example.org --port 8083",
+    "start": "ng serve ",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
