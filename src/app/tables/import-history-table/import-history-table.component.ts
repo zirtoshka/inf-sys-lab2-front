@@ -15,6 +15,7 @@ import {Page} from '../../page';
 import {ApplicationService} from '../../services/application.service';
 import {BaseService} from '../../services/base.service';
 import {WebSocketService} from '../../websocket.service';
+import {HttpHeaders} from '@angular/common/http';
 
 @Component({
   selector: 'app-import-history-table',
@@ -77,6 +78,7 @@ export class ImportHistoryTableComponent extends BaseTableComponent<ImportHistor
       this.loadData(this.currPage, this.pageSize, undefined, this.filters);
     }
   }
+
   loadData(page: number, size: number, sort?: string, filters?:Record<string, any>): void {
     const params = {
       offset: page - 1,
@@ -94,7 +96,8 @@ export class ImportHistoryTableComponent extends BaseTableComponent<ImportHistor
           id: app.id,
           userId: app.userId,
           importedCount: app.importedCount,
-          status: app.status
+          status: app.status,
+          fileUrl:app.fileUrl
         }));
         this.currPage = response.number + 1;
         this.pageSize = response.size;
@@ -111,4 +114,14 @@ export class ImportHistoryTableComponent extends BaseTableComponent<ImportHistor
   }
 
   protected readonly StatusImport = StatusImport;
+
+
+  download(id: number): void {
+    this.baseService.delete(
+      {id: id}, "import/download/")
+      .subscribe((res) => {
+        console.log(res);
+      })
+  }
+
 }

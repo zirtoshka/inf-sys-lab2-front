@@ -60,4 +60,13 @@ export class BaseService {
     });
     return this.httpClient.get<T>(`${this.baseUrl}${endpoint}`, {headers, params: httpParams, withCredentials: true});
   }
+
+
+
+  download(formData: any, action: string) {
+    const jwtToken = this.authService.getAuthToken();
+
+    return this.httpClient
+      .delete<any>(this.baseUrl + action + formData.id, {withCredentials: true});
+  }
 }
