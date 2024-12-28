@@ -9,5 +9,6 @@ export interface ImportHistoryData {
   userId: number,
   status: StatusImport,
   importedCount: number,
-  fileUrl: string
+  fileName: string,
+
 }

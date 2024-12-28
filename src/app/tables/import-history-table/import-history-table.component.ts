@@ -16,6 +16,7 @@ import {ApplicationService} from '../../services/application.service';
 import {BaseService} from '../../services/base.service';
 import {WebSocketService} from '../../websocket.service';
 import {HttpHeaders} from '@angular/common/http';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-import-history-table',
@@ -97,7 +98,7 @@ export class ImportHistoryTableComponent extends BaseTableComponent<ImportHistor
           userId: app.userId,
           importedCount: app.importedCount,
           status: app.status,
-          fileUrl:app.fileUrl
+          fileName:app.fileName
         }));
         this.currPage = response.number + 1;
         this.pageSize = response.size;
@@ -117,11 +118,28 @@ export class ImportHistoryTableComponent extends BaseTableComponent<ImportHistor
 
 
   download(id: number): void {
-    this.baseService.delete(
+    this.baseService.download(
       {id: id}, "import/download/")
-      .subscribe((res) => {
-        console.log(res);
-      })
+      .subscribe(
+        (resp: any) => {
+          const contentDisposition = resp.headers.get('Content-Disposition');
+          console.log(resp.headers)
+          const fileName = this.extractFileNameFromHeader(contentDisposition);
+          saveAs(resp.body, fileName || 'downloaded-file');
+      },
+        (error)=>{
+          this.notificationService.error(
+            "oops",
+            "File download failed"
+          )
+        }
+      )
+  }
+  private extractFileNameFromHeader(contentDisposition: string|null): string | null {
+    console.log(contentDisposition);
+    if (!contentDisposition) return null;
+    const matches = /filename="(.+)"/.exec(contentDisposition);
+    return matches?.[1] ?? null;
   }
 
 }

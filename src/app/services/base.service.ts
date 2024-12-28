@@ -65,8 +65,10 @@ export class BaseService {
 
   download(formData: any, action: string) {
     const jwtToken = this.authService.getAuthToken();
-
     return this.httpClient
-      .delete<any>(this.baseUrl + action + formData.id, {withCredentials: true});
+      .get<any>(this.baseUrl + action + formData.id,
+        {responseType: 'blob' as 'json',
+          observe: 'response',
+        withCredentials: true});
   }
 }

@@ -34,6 +34,7 @@
          [ngClass]="{'sorted-asc': sortOrder['userId'] === 'USER_ASC', 'sorted-desc': sortOrder['userId'] === 'USER_DESC'}"></i>
     </th>
     <th>status</th>
+    <th>file name</th>
     <th>скачать файл</th>
   </tr>
   </thead>
@@ -43,8 +44,9 @@
     <td>{{ data.importedCount }}</td>
     <td>{{ data.userId }}</td>
     <td>{{data.status}}</td>
+    <td>{{data.fileName}}</td>
     <td>
-      <p (click)="download(data.id)">download</p>
+      <button nz-button (click)="download(data.id)">download</button>
     </td>
 
   </tr>
