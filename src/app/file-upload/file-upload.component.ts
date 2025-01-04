@@ -52,13 +52,18 @@ export class FileUploadComponent {
     this.baseService.import(formData, "person/import")
       .subscribe({
         next: (response: any) => {
+          window.document.location.reload();
           this.isLoading = false;
-          this.notificationService.success("success", "uploading is ok")
+          if(response.code==500) {
+            this.notificationService.error("oops", response.body);
+          }else{
+            this.notificationService.success("success", "uploading is ok")
+          }
         },
 
         error: (error) => {
           this.isLoading = false;
-          this.notificationService.success("oops", "uploading failed")
+          this.notificationService.error("oops", "uploading failed")
         },
       });
   }

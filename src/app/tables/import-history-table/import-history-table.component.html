@@ -46,7 +46,7 @@
     <td>{{data.status}}</td>
     <td>{{data.fileName}}</td>
     <td>
-      <button nz-button (click)="download(data.id)">download</button>
+      <button nz-button (click)="download(data.id)" [disabled]="data.status==StatusImport.FAILED_UPLOAD_FILE">download</button>
     </td>
 
   </tr>

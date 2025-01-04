@@ -9,13 +9,10 @@ import {NzPaginationComponent} from 'ng-zorro-antd/pagination';
 import {NzRadioComponent} from 'ng-zorro-antd/radio';
 import {NzTableComponent} from 'ng-zorro-antd/table';
 import {BaseTableComponent} from '../base-table-component';
-import {Application} from '../../application';
 import {ImportHistoryData, StatusImport} from '../../import-history-data';
 import {Page} from '../../page';
-import {ApplicationService} from '../../services/application.service';
 import {BaseService} from '../../services/base.service';
 import {WebSocketService} from '../../websocket.service';
-import {HttpHeaders} from '@angular/common/http';
 import { saveAs } from 'file-saver';
 
 @Component({
@@ -90,7 +87,6 @@ export class ImportHistoryTableComponent extends BaseTableComponent<ImportHistor
       status: filters?.['status']
     };
 
-    console.log(params)
     this.baseService.get<Page<ImportHistoryData>>('import/history', params).subscribe({
       next: (response) => {
         this.listOfData = response.content.map(app => ({

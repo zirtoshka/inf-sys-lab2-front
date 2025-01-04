@@ -1,4 +1,3 @@
-<p>welcome works!</p>
 <div class="navig">
   <button *ngIf="!userService.isLoggedIn" nz-button nzType="primary" (click)="this.userService.login()">login</button>
   <button *ngIf="userService.isLoggedIn" nz-button nzType="primary" routerLink="/home">home</button>
