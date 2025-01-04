@@ -52,7 +52,6 @@ export class FileUploadComponent {
     this.baseService.import(formData, "person/import")
       .subscribe({
         next: (response: any) => {
-          window.document.location.reload();
           this.isLoading = false;
           if(response.code==500) {
             this.notificationService.error("oops", response.body);
